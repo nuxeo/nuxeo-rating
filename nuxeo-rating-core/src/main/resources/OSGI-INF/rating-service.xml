@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.ecm.rating.RatingService">
+
+  <documentation>
+    The Rating Service handles rating on documents, activities, ...
+
+    @author Thomas Roger (troger@nuxeo.com)
+  </documentation>
+
+  <implementation
+    class="org.nuxeo.ecm.rating.RatingServiceImpl" />
+
+  <service>
+    <provide
+      interface="org.nuxeo.ecm.rating.api.RatingService" />
+  </service>
+
+</component>

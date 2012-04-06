@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.ecm.rating.theme">
+
+  <require>org.nuxeo.theme.nuxeo.default</require>
+
+  <extension target="org.nuxeo.theme.services.ThemeService" point="resources">
+    <!-- CSS -->
+    <!-- Gadgets CSS -->
+    <resource name="gadget-like.css">
+      <path>css/opensocial/gadgets/like.css</path>
+    </resource>
+
+    <!-- JS -->
+    <!-- Gadgets JS -->
+    <resource name="gadget-like.js">
+      <path>scripts/opensocial/gadgets/like.js</path>
+    </resource>
+  </extension>
+
+</component>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="org.nuxeo.ecm.rating.widgets">
+
+  <extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+    point="widgettypes">
+    <widgetType name="summary_document_like">
+      <configuration>
+        <sinceVersion>5.6</sinceVersion>
+        <title>User Mini Messages Summary</title>
+        <description>
+          <p>This widgets displays the 'like' status of a document
+            through the like OpenSocial gadget</p>
+        </description>
+        <categories>
+          <category>summary</category>
+        </categories>
+        <supportedModes>
+          <mode>view</mode>
+        </supportedModes>
+        <!-- no configurable properties -->
+      </configuration>
+      <handler-class>
+        org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
+      </handler-class>
+      <property name="template">
+        /widgets/summary/like_widget_template.xhtml
+      </property>
+    </widgetType>
+  </extension>
+
+  <extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
+    point="widgets">
+
+    <widget name="summary_document_like" type="summary_document_like" />
+
+  </extension>
+
+</component>

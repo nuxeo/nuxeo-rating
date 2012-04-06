@@ -1,0 +1,149 @@
+/*
+ * (C) Copyright 2006-2012 Nuxeo SA (http://nuxeo.com/) and others.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Lesser General Public License
+ * (LGPL) version 2.1 which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/lgpl-2.1.html
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * Contributors:
+ *     Thomas Roger <troger@nuxeo.com>
+ */
+
+package org.nuxeo.ecm.rating.api;
+
+import org.nuxeo.ecm.core.api.DocumentModel;
+
+/**
+ * Service handling likes / dislikes on documents, or any other activity object.
+ *
+ * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
+ * @since 5.6
+ */
+public interface LikeService {
+
+    /**
+     * Like the given {@code activityObject} by the {@code username}.
+     */
+    void like(String username, String activityObject);
+
+    /**
+     * Convenient method to like a {@link DocumentModel}.
+     *
+     * @see LikeService#like(String, String)
+     */
+    void like(String username, DocumentModel doc);
+
+    /**
+     * Returns {@code true} if the given {@code username} already liked the
+     * {@code activityObject}, {@code false} otherwise.
+     */
+    boolean hasUserLiked(String username, String activityObject);
+
+    /**
+     * Returns {@code true} if the given {@code username} already liked the
+     * {@code doc}, {@code false} otherwise.
+     */
+    boolean hasUserLiked(String username, DocumentModel doc);
+
+    /**
+     * Returns the likes count for the given {@code activityObject}.
+     */
+    long getLikesCount(String activityObject);
+
+    /**
+     * Convenient method to returns the likes count for a {@link DocumentModel}.
+     *
+     * @see LikeService#getLikesCount(String)
+     */
+    long getLikesCount(DocumentModel doc);
+
+    /**
+     * Dislike the given {@code activityObject} by the {@code username}.
+     */
+    void dislike(String username, String activityObject);
+
+    /**
+     * Convenient method to dislike a {@see DocumentModel}.
+     *
+     * @see LikeService#dislike(String, String)
+     */
+    void dislike(String username, DocumentModel doc);
+
+    /**
+     * Returns {@code true} if the given {@code username} already disliked the
+     * {@code activityObject}, {@code false} otherwise.
+     */
+    boolean hasUserDisliked(String username, String activityObject);
+
+    /**
+     * Returns {@code true} if the given {@code username} already disliked the
+     * {@code doc}, {@code false} otherwise.
+     */
+    boolean hasUserDisliked(String username, DocumentModel doc);
+
+    /**
+     * Returns the dislikes count for the given {@code activityObject}.
+     */
+    long getDislikesCount(String activityObject);
+
+    /**
+     * Convenient method to returns the dislikes count for a
+     * {@link DocumentModel}.
+     *
+     * @see LikeService#getDislikesCount(String)
+     */
+    long getDislikesCount(DocumentModel doc);
+
+    /**
+     * Cancel a like or dislike for the given {@code username}.
+     *
+     * @param username the username
+     * @param activityObject the activity object on which to cancel the like or
+     *            dislike.
+     */
+    void cancel(String username, String activityObject);
+
+    /**
+     * Convenient method to cancel a like or dislike on a {@see DocumentModel}.
+     *
+     * @see LikeService#cancel(String, String)
+     */
+    void cancel(String username, DocumentModel doc);
+
+    /**
+     * Returns the {@see LikeStatus} for the {@code activityObject}.
+     */
+    LikeStatus getLikeStatus(String activityObject);
+
+    /**
+     * Convenient method to return the {@see LikeStatus} for a {@see
+     * DocumentModel}.
+     *
+     * @see LikeService#getLikeStatus(String)
+     */
+    LikeStatus getLikeStatus(DocumentModel doc);
+
+    /**
+     * Returns the {@see LikeStatus} for the {@code username} and
+     * {@code activityObject}.
+     * <p>
+     * The returned {@see LikeStatus} will have the information about the like /
+     * dislike status of the {@code username}.
+     */
+    LikeStatus getLikeStatus(String username, String activityObject);
+
+    /**
+     * Convenient method to return the {@see LikeStatus} for the
+     * {@code username} and a {@see DocumentModel}.
+     *
+     * @see LikeService#getLikeStatus(String, String)
+     */
+    LikeStatus getLikeStatus(String username, DocumentModel doc);
+
+}

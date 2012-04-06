@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 1
+Bundle-Name: Nuxeo Rating Gadget
+Bundle-SymbolicName: org.nuxeo.ecm.rating.gadget;singleton:=true
+Bundle-Vendor: Nuxeo
+Bundle-Version: 1.0.0
+Nuxeo-Component: OSGI-INF/gadgets-contrib.xml,
+ OSGI-INF/theme-contrib.xml
