@@ -72,19 +72,9 @@ public class GetLikeStatus {
                     "'document' or 'activityObject' parameter must be set.");
         }
 
-        JSONObject json = toJSON(status);
+        JSONObject json = new JSONObject(status.toMap());
         return new InputStreamBlob(new ByteArrayInputStream(
                 json.toString().getBytes("UTF-8")), "application/json");
-    }
-
-    private static JSONObject toJSON(LikeStatus status) throws JSONException {
-        JSONObject object = new JSONObject();
-        object.put("activityObject", status.activityObject);
-        object.put("likesCount", status.likesCount);
-        object.put("dislikesCount", status.dislikesCount);
-        object.put("username", status.username);
-        object.put("userLikeStatus", status.userLikeStatus);
-        return object;
     }
 
 }

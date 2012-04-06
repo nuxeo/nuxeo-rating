@@ -17,6 +17,10 @@
 
 package org.nuxeo.ecm.rating.api;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * An object storing the like / dislike status of an activity object.
  * <p>
@@ -60,7 +64,7 @@ public class LikeStatus {
     public final int userLikeStatus;
 
     /**
-     * Create a {@code LikeStatus} with the like status for the specified
+     * Creates a {@code LikeStatus} with the like status for the specified
      * {@code username}.
      *
      * @param activityObject the activity object for which this
@@ -90,6 +94,19 @@ public class LikeStatus {
      */
     public LikeStatus(String activityObject, long likesCount, long dislikesCount) {
         this(activityObject, likesCount, dislikesCount, null, UNKNOWN);
+    }
+
+    /**
+     * Returns a {@code Map} of attributes for this {@code LikeStatus}.
+     */
+    public Map<String, Serializable> toMap() {
+        Map<String, Serializable> map = new HashMap<String, Serializable>();
+        map.put("activityObject", activityObject);
+        map.put("likesCount", likesCount);
+        map.put("dislikesCount", dislikesCount);
+        map.put("username", username);
+        map.put("userLikeStatus", userLikeStatus);
+        return map;
     }
 
 }
