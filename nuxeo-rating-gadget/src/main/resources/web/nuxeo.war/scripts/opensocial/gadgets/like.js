@@ -9,7 +9,7 @@
   };
 
   var docId = prefs.getString("docId") || "";
-  var activityObject = prefs.getString("activityObject") || "";
+  var activityId = prefs.getString("activityId") || "";
 
   var likeStatus;
 
@@ -21,7 +21,7 @@
     var NXRequestParams= { operationId : Constants.getLikeStatusOperationId,
       operationParams: {
         document: docId,
-        activityObject: activityObject
+        activityId: activityId
       },
       operationContext: {},
       operationCallback: storeLikeStatus
@@ -68,7 +68,7 @@
       var NXRequestParams= { operationId : operationId,
         operationParams: {
           document: docId,
-          activityObject: activityObject
+          activityId: activityId
         },
         operationContext: {},
         operationCallback: storeLikeStatus

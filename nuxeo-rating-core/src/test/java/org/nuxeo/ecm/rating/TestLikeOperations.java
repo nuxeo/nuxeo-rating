@@ -99,7 +99,8 @@ public class TestLikeOperations extends AbstractRatingTest {
 
     @Test
     public void shouldReturnLikeStatusForAnActivityObject() throws Exception {
-        String activityObject = ActivityHelper.createActivityObject(15L);
+        Long activityId = 15L;
+        String activityObject = ActivityHelper.createActivityObject(activityId);
 
         likeService.like("bender", activityObject);
         likeService.like("leela", activityObject);
@@ -109,7 +110,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertNotNull(ctx);
 
         OperationChain chain = new OperationChain("testLikeOperation");
-        chain.add(GetLikeStatus.ID).set("activityObject", activityObject);
+        chain.add(GetLikeStatus.ID).set("activityId", String.valueOf(activityId));
         Blob result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         String json = result.getString();
@@ -186,7 +187,8 @@ public class TestLikeOperations extends AbstractRatingTest {
 
     @Test
     public void shouldLikeAnActivityObject() throws Exception {
-        String activityObject = ActivityHelper.createActivityObject(15L);
+        Long activityId = 15L;
+        String activityObject = ActivityHelper.createActivityObject(activityId);
 
         likeService.like("bender", activityObject);
         likeService.like("leela", activityObject);
@@ -196,7 +198,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertNotNull(ctx);
 
         OperationChain chain = new OperationChain("testLikeOperation");
-        chain.add(GetLikeStatus.ID).set("activityObject", activityObject);
+        chain.add(GetLikeStatus.ID).set("activityId", String.valueOf(activityId));
         Blob result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         String json = result.getString();
@@ -209,7 +211,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertEquals(0, object.getInt("userLikeStatus"));
 
         chain = new OperationChain("testLikeOperation");
-        chain.add(Like.ID).set("activityObject", activityObject);
+        chain.add(Like.ID).set("activityId", String.valueOf(activityId));
         result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         json = result.getString();
@@ -276,7 +278,8 @@ public class TestLikeOperations extends AbstractRatingTest {
 
     @Test
     public void shouldCancelLikeOnAnActivityObject() throws Exception {
-        String activityObject = ActivityHelper.createActivityObject(15L);
+        Long activityId = 15L;
+        String activityObject = ActivityHelper.createActivityObject(activityId);
 
         likeService.like("bender", activityObject);
         likeService.like("leela", activityObject);
@@ -287,7 +290,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertNotNull(ctx);
 
         OperationChain chain = new OperationChain("testLikeOperation");
-        chain.add(GetLikeStatus.ID).set("activityObject", activityObject);
+        chain.add(GetLikeStatus.ID).set("activityId", String.valueOf(activityId));
         Blob result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         String json = result.getString();
@@ -300,7 +303,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertEquals(1, object.getInt("userLikeStatus"));
 
         chain = new OperationChain("testLikeOperation");
-        chain.add(CancelLike.ID).set("activityObject", activityObject);
+        chain.add(CancelLike.ID).set("activityId", String.valueOf(activityId));
         result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         json = result.getString();

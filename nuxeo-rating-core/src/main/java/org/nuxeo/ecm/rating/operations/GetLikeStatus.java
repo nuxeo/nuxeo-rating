@@ -19,8 +19,8 @@ package org.nuxeo.ecm.rating.operations;
 
 import java.io.ByteArrayInputStream;
 
-import org.json.JSONException;
 import org.json.JSONObject;
+import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.automation.OperationException;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
@@ -56,8 +56,8 @@ public class GetLikeStatus {
     @Param(name = "document", required = false)
     protected DocumentModel doc;
 
-    @Param(name = "activityObject", required = false)
-    protected String activityObject;
+    @Param(name = "activityId", required = false)
+    protected String activityId;
 
     @OperationMethod
     public Blob run() throws Exception {
@@ -65,11 +65,12 @@ public class GetLikeStatus {
         LikeStatus status;
         if (doc != null) {
             status = likeService.getLikeStatus(username, doc);
-        } else if (activityObject != null) {
+        } else if (activityId != null) {
+            String activityObject = ActivityHelper.createActivityObject(activityId);
             status = likeService.getLikeStatus(username, activityObject);
         } else {
             throw new OperationException(
-                    "'document' or 'activityObject' parameter must be set.");
+                    "'document' or 'activityId' parameter must be set.");
         }
 
         JSONObject json = new JSONObject(status.toMap());

@@ -22,6 +22,9 @@ import static org.nuxeo.ecm.rating.api.LikeStatus.DISLIKED;
 import static org.nuxeo.ecm.rating.api.LikeStatus.LIKED;
 import static org.nuxeo.ecm.rating.api.LikeStatus.UNKNOWN;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.rating.api.LikeService;

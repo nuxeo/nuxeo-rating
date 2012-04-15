@@ -17,6 +17,8 @@
 
 package org.nuxeo.ecm.rating.api;
 
+import java.util.List;
+
 import org.nuxeo.ecm.core.api.DocumentModel;
 
 /**
