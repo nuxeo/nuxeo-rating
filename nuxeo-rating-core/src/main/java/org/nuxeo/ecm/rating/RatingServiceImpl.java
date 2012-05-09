@@ -28,7 +28,7 @@ import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATI
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATINGS_FOR_OBJECT;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.RATING_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.TARGET_OBJECT_PARAMETER;
-import static org.nuxeo.ecm.rating.api.Constants.RATING_VERB_SUFFIX;
+import static org.nuxeo.ecm.rating.api.Constants.RATING_VERB_PREFIX;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -64,7 +64,7 @@ public class RatingServiceImpl extends DefaultComponent implements
     public void rate(String username, int rating, String activityObject,
             String aspect) {
         Activity activity = new ActivityBuilder().verb(
-                RATING_VERB_SUFFIX + aspect).actor(
+                RATING_VERB_PREFIX + aspect).actor(
                 ActivityHelper.createUserActivityObject(username)).target(
                 activityObject).object(String.valueOf(rating)).build();
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);

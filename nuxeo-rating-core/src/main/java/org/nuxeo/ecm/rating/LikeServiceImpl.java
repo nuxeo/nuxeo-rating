@@ -17,15 +17,29 @@
 
 package org.nuxeo.ecm.rating;
 
+import static org.nuxeo.ecm.core.api.security.SecurityConstants.READ;
 import static org.nuxeo.ecm.rating.api.Constants.LIKE_ASPECT;
 import static org.nuxeo.ecm.rating.api.LikeStatus.DISLIKED;
 import static org.nuxeo.ecm.rating.api.LikeStatus.LIKED;
 import static org.nuxeo.ecm.rating.api.LikeStatus.UNKNOWN;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.nuxeo.ecm.activity.ActivitiesList;
+import org.nuxeo.ecm.activity.Activity;
 import org.nuxeo.ecm.activity.ActivityHelper;
+import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.rating.api.LikeService;
 import org.nuxeo.ecm.rating.api.LikeStatus;
 import org.nuxeo.ecm.rating.api.RatingService;
@@ -51,7 +65,6 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
         RatingService ratingService = Framework.getLocalService(RatingService.class);
         ratingService.cancelRate(username, activityObject, LIKE_ASPECT);
         ratingService.rate(username, LIKE_RATING, activityObject, LIKE_ASPECT);
-
     }
 
     @Override
@@ -164,4 +177,72 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
                 ActivityHelper.createDocumentActivityObject(doc));
     }
 
+    @Override
+    public Map<DocumentModel, Integer> getMostLikedDocuments(
+            CoreSession session, int limit, DocumentModel source)
+            throws ClientException {
+        if (session == null) {
+            throw new ClientException("Passed session is null");
+        }
+        RatingService ratingService = Framework.getLocalService(RatingService.class);
+
+        ActivitiesList rated = ratingService.getRatedChildren(
+                ActivityHelper.createDocumentActivityObject(source),
+                LIKE_RATING, LIKE_ASPECT);
+        Map<DocumentModel, Integer> ret = new LinkedHashMap<DocumentModel, Integer>();
+        for (DocIdWithRate docIdRate : getSortedDocIdRated(rated)) {
+            if (ret.size() >= limit) {
+                break;
+            }
+
+            IdRef id = new IdRef(docIdRate.docId);
+            if (session.hasPermission(id, READ)) {
+                ret.put(session.getDocument(id), docIdRate.rate);
+            }
+        }
+        return ret;
+    }
+
+    protected Set<DocIdWithRate> getSortedDocIdRated(ActivitiesList rated) {
+        Map<String, DocIdWithRate> docMap = new HashMap<String, DocIdWithRate>();
+        for (Activity activity : rated) {
+            String docId = ActivityHelper.getDocumentId(activity.getTarget());
+            if (!docMap.containsKey(docId)) {
+                docMap.put(docId, new DocIdWithRate(docId));
+            }
+            docMap.get(docId).addRate(Integer.parseInt(activity.getObject()));
+        }
+
+        return new TreeSet<DocIdWithRate>(docMap.values());
+    }
+
+    protected class DocIdWithRate implements Comparable<DocIdWithRate> {
+        protected String docId;
+
+        protected int rate = 0;
+
+        public DocIdWithRate(String docId) {
+            this.docId = docId;
+        }
+
+        public void addRate(int aRate) {
+            rate += aRate;
+        }
+
+        @Override
+        public int compareTo(DocIdWithRate o) {
+            return (rate > o.rate ? -1
+                    : (rate == o.rate ? docId.compareTo(o.docId) : 1));
+        }
+
+        @Override
+        public int hashCode() {
+            return HashCodeBuilder.reflectionHashCode(this);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return EqualsBuilder.reflectionEquals(this, obj);
+        }
+    }
 }

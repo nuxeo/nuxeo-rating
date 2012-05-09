@@ -17,7 +17,7 @@
 
 package org.nuxeo.ecm.rating;
 
-import static org.nuxeo.ecm.rating.api.Constants.RATING_VERB_SUFFIX;
+import static org.nuxeo.ecm.rating.api.Constants.RATING_VERB_PREFIX;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -70,7 +70,7 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
     @Override
     public boolean isInterestedIn(Activity activity) {
         String verb = activity.getVerb();
-        return verb != null && verb.startsWith(RATING_VERB_SUFFIX);
+        return verb != null && verb.startsWith(RATING_VERB_PREFIX);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
                 sb.append(" and activity.object = :rating");
             }
             query = em.createQuery(sb.toString());
-            query.setParameter("verb", RATING_VERB_SUFFIX + aspect);
+            query.setParameter("verb", RATING_VERB_PREFIX + aspect);
             query.setParameter(TARGET_OBJECT_PARAMETER, targetObject);
             query.setParameter(ACTOR_PARAMETER, actor);
             if (rating != null) {
@@ -125,7 +125,7 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
                 sb.append(" and activity.object = :rating");
             }
             query = em.createQuery(sb.toString());
-            query.setParameter("verb", RATING_VERB_SUFFIX + aspect);
+            query.setParameter("verb", RATING_VERB_PREFIX + aspect);
             query.setParameter(TARGET_OBJECT_PARAMETER, targetObject);
             if (rating != null) {
                 query.setParameter(RATING_PARAMETER, String.valueOf(rating));
@@ -138,7 +138,7 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
                 sb.append(" and activity.object = :rating");
             }
             query = em.createQuery(sb.toString());
-            query.setParameter("verb", RATING_VERB_SUFFIX + aspect);
+            query.setParameter("verb", RATING_VERB_PREFIX + aspect);
             query.setParameter(CONTEXT_PARAMETER, context);
             if (rating != null) {
                 query.setParameter(RATING_PARAMETER, String.valueOf(rating));
@@ -151,7 +151,7 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
                 sb.append(" and activity.object = :rating");
             }
             query = em.createQuery(sb.toString());
-            query.setParameter("verb", RATING_VERB_SUFFIX + aspect);
+            query.setParameter("verb", RATING_VERB_PREFIX + aspect);
             query.setParameter(TARGET_OBJECT_PARAMETER, targetObject);
             query.setParameter(ACTOR_PARAMETER, actor);
             if (rating != null) {

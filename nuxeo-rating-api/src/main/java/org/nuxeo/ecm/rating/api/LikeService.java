@@ -17,13 +17,15 @@
 
 package org.nuxeo.ecm.rating.api;
 
-import java.util.List;
+import java.util.Map;
 
+import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
 /**
  * Service handling likes / dislikes on documents, or any other activity object.
- *
+ * 
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
  */
@@ -36,7 +38,7 @@ public interface LikeService {
 
     /**
      * Convenient method to like a {@link DocumentModel}.
-     *
+     * 
      * @see LikeService#like(String, String)
      */
     void like(String username, DocumentModel doc);
@@ -60,7 +62,7 @@ public interface LikeService {
 
     /**
      * Convenient method to returns the likes count for a {@link DocumentModel}.
-     *
+     * 
      * @see LikeService#getLikesCount(String)
      */
     long getLikesCount(DocumentModel doc);
@@ -72,7 +74,7 @@ public interface LikeService {
 
     /**
      * Convenient method to dislike a {@see DocumentModel}.
-     *
+     * 
      * @see LikeService#dislike(String, String)
      */
     void dislike(String username, DocumentModel doc);
@@ -97,14 +99,14 @@ public interface LikeService {
     /**
      * Convenient method to returns the dislikes count for a
      * {@link DocumentModel}.
-     *
+     * 
      * @see LikeService#getDislikesCount(String)
      */
     long getDislikesCount(DocumentModel doc);
 
     /**
      * Cancel a like or dislike for the given {@code username}.
-     *
+     * 
      * @param username the username
      * @param activityObject the activity object on which to cancel the like or
      *            dislike.
@@ -113,7 +115,7 @@ public interface LikeService {
 
     /**
      * Convenient method to cancel a like or dislike on a {@see DocumentModel}.
-     *
+     * 
      * @see LikeService#cancel(String, String)
      */
     void cancel(String username, DocumentModel doc);
@@ -126,7 +128,7 @@ public interface LikeService {
     /**
      * Convenient method to return the {@see LikeStatus} for a {@see
      * DocumentModel}.
-     *
+     * 
      * @see LikeService#getLikeStatus(String)
      */
     LikeStatus getLikeStatus(DocumentModel doc);
@@ -143,9 +145,18 @@ public interface LikeService {
     /**
      * Convenient method to return the {@see LikeStatus} for the
      * {@code username} and a {@see DocumentModel}.
-     *
+     * 
      * @see LikeService#getLikeStatus(String, String)
      */
     LikeStatus getLikeStatus(String username, DocumentModel doc);
 
+    /**
+     * Returns a map containing a DocumentModel attached to @{code session} with
+     * at least Read permission from the @{reference} parent Super Space
+     *
+     * @param limit maximum documents returned
+     * @param source the parent document when child will be reached
+     */
+    Map<DocumentModel, Integer> getMostLikedDocuments(CoreSession session,
+                                                      int limit, DocumentModel source) throws ClientException;
 }

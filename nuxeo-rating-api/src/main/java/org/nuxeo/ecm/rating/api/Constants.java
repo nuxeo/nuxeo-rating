@@ -30,7 +30,7 @@ public class Constants {
     }
 
     // Activity stream
-    public static final String RATING_VERB_SUFFIX = "rating:";
+    public static final String RATING_VERB_PREFIX = "rating:";
 
     public static final String LIKE_ASPECT = "like";
 
