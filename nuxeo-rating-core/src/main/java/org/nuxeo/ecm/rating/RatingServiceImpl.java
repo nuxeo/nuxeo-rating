@@ -17,10 +17,13 @@
 
 package org.nuxeo.ecm.rating;
 
+import static org.nuxeo.ecm.core.schema.FacetNames.SUPER_SPACE;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.ACTOR_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.ASPECT_PARAMETER;
+import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.CONTEXT_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QUERY_TYPE_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_ACTOR_RATINGS_FOR_OBJECT;
+import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATED_CHILDREN_FOR_CONTEXT;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATINGS_FOR_OBJECT;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.RATING_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.TARGET_OBJECT_PARAMETER;
@@ -37,13 +40,17 @@ import org.nuxeo.ecm.activity.Activity;
 import org.nuxeo.ecm.activity.ActivityBuilder;
 import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.activity.ActivityStreamService;
+import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.IdRef;
+import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
 import org.nuxeo.ecm.rating.api.RatingService;
 import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.model.DefaultComponent;
 
 /**
  * Default implementation of {@see RatingService}.
- *
+ * 
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
  */
@@ -61,6 +68,8 @@ public class RatingServiceImpl extends DefaultComponent implements
                 activityObject).object(String.valueOf(rating)).build();
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
         activityStreamService.addActivity(activity);
+
+        addSuperSpaceRate(activity);
     }
 
     @Override
@@ -183,6 +192,19 @@ public class RatingServiceImpl extends DefaultComponent implements
         return computeAverage(activities);
     }
 
+    @Override
+    public ActivitiesList getRatedChildren(String activityObject, int rating, String aspect) {
+        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        parameters.put(QUERY_TYPE_PARAMETER, GET_RATED_CHILDREN_FOR_CONTEXT);
+        parameters.put(CONTEXT_PARAMETER, activityObject);
+        parameters.put(ASPECT_PARAMETER, aspect);
+        parameters.put(RATING_PARAMETER, rating);
+
+        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        return activityStreamService.query(RatingActivityStreamFilter.ID,
+                parameters);
+    }
+
     private double computeAverage(ActivitiesList activities) {
         double average = 0;
         for (Activity activity : activities) {
@@ -193,5 +215,37 @@ public class RatingServiceImpl extends DefaultComponent implements
             }
         }
         return average / activities.size();
+    }
+
+    protected void addSuperSpaceRate(final Activity fromActivity) {
+        final String activityObject = fromActivity.getTarget();
+        if (!ActivityHelper.isDocument(activityObject)) {
+            return;
+        }
+
+        final ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        try {
+
+            new UnrestrictedSessionRunner(
+                    ActivityHelper.getRepositoryName(activityObject)) {
+                @Override
+                public void run() throws ClientException {
+                    IdRef docId = new IdRef(
+                            ActivityHelper.getDocumentId(activityObject));
+                    for (DocumentModel parent : session.getParentDocuments(docId)) {
+                        if (!parent.hasFacet(SUPER_SPACE)) {
+                            continue;
+                        }
+
+                        Activity activity = new ActivityBuilder(fromActivity).context(
+                                ActivityHelper.createDocumentActivityObject(parent)).build();
+                        activityStreamService.addActivity(activity);
+                    }
+                }
+            }.runUnrestricted();
+        } catch (ClientException e) {
+            log.info("Unable to found SuperSpaces for recomputing their rates",
+                    e);
+        }
     }
 }

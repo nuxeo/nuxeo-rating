@@ -22,9 +22,8 @@ import static org.nuxeo.ecm.rating.api.LikeStatus.DISLIKED;
 import static org.nuxeo.ecm.rating.api.LikeStatus.LIKED;
 import static org.nuxeo.ecm.rating.api.LikeStatus.UNKNOWN;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.rating.api.LikeService;
@@ -35,11 +34,13 @@ import org.nuxeo.runtime.model.DefaultComponent;
 
 /**
  * Default implementation of {@see LikeService}.
- *
+ * 
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
  */
 public class LikeServiceImpl extends DefaultComponent implements LikeService {
+
+    private static final Log log = LogFactory.getLog(LikeServiceImpl.class);
 
     public static final int LIKE_RATING = 1;
 
@@ -50,6 +51,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
         RatingService ratingService = Framework.getLocalService(RatingService.class);
         ratingService.cancelRate(username, activityObject, LIKE_ASPECT);
         ratingService.rate(username, LIKE_RATING, activityObject, LIKE_ASPECT);
+
     }
 
     @Override

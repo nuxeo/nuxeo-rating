@@ -1,11 +1,13 @@
 package org.nuxeo.ecm.rating.api;
 
+import org.nuxeo.ecm.activity.ActivitiesList;
+
 /**
  * Service handling rating on activity objects.
  * <p>
  * The same activity object can handle multiple ratings by using different
  * {@code aspect}s.
- *
+ * 
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
  */
@@ -13,7 +15,7 @@ public interface RatingService {
 
     /**
      * Rates the {@code activityObject} by the {@code username}.
-     *
+     * 
      * @param rating the rating
      * @param aspect the rating aspect
      */
@@ -21,7 +23,7 @@ public interface RatingService {
 
     /**
      * Cancels a rate by the {@code username}.
-     *
+     * 
      * @param activityObject the activity object on which cancelling the rate
      * @param aspect the rating aspect
      */
@@ -73,4 +75,12 @@ public interface RatingService {
      */
     double getAverageRatingForUser(String username, String activityObject,
             String aspect);
+
+    /**
+     * Returns the list of their rated children
+     * {@code activityObject} on the given {@code aspect} with {@code rating}.
+     *
+     * @return a List of activityObject
+     */
+    ActivitiesList getRatedChildren(String activityObject, int rating, String aspect);
 }

@@ -38,7 +38,7 @@ import org.nuxeo.ecm.activity.ActivityStreamServiceImpl;
  * <p>
  * The different queries this filter can handle are defined in the
  * {@link QueryType} enum.
- *
+ * 
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
  */
@@ -47,7 +47,7 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
     public static final String ID = "RatingActivityStreamFilter";
 
     public enum QueryType {
-        GET_ACTOR_RATINGS_FOR_OBJECT, GET_RATINGS_FOR_OBJECT
+        GET_ACTOR_RATINGS_FOR_OBJECT, GET_RATINGS_FOR_OBJECT, GET_RATED_CHILDREN_FOR_CONTEXT
     }
 
     public static final String QUERY_TYPE_PARAMETER = "queryTypeParameter";
@@ -59,6 +59,8 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
     public static final String ACTOR_PARAMETER = "actor";
 
     public static final String RATING_PARAMETER = "rating";
+
+    public static final String CONTEXT_PARAMETER = "context";
 
     @Override
     public String getId() {
@@ -100,10 +102,11 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
         String aspect = (String) parameters.get(ASPECT_PARAMETER);
         String actor = (String) parameters.get(ACTOR_PARAMETER);
         Integer rating = (Integer) parameters.get(RATING_PARAMETER);
+        String context = (String) parameters.get(CONTEXT_PARAMETER);
         switch (queryType) {
         case GET_ACTOR_RATINGS_FOR_OBJECT:
             sb = new StringBuilder(
-                    "select activity from Activity activity where activity.verb = :verb and activity.actor = :actor and activity.target = :targetObject");
+                    "select activity from Activity activity where activity.verb = :verb and activity.actor = :actor and activity.target = :targetObject and activity.context is null");
             if (rating != null) {
                 sb.append(" and activity.object = :rating");
             }
@@ -117,13 +120,26 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
             break;
         case GET_RATINGS_FOR_OBJECT:
             sb = new StringBuilder(
-                    "select activity from Activity activity where activity.verb = :verb and activity.target = :targetObject");
+                    "select activity from Activity activity where activity.verb = :verb and activity.target = :targetObject and activity.context is null");
             if (rating != null) {
                 sb.append(" and activity.object = :rating");
             }
             query = em.createQuery(sb.toString());
             query.setParameter("verb", RATING_VERB_SUFFIX + aspect);
             query.setParameter(TARGET_OBJECT_PARAMETER, targetObject);
+            if (rating != null) {
+                query.setParameter(RATING_PARAMETER, String.valueOf(rating));
+            }
+            break;
+        case GET_RATED_CHILDREN_FOR_CONTEXT:
+            sb = new StringBuilder(
+                    "select activity from Activity activity where activity.verb = :verb and activity.context  = :context");
+            if (rating != null) {
+                sb.append(" and activity.object = :rating");
+            }
+            query = em.createQuery(sb.toString());
+            query.setParameter("verb", RATING_VERB_SUFFIX + aspect);
+            query.setParameter(CONTEXT_PARAMETER, context);
             if (rating != null) {
                 query.setParameter(RATING_PARAMETER, String.valueOf(rating));
             }
@@ -138,5 +154,4 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
         }
         return new ActivitiesListImpl(query.getResultList());
     }
-
 }

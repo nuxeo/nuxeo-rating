@@ -22,6 +22,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.nuxeo.ecm.activity.ActivityHelper.createDocumentActivityObject;
+import static org.nuxeo.ecm.rating.LikeServiceImpl.LIKE_RATING;
+import static org.nuxeo.ecm.rating.api.Constants.LIKE_ASPECT;
 
 import java.io.IOException;
 
@@ -29,6 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.test.CoreFeature;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
@@ -184,4 +188,45 @@ public class TestLikeService extends AbstractRatingTest {
         assertEquals(LikeStatus.UNKNOWN, likeStatus.userLikeStatus);
     }
 
+    @Test
+    public void shouldHandleSuperSpaceCount() throws ClientException {
+        initWithDefaultRepository();
+
+        DocumentModel folder = session.createDocumentModel(
+                "/default-domain/workspaces/", "folder", "Folder");
+        folder = session.createDocument(folder);
+        session.save();
+
+        DocumentModel testDoc = createTestDocument("myDoc",
+                "/default-domain/workspaces/folder");
+        DocumentModel defaultDomain = session.getDocument(new PathRef(
+                "/default-domain"));
+        DocumentModel workspaces = session.getDocument(new PathRef(
+                "/default-domain/workspaces"));
+
+        likeService.like("robin", testDoc);
+        likeService.like("barney", testDoc);
+        likeService.dislike("Ted", testDoc);
+
+        assertEquals(3, ratingService.getRatesCount(
+                createDocumentActivityObject(testDoc), LIKE_ASPECT));
+
+        // Only on SuperSpace
+        assertEquals(
+                0,
+                ratingService.getRatedChildren(
+                        createDocumentActivityObject(folder), LIKE_RATING,
+                        LIKE_ASPECT).size());
+
+        assertEquals(
+                2,
+                ratingService.getRatedChildren(
+                        createDocumentActivityObject(defaultDomain),
+                        LIKE_RATING, LIKE_ASPECT).size());
+        assertEquals(
+                2,
+                ratingService.getRatedChildren(
+                        createDocumentActivityObject(workspaces), LIKE_RATING,
+                        LIKE_ASPECT).size());
+    }
 }

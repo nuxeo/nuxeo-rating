@@ -20,6 +20,7 @@ package org.nuxeo.ecm.rating;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import com.google.inject.Inject;
 import org.junit.Before;
 import org.nuxeo.ecm.activity.ActivityStreamService;
 import org.nuxeo.ecm.activity.ActivityStreamServiceImpl;
@@ -30,15 +31,14 @@ import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.ecm.core.event.EventServiceAdmin;
 import org.nuxeo.ecm.core.persistence.PersistenceProvider;
 import org.nuxeo.ecm.core.test.CoreFeature;
+import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
 import org.nuxeo.ecm.rating.api.LikeService;
 import org.nuxeo.ecm.rating.api.RatingService;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
-import com.google.inject.Inject;
-
 /**
- *
- *
+ * 
+ * 
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
  */
@@ -84,7 +84,12 @@ public abstract class AbstractRatingTest {
 
     protected DocumentModel createTestDocument(String name)
             throws ClientException {
-        DocumentModel doc = session.createDocumentModel("/", name, "File");
+        return createTestDocument(name, "/");
+    }
+
+    protected DocumentModel createTestDocument(String name, String path)
+            throws ClientException {
+        DocumentModel doc = session.createDocumentModel(path, name, "File");
         doc.setProperty("dublincore", "title", name);
         doc = session.createDocument(doc);
         session.saveDocument(doc);
@@ -96,6 +101,11 @@ public abstract class AbstractRatingTest {
         CoreFeature coreFeature = featuresRunner.getFeature(CoreFeature.class);
         return coreFeature.getRepository().getRepositoryHandler().openSessionAs(
                 username);
+    }
+
+    protected void initWithDefaultRepository() throws ClientException {
+        new DefaultRepositoryInit().populate(session);
+        session.save();
     }
 
 }
