@@ -228,5 +228,15 @@ public class TestLikeService extends AbstractRatingTest {
                 ratingService.getRatedChildren(
                         createDocumentActivityObject(workspaces), LIKE_RATING,
                         LIKE_ASPECT).size());
+
+        // All activities correctly removed
+        likeService.cancel("robin", testDoc);
+        assertEquals(2, ratingService.getRatesCount(
+                createDocumentActivityObject(testDoc), LIKE_ASPECT));
+        assertEquals(
+                1,
+                ratingService.getRatedChildren(
+                        createDocumentActivityObject(defaultDomain),
+                        LIKE_RATING, LIKE_ASPECT).size());
     }
 }

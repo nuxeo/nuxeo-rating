@@ -24,6 +24,7 @@ import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.CONTEXT_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QUERY_TYPE_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_ACTOR_RATINGS_FOR_OBJECT;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATED_CHILDREN_FOR_CONTEXT;
+import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATINGS_FOR_CANCEL;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATINGS_FOR_OBJECT;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.RATING_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.TARGET_OBJECT_PARAMETER;
@@ -75,7 +76,7 @@ public class RatingServiceImpl extends DefaultComponent implements
     @Override
     public void cancelRate(String username, String activityObject, String aspect) {
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
-        parameters.put(QUERY_TYPE_PARAMETER, GET_ACTOR_RATINGS_FOR_OBJECT);
+        parameters.put(QUERY_TYPE_PARAMETER, GET_RATINGS_FOR_CANCEL);
         parameters.put(ACTOR_PARAMETER,
                 ActivityHelper.createUserActivityObject(username));
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
@@ -193,7 +194,8 @@ public class RatingServiceImpl extends DefaultComponent implements
     }
 
     @Override
-    public ActivitiesList getRatedChildren(String activityObject, int rating, String aspect) {
+    public ActivitiesList getRatedChildren(String activityObject, int rating,
+            String aspect) {
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_RATED_CHILDREN_FOR_CONTEXT);
         parameters.put(CONTEXT_PARAMETER, activityObject);

@@ -47,7 +47,7 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
     public static final String ID = "RatingActivityStreamFilter";
 
     public enum QueryType {
-        GET_ACTOR_RATINGS_FOR_OBJECT, GET_RATINGS_FOR_OBJECT, GET_RATED_CHILDREN_FOR_CONTEXT
+        GET_ACTOR_RATINGS_FOR_OBJECT, GET_RATINGS_FOR_OBJECT, GET_RATED_CHILDREN_FOR_CONTEXT, GET_RATINGS_FOR_CANCEL
     }
 
     public static final String QUERY_TYPE_PARAMETER = "queryTypeParameter";
@@ -140,6 +140,20 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
             query = em.createQuery(sb.toString());
             query.setParameter("verb", RATING_VERB_SUFFIX + aspect);
             query.setParameter(CONTEXT_PARAMETER, context);
+            if (rating != null) {
+                query.setParameter(RATING_PARAMETER, String.valueOf(rating));
+            }
+            break;
+        case GET_RATINGS_FOR_CANCEL:
+            sb = new StringBuilder(
+                    "select activity from Activity activity where activity.verb = :verb and activity.actor = :actor and activity.target = :targetObject");
+            if (rating != null) {
+                sb.append(" and activity.object = :rating");
+            }
+            query = em.createQuery(sb.toString());
+            query.setParameter("verb", RATING_VERB_SUFFIX + aspect);
+            query.setParameter(TARGET_OBJECT_PARAMETER, targetObject);
+            query.setParameter(ACTOR_PARAMETER, actor);
             if (rating != null) {
                 query.setParameter(RATING_PARAMETER, String.valueOf(rating));
             }
