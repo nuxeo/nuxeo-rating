@@ -12,6 +12,8 @@
       class="org.nuxeo.ecm.rating.operations.Like" />
     <operation
       class="org.nuxeo.ecm.rating.operations.CancelLike" />
+    <operation
+      class="org.nuxeo.ecm.rating.operations.MostLiked" />
 
   </extension>
 

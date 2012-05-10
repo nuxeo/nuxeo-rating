@@ -20,8 +20,9 @@ package org.nuxeo.ecm.rating;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.google.inject.Inject;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.activity.ActivityHelper;
@@ -29,7 +30,6 @@ import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationChain;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.core.api.Blob;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.test.CoreFeature;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
@@ -37,12 +37,11 @@ import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.rating.operations.CancelLike;
 import org.nuxeo.ecm.rating.operations.GetLikeStatus;
 import org.nuxeo.ecm.rating.operations.Like;
+import org.nuxeo.ecm.rating.operations.MostLiked;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 import org.nuxeo.runtime.test.runner.LocalDeploy;
-
-import com.google.inject.Inject;
 
 /**
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
@@ -110,7 +109,8 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertNotNull(ctx);
 
         OperationChain chain = new OperationChain("testLikeOperation");
-        chain.add(GetLikeStatus.ID).set("activityId", String.valueOf(activityId));
+        chain.add(GetLikeStatus.ID).set("activityId",
+                String.valueOf(activityId));
         Blob result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         String json = result.getString();
@@ -198,7 +198,8 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertNotNull(ctx);
 
         OperationChain chain = new OperationChain("testLikeOperation");
-        chain.add(GetLikeStatus.ID).set("activityId", String.valueOf(activityId));
+        chain.add(GetLikeStatus.ID).set("activityId",
+                String.valueOf(activityId));
         Blob result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         String json = result.getString();
@@ -290,7 +291,8 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertNotNull(ctx);
 
         OperationChain chain = new OperationChain("testLikeOperation");
-        chain.add(GetLikeStatus.ID).set("activityId", String.valueOf(activityId));
+        chain.add(GetLikeStatus.ID).set("activityId",
+                String.valueOf(activityId));
         Blob result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         String json = result.getString();
@@ -314,5 +316,39 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertEquals(1, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
         assertEquals(0, object.getInt("userLikeStatus"));
+    }
+
+    @Test
+    public void shouldReturnMostLikedDocumentAsJson() throws Exception {
+        initWithDefaultRepository();
+
+        DocumentModel myDoc = createTestDocument("test",
+                "/default-domain/workspaces/test");
+        likeService.like("Robin", myDoc);
+        likeService.like("Barney", myDoc);
+
+        DocumentModel test2 = createTestDocument("test2",
+                "/default-domain/workspaces/test");
+        likeService.like("Robin", test2);
+
+        OperationContext ctx = new OperationContext(session);
+        assertNotNull(ctx);
+
+        OperationChain chain = new OperationChain("testLikeOperation");
+        chain.add(MostLiked.ID).set("limit", 5).set("contextPath",
+                "/default-domain/");
+        Blob result = (Blob) service.run(ctx, chain);
+        assertNotNull(result);
+        String json = result.getString();
+        assertNotNull(json);
+
+        JSONObject object = JSONObject.fromObject(json);
+        JSONArray items = object.getJSONArray("items");
+        assertEquals(2, items.size());
+
+        JSONObject firstDocRated = items.getJSONObject(0);
+        assertEquals(2, firstDocRated.getInt("rating"));
+        assertEquals(myDoc.getId(),
+                firstDocRated.getJSONObject("document").getString("uid"));
     }
 }
