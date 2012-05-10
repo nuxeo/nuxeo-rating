@@ -17,7 +17,6 @@
 
 package org.nuxeo.ecm.rating;
 
-import static org.nuxeo.ecm.core.api.security.SecurityConstants.READ;
 import static org.nuxeo.ecm.rating.api.Constants.LIKE_ASPECT;
 import static org.nuxeo.ecm.rating.api.LikeStatus.DISLIKED;
 import static org.nuxeo.ecm.rating.api.LikeStatus.LIKED;
@@ -189,6 +188,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
         ActivitiesList rated = ratingService.getRatedChildren(
                 ActivityHelper.createDocumentActivityObject(source),
                 LIKE_RATING, LIKE_ASPECT);
+        rated = rated.filterActivities(session);
         Map<DocumentModel, Integer> ret = new LinkedHashMap<DocumentModel, Integer>();
         for (DocIdWithRate docIdRate : getSortedDocIdRated(rated)) {
             if (ret.size() >= limit) {
@@ -196,9 +196,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
             }
 
             IdRef id = new IdRef(docIdRate.docId);
-            if (session.hasPermission(id, READ)) {
-                ret.put(session.getDocument(id), docIdRate.rate);
-            }
+            ret.put(session.getDocument(id), docIdRate.rate);
         }
         return ret;
     }
