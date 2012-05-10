@@ -10,6 +10,13 @@
       <icon>gadget-like.png</icon>
     </internalGadget>
 
+    <internalGadget name="mostLiked" disabled="false">
+      <mountPoint>/mostLiked</mountPoint>
+      <entryPoint>mostLiked.xml</entryPoint>
+      <category>Nuxeo</category>
+      <icon>gadget-like.png</icon>
+    </internalGadget>
+
   </extension>
 
 </component>

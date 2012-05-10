@@ -62,19 +62,20 @@ public class MostLiked {
             Integer rating = entry.getValue();
 
             OutputStream out = new ByteArrayOutputStream();
-            writeDocument(out, doc, new String[] { "dublincore" });
+            writeDocument(out, doc, new String[] { "dublincore", "common" });
 
             Map<String, Object> value = new HashMap<String, Object>();
             value.put("rating", rating);
             value.put("document", new JSONObject(out.toString()));
             value.put("url", getDocumentUrl(doc.getId()));
+            value.put("hashUserLiked", likeService.hasUserLiked(session.getPrincipal().getName(), doc));
             docsWithRate.add(new JSONObject(value));
         }
 
         Map<String, Object> jsonObj = new HashMap<String, Object>();
         jsonObj.put("items", new JSONArray(docsWithRate));
-        return new InputStreamBlob(new ByteArrayInputStream(
-                jsonObj.toString().getBytes("UTF-8")), "application/json");
+        return new InputStreamBlob(new ByteArrayInputStream(new JSONObject(
+                jsonObj).toString().getBytes("UTF-8")), "application/json");
     }
 
     protected String getDocumentUrl(String documentId) {
