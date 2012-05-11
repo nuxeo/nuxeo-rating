@@ -40,11 +40,9 @@ import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.PathRef;
-import org.nuxeo.ecm.core.test.CoreFeature;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.rating.api.LikeStatus;
-import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 import org.nuxeo.runtime.test.runner.LocalDeploy;
@@ -54,10 +52,8 @@ import org.nuxeo.runtime.test.runner.LocalDeploy;
  * @since 5.6
  */
 @RunWith(FeaturesRunner.class)
-@Features({ CoreFeature.class })
+@Features({ RatingFeature.class })
 @RepositoryConfig(repositoryName = "default", cleanup = Granularity.METHOD)
-@Deploy({ "org.nuxeo.ecm.core.persistence", "org.nuxeo.ecm.activity",
-        "org.nuxeo.ecm.rating.api", "org.nuxeo.ecm.rating.core" })
 @LocalDeploy("org.nuxeo.ecm.rating.core:rating-test.xml")
 public class TestLikeService extends AbstractRatingTest {
 

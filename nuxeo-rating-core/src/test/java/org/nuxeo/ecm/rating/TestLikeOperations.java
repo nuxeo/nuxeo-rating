@@ -31,7 +31,6 @@ import org.nuxeo.ecm.automation.OperationChain;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.test.CoreFeature;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.rating.operations.CancelLike;
@@ -48,11 +47,9 @@ import org.nuxeo.runtime.test.runner.LocalDeploy;
  * @since 5.6
  */
 @RunWith(FeaturesRunner.class)
-@Features(CoreFeature.class)
+@Features(RatingFeature.class)
 @RepositoryConfig(repositoryName = "default", cleanup = Granularity.METHOD)
-@Deploy({ "org.nuxeo.ecm.core.persistence", "org.nuxeo.ecm.activity",
-        "org.nuxeo.ecm.automation.core", "org.nuxeo.ecm.rating.api",
-        "org.nuxeo.ecm.rating.core" })
+@Deploy({"org.nuxeo.ecm.automation.core"})
 @LocalDeploy("org.nuxeo.ecm.rating.core:rating-test.xml")
 public class TestLikeOperations extends AbstractRatingTest {
 
