@@ -30,7 +30,9 @@ import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationChain;
 import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.core.api.Blob;
+import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.rating.operations.CancelLike;
@@ -49,7 +51,7 @@ import org.nuxeo.runtime.test.runner.LocalDeploy;
 @RunWith(FeaturesRunner.class)
 @Features(RatingFeature.class)
 @RepositoryConfig(repositoryName = "default", cleanup = Granularity.METHOD)
-@Deploy({"org.nuxeo.ecm.automation.core"})
+@Deploy({ "org.nuxeo.ecm.automation.core" })
 @LocalDeploy("org.nuxeo.ecm.rating.core:rating-test.xml")
 public class TestLikeOperations extends AbstractRatingTest {
 
@@ -347,5 +349,10 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertEquals(2, firstDocRated.getInt("rating"));
         assertEquals(myDoc.getId(),
                 firstDocRated.getJSONObject("document").getString("uid"));
+    }
+
+    protected void initWithDefaultRepository() throws ClientException {
+        new DefaultRepositoryInit().populate(session);
+        session.save();
     }
 }

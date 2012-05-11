@@ -103,9 +103,4 @@ public abstract class AbstractRatingTest {
                 username);
     }
 
-    protected void initWithDefaultRepository() throws ClientException {
-        new DefaultRepositoryInit().populate(session);
-        session.save();
-    }
-
 }

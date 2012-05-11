@@ -17,9 +17,7 @@
 
 package org.nuxeo.ecm.rating.api;
 
-import java.util.Map;
-
-import org.nuxeo.ecm.core.api.ClientException;
+import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
 
@@ -153,10 +151,10 @@ public interface LikeService {
     /**
      * Returns a map containing a DocumentModel attached to @{code session} with
      * at least Read permission from the @{reference} parent Super Space
-     *
+     * 
      * @param limit maximum documents returned
      * @param source the parent document when child will be reached
      */
-    Map<DocumentModel, Integer> getMostLikedDocuments(CoreSession session,
-                                                      int limit, DocumentModel source) throws ClientException;
+    ActivitiesList getMostLikedDocuments(CoreSession session, int limit,
+            DocumentModel source);
 }

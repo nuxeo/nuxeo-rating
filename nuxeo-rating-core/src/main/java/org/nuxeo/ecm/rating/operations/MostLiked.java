@@ -12,6 +12,9 @@ import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.nuxeo.ecm.activity.ActivitiesList;
+import org.nuxeo.ecm.activity.Activity;
+import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -53,13 +56,15 @@ public class MostLiked {
 
     @OperationMethod
     public Blob run() throws Exception {
-        Map<DocumentModel, Integer> mostLikedDocuments = likeService.getMostLikedDocuments(
+        ActivitiesList mostLikedDocuments = likeService.getMostLikedDocuments(
                 session, limit, session.getDocument(new PathRef(contextPath)));
 
         final List<JSONObject> docsWithRate = new ArrayList<JSONObject>();
-        for (Map.Entry<DocumentModel, Integer> entry : mostLikedDocuments.entrySet()) {
-            DocumentModel doc = entry.getKey();
-            Integer rating = entry.getValue();
+        for (Activity activity : mostLikedDocuments) {
+            DocumentModel doc = session.getDocument(new IdRef(
+                    ActivityHelper.getDocumentId(activity.getTarget())));
+            Integer rating = Integer.valueOf(activity.getObject());
+            Integer hasRated = Integer.valueOf(activity.getContext());
 
             OutputStream out = new ByteArrayOutputStream();
             writeDocument(out, doc, new String[] { "dublincore", "common" });
@@ -68,7 +73,7 @@ public class MostLiked {
             value.put("rating", rating);
             value.put("document", new JSONObject(out.toString()));
             value.put("url", getDocumentUrl(doc.getId()));
-            value.put("hashUserLiked", likeService.hasUserLiked(session.getPrincipal().getName(), doc));
+            value.put("hashUserLiked", hasRated);
             docsWithRate.add(new JSONObject(value));
         }
 

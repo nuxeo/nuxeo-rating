@@ -4,6 +4,7 @@
     point="activityStreamFilters">
 
     <activityStreamFilter class="org.nuxeo.ecm.rating.RatingActivityStreamFilter" />
+    <activityStreamFilter class="org.nuxeo.ecm.rating.LikesCountActivityStreamFilter" />
 
   </extension>
 
