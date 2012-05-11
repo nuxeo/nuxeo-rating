@@ -12,10 +12,12 @@ import java.util.Map;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.activity.ActivitiesList;
+import org.nuxeo.ecm.activity.Activity;
 import org.nuxeo.ecm.activity.ActivityBuilder;
 import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
@@ -183,6 +185,39 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
                     ActivityHelper.createDocumentActivityObject("default",
                             docId)).object("1");
             activities.add(ab.build());
+        }
+    }
+
+    @Test
+    public void shouldEnsureOrderIsRight() throws ClientException {
+        int expected = 75;
+        int limit = 30;
+
+        for (int i = 0; i < expected; i++) {
+            createAndLikeDocs(i);
+        }
+        PathRef testRef = new PathRef("/default-domain/workspaces/test");
+        assertEquals(expected, session.getChildren(testRef).size());
+
+        ActivitiesList docs = likeService.getMostLikedDocuments(session, limit,
+                session.getDocument(testRef));
+        assertEquals(limit, docs.size());
+
+        for (int i = 0; i < limit; i++) {
+            int id = expected - (i + 1);
+            Activity activity = docs.get(i);
+            IdRef docRef = new IdRef(
+                    ActivityHelper.getDocumentId(activity.getTarget()));
+            assertEquals("doc" + id, session.getDocument(docRef).getName());
+            assertEquals(String.valueOf(id), activity.getObject());
+        }
+    }
+
+    protected void createAndLikeDocs(int nb) throws ClientException {
+        DocumentModel doc = createTestDocument("doc" + nb,
+                "/default-domain/workspaces/test");
+        for (int i = 0; i < nb; i++) {
+            likeService.like("user" + i, doc);
         }
     }
 }
