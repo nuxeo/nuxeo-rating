@@ -12,9 +12,9 @@ var prefs = new gadgets.Prefs();
   function displayobjects() {
     var table = jQuery('<table class="dataList"><thead>' + 
       '<th class="iconColumn"></th>' + 
-      '<th>Title</th>' + 
+      '<th>' + prefs.getMsg("label.dublincore.title") + '</th>' +
       '<th>Likes</th>' + 
-      '<th>Creator</th>' + 
+      '<th>' + prefs.getMsg("label.dublincore.creator") + '</th>' +
       '</thead></table>')
 
     for (var i = 0; i < objects.length; i++) {
@@ -51,10 +51,11 @@ var prefs = new gadgets.Prefs();
   }
 
   function loadMostLiked() {
+    var contextPath = getTargetContextPath();
     var NXRequestParams = {
       operationId: Constants.mostLikedOperationId,
       operationParams: {
-        contextPath: "/default-domain",
+        contextPath: contextPath == "/" ? "/default-domain" : contextPath,
         limit: 10
       },
       operationContext: {},
