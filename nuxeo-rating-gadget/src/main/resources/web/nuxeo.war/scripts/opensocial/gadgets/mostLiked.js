@@ -4,18 +4,17 @@ var prefs = new gadgets.Prefs();
 
   var Constants = {
     mostLikedOperationId: 'Services.MostLiked',
+    queryOperationId: 'Document.Query',
     userHasLikedIcon: '/nuxeo/icons/vote_up_active.png',
     likedIcon: '/nuxeo/icons/vote_up_active2.png',
   };
+
   var content;
+  var tools;
+  var contextPath;
 
   function displayobjects() {
-    var table = jQuery('<table class="dataList"><thead>' + 
-      '<th class="iconColumn"></th>' + 
-      '<th>' + prefs.getMsg("label.dublincore.title") + '</th>' +
-      '<th>Likes</th>' + 
-      '<th>' + prefs.getMsg("label.dublincore.creator") + '</th>' +
-      '</thead></table>')
+    var table = jQuery('<table class="dataList"><thead>' + '<th class="iconColumn"></th>' + '<th>' + prefs.getMsg("label.dublincore.title") + '</th>' + '<th>Likes</th>' + '<th>' + prefs.getMsg("label.dublincore.creator") + '</th>' + '</thead></table>')
 
     for (var i = 0; i < objects.length; i++) {
       var object = objects[i];
@@ -50,12 +49,46 @@ var prefs = new gadgets.Prefs();
     displayobjects();
   }
 
+  function handleQueryResponse(response, params) {
+    if (response.data) {
+      var select = jQuery('<select name="combo"></select>').appendTo(jQuery("#domains"));
+      select.change(function(obj) {
+        var option = jQuery(obj.target.selectedOptions);
+        contextPath = option.attr("value");
+        loadMostLiked();
+      })
+
+      for (var i = 0; i < response.data.entries.length; i++) {
+        var entry = response.data.entries[i];
+        console.log(entry)
+        jQuery('<option value="' + entry.path + '">' + entry.title + '</option>').appendTo(select)
+      }
+      select.change();
+    }
+  }
+
+  function initToolbar() {
+    if (contextPath != "/") {
+      loadMostLiked();
+      return;
+    }
+    var toolbar = jQuery('<div class="tools"><div class="floatR" id="contextButton"><a href="#" class="linkButton" title="Edit context settings">Settings</a></div><div id="domains" style="display: none;"></div><div class="clear" /></div>');
+    tools = toolbar.prependTo(content.parent())
+
+    jQuery("#contextButton a").click(function() {
+      var that = jQuery(this)
+      var disp = jQuery("#domains").css('display');
+      jQuery("#domains").css('display', disp == "none" ? "block" : "none");
+      gadgets.window.adjustHeight();
+    })
+    loadDomains();
+  }
+
   function loadMostLiked() {
-    var contextPath = getTargetContextPath();
     var NXRequestParams = {
       operationId: Constants.mostLikedOperationId,
       operationParams: {
-        contextPath: contextPath == "/" ? "/default-domain" : contextPath,
+        contextPath: contextPath,
         limit: 10
       },
       operationContext: {},
@@ -65,8 +98,26 @@ var prefs = new gadgets.Prefs();
     doAutomationRequest(NXRequestParams);
   }
 
+  function loadDomains() {
+    var NXRequestParams = {
+      operationId: Constants.queryOperationId,
+      operationParams: {
+        query: 'Select * from Domain where ecm:mixinType <> "HiddenInNavigation" AND ecm:currentLifeCycleState != "deleted"',
+      },
+      operationContext: {},
+      operationCallback: handleQueryResponse,
+      displayMethod: function() {}
+    };
+
+    doAutomationRequest(NXRequestParams);
+  }
+
   gadgets.util.registerOnLoadHandler(function() {
     content = jQuery("#content")
-    loadMostLiked()
+
+    contextPath = getTargetContextPath();
+
+    initToolbar()
+    //loadMostLiked()
   });
 }());
