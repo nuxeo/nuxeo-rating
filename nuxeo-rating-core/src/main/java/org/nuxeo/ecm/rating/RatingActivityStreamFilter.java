@@ -38,7 +38,7 @@ import org.nuxeo.ecm.activity.ActivityStreamServiceImpl;
  * <p>
  * The different queries this filter can handle are defined in the
  * {@link QueryType} enum.
- * 
+ *
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
  */
@@ -80,9 +80,17 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
     }
 
     @Override
+    @Deprecated
     public void handleRemovedActivities(
             ActivityStreamService activityStreamService,
             Collection<Serializable> activityIds) {
+        // nothing to do for now
+    }
+
+    @Override
+    public void handleRemovedActivities(
+            ActivityStreamService activityStreamService,
+            ActivitiesList activities) {
         // nothing to do for now
     }
 

@@ -22,7 +22,7 @@ import org.nuxeo.ecm.activity.ActivityStreamServiceImpl;
 
 /**
  * An activity stream filter to handle likes count
- * 
+ *
  * @author <a href="mailto:akervern@nuxeo.com">Arnaud Kervern</a>
  * @since 5.6
  */
@@ -59,10 +59,17 @@ public class LikesCountActivityStreamFilter implements ActivityStreamFilter {
     }
 
     @Override
+    @Deprecated
     public void handleRemovedActivities(
             ActivityStreamService activityStreamService,
             Collection<Serializable> activityIds) {
         // Nothing to do for now
+    }
+
+    @Override
+    public void handleRemovedActivities(
+            ActivityStreamService activityStreamService,
+            ActivitiesList activities) {
     }
 
     @Override

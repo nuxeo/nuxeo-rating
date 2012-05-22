@@ -51,7 +51,7 @@ import org.nuxeo.runtime.model.DefaultComponent;
 
 /**
  * Default implementation of {@see RatingService}.
- * 
+ *
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
  */
@@ -85,7 +85,7 @@ public class RatingServiceImpl extends DefaultComponent implements
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
         ActivitiesList activities = activityStreamService.query(
                 RatingActivityStreamFilter.ID, parameters);
-        activityStreamService.removeActivities(activities.toActivityIds());
+        activityStreamService.removeActivities(activities);
     }
 
     @Override
