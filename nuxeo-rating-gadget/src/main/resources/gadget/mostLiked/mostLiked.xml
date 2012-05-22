@@ -3,11 +3,13 @@
   <ModulePrefs title="Most liked documents"
     description=""
     author="akervern" author_email="akervern@nuxeo.com" height="30">
+    <Require feature="setprefs"/>
     <#include "dynamic-translations.ftl"/>
     <Require feature="dynamic-height" />
     <#include "default-oauth-prefs.ftl"/>
   </ModulePrefs>
   <#include "context-prefs.ftl"/>
+  <UserPref name="contextPath" datatype="string"></UserPref>
   <Content type="html">
 
 <![CDATA[

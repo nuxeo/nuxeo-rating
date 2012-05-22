@@ -7,6 +7,7 @@ var prefs = new gadgets.Prefs();
     queryOperationId: 'Document.Query',
     userHasLikedIcon: '/nuxeo/icons/vote_up_active.png',
     likedIcon: '/nuxeo/icons/vote_up_active2.png',
+    prefContextPath: 'contextPath'
   };
 
   var content;
@@ -55,13 +56,15 @@ var prefs = new gadgets.Prefs();
       select.change(function(obj) {
         var option = jQuery(obj.target.selectedOptions);
         contextPath = option.attr("value");
+        prefs.set(Constants.prefContextPath, contextPath)
         loadMostLiked();
       })
 
+      var savedContextPath = prefs.getString(Constants.prefContextPath) || contextPath;
       for (var i = 0; i < response.data.entries.length; i++) {
         var entry = response.data.entries[i];
-        console.log(entry)
-        jQuery('<option value="' + entry.path + '">' + entry.title + '</option>').appendTo(select)
+        var selected = entry.path == savedContextPath ? ' selected="selected"' : ''
+        jQuery('<option value="' + entry.path + '"'+ selected +'>' + entry.title + '</option>').appendTo(select)
       }
       select.change();
     }
