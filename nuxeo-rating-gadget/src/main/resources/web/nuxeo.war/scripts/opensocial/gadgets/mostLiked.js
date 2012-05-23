@@ -60,7 +60,7 @@ var prefs = new gadgets.Prefs();
         loadMostLiked();
       })
 
-      var savedContextPath = prefs.getString(Constants.prefContextPath) || contextPath;
+      var savedContextPath = gadgets.util.unescapeString(prefs.getString(Constants.prefContextPath)) || contextPath;
       for (var i = 0; i < response.data.entries.length; i++) {
         var entry = response.data.entries[i];
         var selected = entry.path == savedContextPath ? ' selected="selected"' : ''
