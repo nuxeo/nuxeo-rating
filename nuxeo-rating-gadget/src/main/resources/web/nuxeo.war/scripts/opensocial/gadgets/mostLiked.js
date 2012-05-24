@@ -14,56 +14,58 @@ var prefs = new gadgets.Prefs();
   var tools;
   var contextPath;
 
-  function displayobjects() {
-    var table = jQuery('<table class="dataList"><thead>' + '<th class="iconColumn"></th>' + '<th>' + prefs.getMsg("label.dublincore.title") + '</th>' + '<th>Likes</th>' + '<th>' + prefs.getMsg("label.dublincore.creator") + '</th>' + '</thead></table>')
+  function displayObjects() {
+    var table = jQuery('<table class="dataList"><thead>' + '<th class="iconColumn"></th>' + '<th>' + prefs.getMsg("label.dublincore.title") + '</th>' + '<th>Likes</th>' + '<th>' + prefs.getMsg("label.dublincore.creator") + '</th>' + '</thead></table>');
 
     for (var i = 0; i < objects.length; i++) {
       var object = objects[i];
-      console.log(object)
       mkCell(object).appendTo(table);
-    };
+    }
 
-    table.appendTo(content);
-    gadgets.window.adjustHeight();
+    jQuery(table.appendTo(content)).ready(function() {
+      gadgets.window.adjustHeight();
+    });
   }
 
   function mkCell(object) {
-    var html = "<tr>"
-    html += '<td><img src="' + NXGadgetContext.clientSideBaseUrl + object.document.properties["common:icon"] + '" /></td>'
-    html += '<td><a href="' + object.url + '">' + object.document.properties["dc:title"] + '</a></td>'
-    html += '<td><img src="'
+    var html = "<tr>";
+    html += '<td><img src="' + NXGadgetContext.clientSideBaseUrl + object.document.properties["common:icon"] + '" /></td>';
+    html += '<td><a href="' + object.url + '">' + object.document.properties["dc:title"] + '</a></td>';
+    html += '<td><img src="';
     if (object.hashUserLiked) {
       html += Constants.userHasLikedIcon
     } else {
       html += Constants.likedIcon
     }
-    html += '"/>' + object.rating + '</td>'
-    html += '<td>' + object.document.properties["dc:creator"] + '</td>'
-    console.log(NXGadgetContext.clientSideBaseUrl)
-    html += "</tr>"
+    html += '"/>' + object.rating + '</td>';
+    html += '<td>' + object.document.properties["dc:creator"] + '</td>';
+    html += "</tr>";
     return jQuery(html)
   }
 
   function handleMostLikedResponse(response, params) {
     content.empty();
-    objects = response.data.items;
-    displayobjects();
+    if (response.data) {
+      objects = response.data.items;
+      displayObjects();
+    }
   }
 
   function handleQueryResponse(response, params) {
     if (response.data) {
       var select = jQuery('<select name="combo"></select>').appendTo(jQuery("#domains"));
       select.change(function(obj) {
-        var option = jQuery(obj.target.selectedOptions);
-        contextPath = option.attr("value");
-        prefs.set(Constants.prefContextPath, contextPath)
+        contextPath = obj.target.value;
+        prefs.set(Constants.prefContextPath, contextPath);
         loadMostLiked();
-      })
+        return false;
+      });
 
-      var savedContextPath = gadgets.util.unescapeString(prefs.getString(Constants.prefContextPath)) || contextPath;
+      var savedContextPath = prefs.getString(Constants.prefContextPath) || '/default-domain';
       for (var i = 0; i < response.data.entries.length; i++) {
         var entry = response.data.entries[i];
-        var selected = entry.path == savedContextPath ? ' selected="selected"' : ''
+        var selected = entry.path == savedContextPath ? ' selected="selected"' : '';
+        console.log(entry.path)
         jQuery('<option value="' + entry.path + '"'+ selected +'>' + entry.title + '</option>').appendTo(select)
       }
       select.change();
@@ -76,14 +78,14 @@ var prefs = new gadgets.Prefs();
       return;
     }
     var toolbar = jQuery('<div class="tools"><div class="floatR" id="contextButton"><a href="#" class="linkButton" title="Edit context settings">Settings</a></div><div id="domains" style="display: none;"></div><div class="clear" /></div>');
-    tools = toolbar.prependTo(content.parent())
+    tools = toolbar.prependTo(content.parent());
 
     jQuery("#contextButton a").click(function() {
-      var that = jQuery(this)
+      var that = jQuery(this);
       var disp = jQuery("#domains").css('display');
       jQuery("#domains").css('display', disp == "none" ? "block" : "none");
       gadgets.window.adjustHeight();
-    })
+    });
     loadDomains();
   }
 
@@ -105,7 +107,7 @@ var prefs = new gadgets.Prefs();
     var NXRequestParams = {
       operationId: Constants.queryOperationId,
       operationParams: {
-        query: 'Select * from Domain where ecm:mixinType <> "HiddenInNavigation" AND ecm:currentLifeCycleState != "deleted"',
+        query: 'Select * from Domain where ecm:mixinType <> "HiddenInNavigation" AND ecm:currentLifeCycleState != "deleted"'
       },
       operationContext: {},
       operationCallback: handleQueryResponse,
@@ -116,11 +118,10 @@ var prefs = new gadgets.Prefs();
   }
 
   gadgets.util.registerOnLoadHandler(function() {
-    content = jQuery("#content")
+    content = jQuery("#content");
 
     contextPath = getTargetContextPath();
 
-    initToolbar()
-    //loadMostLiked()
+    initToolbar();
   });
 }());
