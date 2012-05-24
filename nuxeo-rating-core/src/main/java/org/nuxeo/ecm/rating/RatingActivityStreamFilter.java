@@ -154,16 +154,27 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
             break;
         case GET_RATINGS_FOR_CANCEL:
             sb = new StringBuilder(
-                    "select activity from Activity activity where activity.verb = :verb and activity.actor = :actor and activity.target = :targetObject");
+                    "select activity from Activity activity where activity.target = :targetObject");
             if (rating != null) {
                 sb.append(" and activity.object = :rating");
+            }
+            if (actor != null) {
+                sb.append(" and activity.actor = :actor");
+            }
+            if (aspect != null) {
+                sb.append(" and activity.verb = :verb");
+            } else {
+                sb.append(" and activity.verb LIKE :verb");
+                aspect = "%";
             }
             query = em.createQuery(sb.toString());
             query.setParameter("verb", RATING_VERB_PREFIX + aspect);
             query.setParameter(TARGET_OBJECT_PARAMETER, targetObject);
-            query.setParameter(ACTOR_PARAMETER, actor);
             if (rating != null) {
                 query.setParameter(RATING_PARAMETER, String.valueOf(rating));
+            }
+            if (actor != null) {
+                query.setParameter(ACTOR_PARAMETER, actor);
             }
             break;
         }

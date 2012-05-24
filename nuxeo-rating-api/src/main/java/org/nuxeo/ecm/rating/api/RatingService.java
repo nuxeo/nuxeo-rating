@@ -30,6 +30,14 @@ public interface RatingService {
     void cancelRate(String username, String activityObject, String aspect);
 
     /**
+     * Cancels all rates.
+     *
+     * @param activityObject the activity object on which cancelling the rate
+     * @param aspect the rating aspect may be null.
+     */
+    void cancelRates(String activityObject, String aspect);
+
+    /**
      * Returns {@code true} if the {@code username} already rated the
      * {@code activityObject} on the given {@code aspect}, {@code false}
      * otherwise.

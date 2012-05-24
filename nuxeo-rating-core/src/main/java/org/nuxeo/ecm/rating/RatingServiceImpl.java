@@ -89,6 +89,19 @@ public class RatingServiceImpl extends DefaultComponent implements
     }
 
     @Override
+    public void cancelRates(String activityObject, String aspect) {
+        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        parameters.put(QUERY_TYPE_PARAMETER, GET_RATINGS_FOR_CANCEL);
+        parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
+        parameters.put(ASPECT_PARAMETER, aspect);
+
+        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        ActivitiesList activities = activityStreamService.query(
+                RatingActivityStreamFilter.ID, parameters);
+        activityStreamService.removeActivities(activities);
+    }
+
+    @Override
     public boolean hasUserRated(String username, String activityObject,
             String aspect) {
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();

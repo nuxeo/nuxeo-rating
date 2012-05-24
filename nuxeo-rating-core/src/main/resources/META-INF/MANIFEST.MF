@@ -7,4 +7,5 @@ Bundle-Version: 1.0.0
 Nuxeo-Component: OSGI-INF/like-service.xml,
  OSGI-INF/rating-service.xml,
  OSGI-INF/activity-stream-filters-contrib.xml,
- OSGI-INF/operations-contrib.xml
+ OSGI-INF/operations-contrib.xml,
+ OSGI-INF/listener-contrib.xml

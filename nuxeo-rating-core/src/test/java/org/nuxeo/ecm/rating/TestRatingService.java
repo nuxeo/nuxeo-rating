@@ -24,11 +24,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
+import com.google.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
+import org.nuxeo.ecm.core.api.DocumentRef;
+import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.runtime.test.runner.Features;
@@ -48,6 +51,9 @@ public class TestRatingService extends AbstractRatingTest {
     public static final String STARS_ASPECT = "stars";
 
     public static final String OTHER_ASPECT = "other";
+
+    @Inject
+    protected EventService eventService;
 
     @Test
     public void serviceRegistration() throws IOException {
@@ -263,5 +269,36 @@ public class TestRatingService extends AbstractRatingTest {
                 STARS_ASPECT));
         assertFalse(ratingService.hasUserRated("fry", activityObject,
                 STARS_ASPECT));
+    }
+
+    @Test
+    public void shouldNotFindRatingWhenDocIsRemoved() throws ClientException {
+        DocumentModel doc = createTestDocument("doc1");
+        String docActivity = ActivityHelper.createDocumentActivityObject(doc);
+
+        ratingService.rate("Leah", 5, docActivity, STARS_ASPECT);
+        assertTrue(ratingService.hasUserRated("Leah", docActivity, STARS_ASPECT));
+
+        DocumentRef docRef = doc.getRef();
+        session.removeDocument(docRef);
+        session.save();
+
+        assertEquals(0, ratingService.getRatesCount(docActivity, STARS_ASPECT));
+    }
+
+    @Test
+    public void shouldNotFindRatingWhenDocIsDeleted() throws ClientException {
+
+        DocumentModel doc = createTestDocument("doc1");
+        String docActivity = ActivityHelper.createDocumentActivityObject(doc);
+
+        ratingService.rate("Leah", 5, docActivity, STARS_ASPECT);
+        assertEquals(1, ratingService.getRatesCount(docActivity, STARS_ASPECT));
+
+        DocumentRef docRef = doc.getRef();
+        session.followTransition(docRef, "delete");
+        session.save();
+
+        assertEquals(0, ratingService.getRatesCount(docActivity, STARS_ASPECT));
     }
 }
