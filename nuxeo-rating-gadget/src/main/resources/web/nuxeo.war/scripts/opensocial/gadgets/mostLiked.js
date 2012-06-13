@@ -29,17 +29,31 @@ var prefs = new gadgets.Prefs();
 
   function mkCell(object) {
     var html = "<tr>";
-    html += '<td><img src="' + NXGadgetContext.clientSideBaseUrl + object.document.properties["common:icon"] + '" /></td>';
-    html += '<td><a href="' + object.url + '">' + object.document.properties["dc:title"] + '</a></td>';
-    html += '<td><img src="';
-    if (object.hashUserLiked) {
-      html += Constants.userHasLikedIcon
-    } else {
-      html += Constants.likedIcon
+    if (object.type == 'document') {
+      html += '<td><img src="' + NXGadgetContext.clientSideBaseUrl + object.document.properties["common:icon"] + '" /></td>';
+      html += '<td><a href="' + object.url + '">' + object.document.properties["dc:title"] + '</a></td>';
+      html += '<td><img src="';
+      if (object.hasUserLiked) {
+        html += Constants.userHasLikedIcon
+      } else {
+        html += Constants.likedIcon
+      }
+      html += '"/>' + object.rating + '</td>';
+      html += '<td>' + object.document.properties["dc:creator"] + '</td>';
+      html += "</tr>";
+    } else if (object.type == 'minimessage') {
+      html += '<td><img src="' + NXGadgetContext.clientSideBaseUrl + 'icons/activity_message.png" /></td>';
+      html += '<td>' + object.message + '</td>';
+      html += '<td><img src="';
+      if (object.hasUserLiked) {
+        html += Constants.userHasLikedIcon;
+      } else {
+        html += Constants.likedIcon;
+      }
+      html += '"/>' + object.rating + '</td>';
+      html += '<td>' + object.actor + '</td>';
+      html += "</tr>";
     }
-    html += '"/>' + object.rating + '</td>';
-    html += '<td>' + object.document.properties["dc:creator"] + '</td>';
-    html += "</tr>";
     return jQuery(html)
   }
 
@@ -66,7 +80,7 @@ var prefs = new gadgets.Prefs();
         var entry = response.data.entries[i];
         var selected = entry.path == savedContextPath ? ' selected="selected"' : '';
         console.log(entry.path)
-        jQuery('<option value="' + entry.path + '"'+ selected +'>' + entry.title + '</option>').appendTo(select)
+        jQuery('<option value="' + entry.path + '"' + selected + '>' + entry.title + '</option>').appendTo(select)
       }
       select.change();
     }

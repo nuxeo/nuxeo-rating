@@ -17,12 +17,22 @@
 
 package org.nuxeo.ecm.rating;
 
+import static org.nuxeo.ecm.activity.ActivityHelper.createDocumentActivityObject;
+import static org.nuxeo.ecm.activity.ActivityHelper.createUserActivityObject;
+import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.ACTOR_PARAMETER;
+import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.CONTEXT_PARAMETER;
+import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.OBJECT_PARAMETER;
+import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.QueryType.GET_DOCUMENTS_COUNT;
+import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.QueryType.GET_MINI_MESSAGE_COUNT;
+import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QUERY_TYPE_PARAMETER;
 import static org.nuxeo.ecm.rating.api.Constants.LIKE_ASPECT;
 import static org.nuxeo.ecm.rating.api.LikeStatus.DISLIKED;
 import static org.nuxeo.ecm.rating.api.LikeStatus.LIKED;
 import static org.nuxeo.ecm.rating.api.LikeStatus.UNKNOWN;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,7 +40,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.activity.ActivitiesListImpl;
-import org.nuxeo.ecm.activity.ActivityHelper;
+import org.nuxeo.ecm.activity.Activity;
 import org.nuxeo.ecm.activity.ActivityStreamService;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -63,7 +73,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public void like(String username, DocumentModel doc) {
-        like(username, ActivityHelper.createDocumentActivityObject(doc));
+        like(username, createDocumentActivityObject(doc));
     }
 
     @Override
@@ -76,8 +86,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public boolean hasUserLiked(String username, DocumentModel doc) {
-        return hasUserLiked(username,
-                ActivityHelper.createDocumentActivityObject(doc));
+        return hasUserLiked(username, createDocumentActivityObject(doc));
     }
 
     @Override
@@ -89,7 +98,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public long getLikesCount(DocumentModel doc) {
-        return getLikesCount(ActivityHelper.createDocumentActivityObject(doc));
+        return getLikesCount(createDocumentActivityObject(doc));
     }
 
     @Override
@@ -102,7 +111,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public void dislike(String username, DocumentModel doc) {
-        dislike(username, ActivityHelper.createDocumentActivityObject(doc));
+        dislike(username, createDocumentActivityObject(doc));
     }
 
     @Override
@@ -115,8 +124,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public boolean hasUserDisliked(String username, DocumentModel doc) {
-        return hasUserDisliked(username,
-                ActivityHelper.createDocumentActivityObject(doc));
+        return hasUserDisliked(username, createDocumentActivityObject(doc));
     }
 
     @Override
@@ -128,7 +136,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public long getDislikesCount(DocumentModel doc) {
-        return getDislikesCount(ActivityHelper.createDocumentActivityObject(doc));
+        return getDislikesCount(createDocumentActivityObject(doc));
     }
 
     @Override
@@ -139,7 +147,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public void cancel(String username, DocumentModel doc) {
-        cancel(username, ActivityHelper.createDocumentActivityObject(doc));
+        cancel(username, createDocumentActivityObject(doc));
     }
 
     @Override
@@ -151,7 +159,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public LikeStatus getLikeStatus(DocumentModel doc) {
-        return getLikeStatus(ActivityHelper.createDocumentActivityObject(doc));
+        return getLikeStatus(createDocumentActivityObject(doc));
     }
 
     @Override
@@ -167,29 +175,42 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public LikeStatus getLikeStatus(String username, DocumentModel doc) {
-        return getLikeStatus(username,
-                ActivityHelper.createDocumentActivityObject(doc));
+        return getLikeStatus(username, createDocumentActivityObject(doc));
     }
 
     @Override
-    public ActivitiesList getMostLikedDocuments(CoreSession session, int limit,
-            DocumentModel source) {
+    public ActivitiesList getMostLikedActivities(CoreSession session,
+            int limit, DocumentModel source) {
+        // Get most liked Documents
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
-        parameters.put(LikesCountActivityStreamFilter.CONTEXT_PARAMETER,
-                ActivityHelper.createDocumentActivityObject(source));
-        parameters.put(LikesCountActivityStreamFilter.OBJECT_PARAMETER,
-                LIKE_RATING);
-        parameters.put(
-                LikesCountActivityStreamFilter.ACTOR_PARAMETER,
-                ActivityHelper.createUserActivityObject(session.getPrincipal().getName()));
+        parameters.put(CONTEXT_PARAMETER, createDocumentActivityObject(source));
+        parameters.put(OBJECT_PARAMETER, LIKE_RATING);
+        parameters.put(ACTOR_PARAMETER,
+                createUserActivityObject(session.getPrincipal().getName()));
+        parameters.put(QUERY_TYPE_PARAMETER, GET_DOCUMENTS_COUNT);
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
-        ActivitiesList activitiesList = activityStreamService.query(
+        ActivitiesList documentActivitiesList = activityStreamService.query(
                 LikesCountActivityStreamFilter.ID, parameters);
-        ActivitiesList filtered = activitiesList.filterActivities(session);
-        if (filtered.size() > limit) {
-            return new ActivitiesListImpl(filtered.subList(0, limit));
+        ActivitiesList mostLikedActivities = documentActivitiesList.filterActivities(session);
+
+        // Get most liked minimessages
+        parameters.put(QUERY_TYPE_PARAMETER, GET_MINI_MESSAGE_COUNT);
+        ActivitiesList miniMessageActivitiesList = activityStreamService.query(
+                LikesCountActivityStreamFilter.ID, parameters, 0, limit);
+        mostLikedActivities.addAll(miniMessageActivitiesList);
+
+        // Sort by Object
+        Collections.sort(mostLikedActivities, new Comparator<Activity>() {
+            @Override
+            public int compare(Activity o1, Activity o2) {
+                return o2.getObject().compareTo(o1.getObject());
+            }
+        });
+
+        if (mostLikedActivities.size() > limit) {
+            return new ActivitiesListImpl(mostLikedActivities.subList(0, limit));
         }
-        return filtered;
+        return mostLikedActivities;
     }
 }

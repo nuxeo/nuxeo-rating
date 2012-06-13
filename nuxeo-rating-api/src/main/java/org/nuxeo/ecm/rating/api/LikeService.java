@@ -149,12 +149,13 @@ public interface LikeService {
     LikeStatus getLikeStatus(String username, DocumentModel doc);
 
     /**
-     * Returns a map containing a DocumentModel attached to @{code session} with
-     * at least Read permission from the @{reference} parent Super Space
+     * An actitivitesList containing a documentActivity or a minimessageActivity
+     * as target, the likes count as object, current user as actor and actor's
+     * likes in context.
      * 
      * @param limit maximum documents returned
      * @param source the parent document when child will be reached
      */
-    ActivitiesList getMostLikedDocuments(CoreSession session, int limit,
+    ActivitiesList getMostLikedActivities(CoreSession session, int limit,
             DocumentModel source);
 }
