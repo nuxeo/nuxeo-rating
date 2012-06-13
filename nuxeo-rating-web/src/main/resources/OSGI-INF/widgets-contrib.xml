@@ -3,13 +3,12 @@
 
   <extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
     point="widgettypes">
-    <widgetType name="summary_document_like">
+    <widgetType name="summary_document_like_status">
       <configuration>
         <sinceVersion>5.6</sinceVersion>
-        <title>User Mini Messages Summary</title>
+        <title>Like Summary</title>
         <description>
-          <p>This widgets displays the 'like' status of a document
-            through the like OpenSocial gadget</p>
+          <p>This widgets displays how many people like a document</p>
         </description>
         <categories>
           <category>summary</category>
@@ -23,7 +22,7 @@
         org.nuxeo.ecm.platform.forms.layout.facelets.plugins.TemplateWidgetTypeHandler
       </handler-class>
       <property name="template">
-        /widgets/summary/like_widget_template.xhtml
+        /widgets/summary/like_status_widget_template.xhtml
       </property>
     </widgetType>
   </extension>
@@ -31,7 +30,19 @@
   <extension target="org.nuxeo.ecm.platform.forms.layout.WebLayoutManager"
     point="widgets">
 
-    <widget name="summary_document_like" type="summary_document_like" />
+    <widget name="summary_document_like_status" type="summary_document_like_status" />
+
+  </extension>
+
+  <extension target="org.nuxeo.ecm.platform.actions.ActionService"
+    point="actions">
+
+    <action id="summary_document_like_status" type="widget" order="5">
+      <category>SUMMARY_TOP_RIGHT</category>
+      <properties>
+        <property name="widgetName">summary_document_like_status</property>
+      </properties>
+    </action>
 
   </extension>
 

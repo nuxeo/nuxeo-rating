@@ -1,0 +1,23 @@
+<c:if test="true"
+  xmlns:c="http://java.sun.com/jstl/core"
+  xmlns:nxu="http://nuxeo.org/nxweb/util"
+  xmlns:nxh="http://nuxeo.org/nxweb/html"
+  xmlns:ui="http://java.sun.com/jsf/facelets"
+  xmlns:a4j="https://ajax4jsf.dev.java.net/ajax"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:h="http://java.sun.com/jsf/html">
+
+  <c:set var="hasUserLiked" value="#{likeActions.hasUserLikedCurrentDocument()}" />
+  <c:set var="icon" value="#{nxu:test(hasUserLiked, '/icons/unlike.png', '/icons/like.png')}" />
+  <c:set var="label" value="#{nxu:test(hasUserLiked, 'command.unlike', 'command.like')}" />
+  <c:set var="actionLink" value="#{nxu:test(hasUserLiked, '#{likeActions.cancelLikeForCurrentDocument}', '#{likeActions.likeCurrentDocument}')}" />
+
+  <h:commandButton value="#{actionLink}"
+    styleClass="#{useButton?'button':''} #{actionStyleClass} #{action.properties.styleClass}">
+    <h:graphicImage value="#{icon}"
+      title="#{messages[label]}"
+      alt="#{messages[label]}"
+      styleClass="smallIcon #{action.properties.iconStyleClass}" />
+  </h:commandButton>
+
+</c:if>
