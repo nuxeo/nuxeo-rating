@@ -9,6 +9,7 @@
       icon="/icons/like.png" label="command.like">
       <category>DOCUMENT_UPPER_ACTION</category>
       <filter-id>mutable_document</filter-id>
+      <filter-id>not_folder</filter-id>
       <filter-id>userNotLiked</filter-id>
     </action>
 
@@ -17,6 +18,7 @@
       icon="/icons/unlike.png" label="command.unlike">
       <category>DOCUMENT_UPPER_ACTION</category>
       <filter-id>mutable_document</filter-id>
+      <filter-id>not_folder</filter-id>
       <filter-id>userLiked</filter-id>
     </action>
 
