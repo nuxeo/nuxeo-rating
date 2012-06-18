@@ -31,7 +31,7 @@ var prefs = new gadgets.Prefs();
     var html = "<tr>";
     if (object.type == 'document') {
       html += '<td><img src="' + NXGadgetContext.clientSideBaseUrl + object.document.properties["common:icon"] + '" /></td>';
-      html += '<td><a href="' + object.url + '">' + object.document.properties["dc:title"] + '</a></td>';
+      html += '<td><a target="_top" href="' + object.url + '">' + object.document.properties["dc:title"] + '</a></td>';
       html += '<td><img src="';
       if (object.hasUserLiked) {
         html += Constants.userHasLikedIcon
