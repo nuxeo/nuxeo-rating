@@ -43,7 +43,9 @@ public class LikesCountActivityStreamFilter implements ActivityStreamFilter {
 
     public static final String ACTOR_PARAMETER = "actor";
 
-    public static final String ACTORS_PARAMETER = "actors";
+    public static final String FROMDT_PARAMETER = "fromDt";
+
+    public static final String TODT_PARAMETER = "toDt";
 
     protected static final String VERB_PARAMETER = "verb";
 
@@ -98,37 +100,60 @@ public class LikesCountActivityStreamFilter implements ActivityStreamFilter {
         switch (queryType) {
         case GET_DOCUMENTS_COUNT:
             // InnerQuery indicates if the actor has alredy liked or not
-            innerStr = "Select count(activity2) from Activity activity2 where activity2.verb = :verb and activity2.context  = :context and activity2.object = :object AND activity2.actor = :actor AND activity2.target = activity.target";
-            queryStr = "Select activity.target, count(activity), ("
-                    + innerStr
-                    + ") from Activity activity where activity.verb = :verb and activity.context  = :context and activity.object = :object group by activity.target order by count(activity) desc";
+            innerStr = "SELECT COUNT(activity2) FROM Activity activity2 WHERE activity2.verb = :verb";
+            innerStr += " AND activity2.context = :context AND activity2.object = :object";
+            innerStr += " AND activity2.actor = :actor AND activity2.target = activity.target";
+            if (parameters.containsKey(FROMDT_PARAMETER)) {
+                innerStr += " AND activity2.publishedDate BETWEEN :fromDt AND :toDt";
+            }
+            queryStr = "SELECT activity.target, count(activity), (" + innerStr
+                    + ") FROM Activity activity";
+            queryStr += " WHERE activity.verb = :verb and activity.context  = :context";
+            queryStr += " AND activity.object = :object";
+            if (parameters.containsKey(FROMDT_PARAMETER)) {
+                queryStr += " AND activity.publishedDate BETWEEN :fromDt AND :toDt";
+            }
+            queryStr += " GROUP BY activity.target ORDER BY COUNT(activity) DESC";
 
             Serializable object = String.valueOf(parameters.get(OBJECT_PARAMETER));
-            Serializable context = parameters.get(CONTEXT_PARAMETER);
-
             query = em.createQuery(queryStr);
-            query.setParameter(VERB_PARAMETER, RATING_VERB_PREFIX + LIKE_ASPECT);
-            query.setParameter(CONTEXT_PARAMETER, context);
             query.setParameter(OBJECT_PARAMETER, object);
-            query.setParameter(ACTOR_PARAMETER, actor);
+
             break;
         case GET_MINI_MESSAGE_COUNT:
             // InnerQuery indicates if the actor has alredy liked or not
-            innerStr = "Select count(likes2) from Activity as likes2 where likes.target = likes2.target and likes2.actor = :actor";
-            queryStr = "Select likes.target, count(likes), ("
-                    + innerStr
-                    + ") from Activity as likes, Activity as minimessage where concat('activity:', minimessage.id) = likes.target and minimessage.verb = :verbMiniMessage and minimessage.context  = :context and likes.verb = :verb group by likes.target order by count(likes) desc";
+            innerStr = "Select count(likes2) from Activity as likes2 ";
+            innerStr += " where likes.target = likes2.target and likes2.actor = :actor";
+            if (parameters.containsKey(FROMDT_PARAMETER)) {
+                innerStr += " AND likes2.publishedDate BETWEEN :fromDt AND :toDt";
+            }
+            queryStr = "Select likes.target, count(likes), (" + innerStr
+                    + ") from Activity as likes, Activity as minimessage";
+            queryStr += " where concat('activity:', minimessage.id) = likes.target";
+            queryStr += " and minimessage.verb = :verbMiniMessage and minimessage.context  = :context";
+            queryStr += " and likes.verb = :verb";
+            if (parameters.containsKey(FROMDT_PARAMETER)) {
+                queryStr += " AND likes.publishedDate BETWEEN :fromDt AND :toDt";
+            }
+            queryStr += " group by likes.target order by count(likes) desc";
 
             query = em.createQuery(queryStr);
-            query.setParameter(ACTOR_PARAMETER, actor);
-            query.setParameter(CONTEXT_PARAMETER,
-                    parameters.get(CONTEXT_PARAMETER));
-            query.setParameter(VERB_PARAMETER, RATING_VERB_PREFIX + LIKE_ASPECT);
             query.setParameter(VERB_MINIMESSAGE_PARAMETER, "minimessage");
+
             break;
         default:
             log.info("Unknown query type: " + queryType);
             return new ActivitiesListImpl();
+        }
+
+        // Default parameters
+        query.setParameter(CONTEXT_PARAMETER, parameters.get(CONTEXT_PARAMETER));
+        query.setParameter(VERB_PARAMETER, RATING_VERB_PREFIX + LIKE_ASPECT);
+        query.setParameter(ACTOR_PARAMETER, actor);
+        if (parameters.containsKey(FROMDT_PARAMETER)) {
+            query.setParameter(FROMDT_PARAMETER,
+                    parameters.get(FROMDT_PARAMETER));
+            query.setParameter(TODT_PARAMETER, parameters.get(TODT_PARAMETER));
         }
 
         if (limit > 0) {

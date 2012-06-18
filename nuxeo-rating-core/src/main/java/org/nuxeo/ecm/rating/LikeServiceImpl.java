@@ -21,9 +21,11 @@ import static org.nuxeo.ecm.activity.ActivityHelper.createDocumentActivityObject
 import static org.nuxeo.ecm.activity.ActivityHelper.createUserActivityObject;
 import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.ACTOR_PARAMETER;
 import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.CONTEXT_PARAMETER;
+import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.FROMDT_PARAMETER;
 import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.OBJECT_PARAMETER;
 import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.QueryType.GET_DOCUMENTS_COUNT;
 import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.QueryType.GET_MINI_MESSAGE_COUNT;
+import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.TODT_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QUERY_TYPE_PARAMETER;
 import static org.nuxeo.ecm.rating.api.Constants.LIKE_ASPECT;
 import static org.nuxeo.ecm.rating.api.LikeStatus.DISLIKED;
@@ -33,6 +35,7 @@ import static org.nuxeo.ecm.rating.api.LikeStatus.UNKNOWN;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -180,9 +183,13 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public ActivitiesList getMostLikedActivities(CoreSession session,
-            int limit, DocumentModel source) {
+            int limit, DocumentModel source, Date fromDt, Date toDt) {
         // Get most liked Documents
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        if (fromDt != null && toDt != null) {
+            parameters.put(FROMDT_PARAMETER, fromDt);
+            parameters.put(TODT_PARAMETER, toDt);
+        }
         parameters.put(CONTEXT_PARAMETER, createDocumentActivityObject(source));
         parameters.put(OBJECT_PARAMETER, LIKE_RATING);
         parameters.put(ACTOR_PARAMETER,
@@ -212,5 +219,11 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
             return new ActivitiesListImpl(mostLikedActivities.subList(0, limit));
         }
         return mostLikedActivities;
+    }
+
+    @Override
+    public ActivitiesList getMostLikedActivities(CoreSession session,
+            int limit, DocumentModel source) {
+        return getMostLikedActivities(session, limit, source, null, null);
     }
 }

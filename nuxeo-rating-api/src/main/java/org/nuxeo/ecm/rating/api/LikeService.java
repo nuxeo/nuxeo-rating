@@ -17,6 +17,8 @@
 
 package org.nuxeo.ecm.rating.api;
 
+import java.util.Date;
+
 import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -158,4 +160,15 @@ public interface LikeService {
      */
     ActivitiesList getMostLikedActivities(CoreSession session, int limit,
             DocumentModel source);
+
+    /**
+     * An actitivitesList containing a documentActivity or a minimessageActivity
+     * as target, the likes count as object, current user as actor and actor's
+     * likes in context the result will be between two dates
+     * 
+     * @param limit maximum documents returned
+     * @param source the parent document when child will be reached
+     */
+    ActivitiesList getMostLikedActivities(CoreSession session, int limit,
+            DocumentModel source, Date fromDt, Date toDt);
 }

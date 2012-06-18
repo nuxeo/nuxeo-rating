@@ -15,6 +15,7 @@ import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.QueryType.GET_
 import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.QueryType.GET_MINI_MESSAGE_COUNT;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QUERY_TYPE_PARAMETER;
 import static org.nuxeo.ecm.rating.api.Constants.LIKE_ASPECT;
+import static org.nuxeo.ecm.rating.api.Constants.RATING_VERB_PREFIX;
 
 import java.io.Serializable;
 import java.security.Principal;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.google.inject.Inject;
+import org.joda.time.DateTime;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -232,6 +234,86 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
     }
 
     @Test
+    public void shouldHandleMostLikedBetweenTwoDates() throws ClientException {
+        DocumentModel context = session.getDocument(new PathRef(
+                "/default-domain/workspaces/test"));
+        DocumentModel lovelyDoc = createTestDocument("lovelyDoc",
+                context.getPathAsString());
+        DocumentModel anotherLovelyDoc = createTestDocument("anotherLovelyDoc",
+                context.getPathAsString());
+
+        Principal jeannot = createUser("Tim");
+        MiniMessage miniMessage = mms.addMiniMessage(session.getPrincipal(),
+                "My first miniMessage", new Date(),
+                createDocumentActivityObject(context));
+        MiniMessage miniMessage1 = mms.addMiniMessage(session.getPrincipal(),
+                "My second miniMessage", new Date(),
+                createDocumentActivityObject(context));
+
+        final DateTime YESTERDAY = new DateTime().minusDays(1);
+        final DateTime TODAY = new DateTime();
+        final DateTime TOMORROW = new DateTime().plusDays(1);
+
+        String contextObject = createDocumentActivityObject(context);
+        // Likes now
+        String currentActivity = createActivityObject(miniMessage.getId());
+        manuallyLike("user0", currentActivity, YESTERDAY, null);
+        manuallyLike("user1", currentActivity, TODAY, null);
+
+        currentActivity = createActivityObject(miniMessage1.getId());
+        manuallyLike("user0", currentActivity, YESTERDAY, null);
+        manuallyLike("user1", currentActivity, TODAY, null);
+        manuallyLike("user2", currentActivity, TOMORROW, null);
+
+        currentActivity = createDocumentActivityObject(lovelyDoc);
+        manuallyLike("user0", currentActivity, YESTERDAY, contextObject);
+        manuallyLike("user1", currentActivity, YESTERDAY, contextObject);
+
+        currentActivity = createDocumentActivityObject(anotherLovelyDoc);
+        manuallyLike("user0", currentActivity, TOMORROW, contextObject);
+        manuallyLike("user1", currentActivity, TOMORROW, contextObject);
+
+        // Tests now !
+        ActivitiesList mostLikedActivities = likeService.getMostLikedActivities(
+                session, 10, context, YESTERDAY.minusHours(2).toDate(),
+                YESTERDAY.plusHours(2).toDate());
+        assertEquals(3, mostLikedActivities.size());
+        assertEquals(createDocumentActivityObject(lovelyDoc),
+                mostLikedActivities.get(0).getTarget());
+
+        mostLikedActivities = likeService.getMostLikedActivities(session, 10,
+                context, TOMORROW.minusHours(2).toDate(),
+                TOMORROW.plusHours(2).toDate());
+        assertEquals(2, mostLikedActivities.size());
+        assertEquals(createDocumentActivityObject(anotherLovelyDoc),
+                mostLikedActivities.get(0).getTarget());
+
+        mostLikedActivities = likeService.getMostLikedActivities(session, 10,
+                context, TODAY.minusHours(2).toDate(),
+                TOMORROW.plusHours(2).toDate());
+        assertEquals(3, mostLikedActivities.size());
+
+        mostLikedActivities = likeService.getMostLikedActivities(session, 10,
+                context, YESTERDAY.minusHours(2).toDate(),
+                TOMORROW.plusHours(2).toDate());
+        assertEquals(4, mostLikedActivities.size());
+    }
+
+    protected void manuallyLike(String username, String activityObject,
+            DateTime publishedDate, String contextObject) {
+        ActivityBuilder activityBuilder = new ActivityBuilder().verb(
+                RATING_VERB_PREFIX + LIKE_ASPECT).actor(
+                ActivityHelper.createUserActivityObject(username)).target(
+                activityObject).object(String.valueOf(1)).publishedDate(
+                publishedDate.toDate());
+        if (contextObject != null) {
+            activityBuilder.context(contextObject);
+        }
+
+        activityStreamService.addActivity(activityBuilder.build());
+    }
+
+    @Test
     public void shouldCountCorrectlyLikesOnMiniMessage() throws ClientException {
         DocumentModel context = session.getDocument(new PathRef(
                 "/default-domain/workspaces/test"));
@@ -274,7 +356,6 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         assertEquals("1", activitiesList.get(0).getContext());
         // Emir do not vote minimessage
         assertNotSame("1", activitiesList.get(1).getContext());
-
     }
 
     protected Principal createUser(String username) throws ClientException {

@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,10 +72,17 @@ public class MostLiked {
     @Param(name = "limit")
     protected int limit;
 
+    @Param(name = "fromDt", required = false)
+    protected Date fromDt;
+
+    @Param(name = "toDt", required = false)
+    protected Date toDt;
+
     @OperationMethod
     public Blob run() throws Exception {
         ActivitiesList mostLikedDocuments = likeService.getMostLikedActivities(
-                session, limit, session.getDocument(new PathRef(contextPath)));
+                session, limit, session.getDocument(new PathRef(contextPath)),
+                fromDt, toDt);
 
         final List<JSONObject> docsWithRate = new ArrayList<JSONObject>();
         for (Activity activity : mostLikedDocuments) {
