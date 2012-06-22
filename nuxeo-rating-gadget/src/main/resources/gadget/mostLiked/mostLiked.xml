@@ -19,7 +19,7 @@
 
     <!-- insert JS Context -->
     ${jsContext}
-    <script src="${clientSideBaseUrl}nxthemes-lib/jquery.js,gadget-context-management.js,gadget-default-automation-request.js,gadget-mostLiked.js"></script>
+    <script src="${clientSideBaseUrl}nxthemes-lib/jquery.js,gadget-context-management.js,gadget-default-automation-request.js,gadget-mostLiked.js,moment.js"></script>
 
   </head>
   <body>

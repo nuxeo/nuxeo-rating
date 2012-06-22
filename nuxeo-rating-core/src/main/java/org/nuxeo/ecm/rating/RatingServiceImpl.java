@@ -23,6 +23,7 @@ import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.ASPECT_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.CONTEXT_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QUERY_TYPE_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_ACTOR_RATINGS_FOR_OBJECT;
+import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_LATEST_RATED_FOR_OBJECT;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATED_CHILDREN_FOR_CONTEXT;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATINGS_FOR_CANCEL;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATINGS_FOR_OBJECT;
@@ -218,6 +219,19 @@ public class RatingServiceImpl extends DefaultComponent implements
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
         return activityStreamService.query(RatingActivityStreamFilter.ID,
                 parameters);
+    }
+
+    @Override
+    public ActivitiesList getLastestRatedDocByUser(String username, String aspect, int limit) {
+        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        parameters.put(QUERY_TYPE_PARAMETER, GET_LATEST_RATED_FOR_OBJECT);
+        parameters.put(ACTOR_PARAMETER,
+                ActivityHelper.createUserActivityObject(username));
+        parameters.put(ASPECT_PARAMETER, aspect);
+
+        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        return activityStreamService.query(RatingActivityStreamFilter.ID,
+                parameters, 0, limit);
     }
 
     private double computeAverage(ActivitiesList activities) {

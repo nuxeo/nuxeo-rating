@@ -91,4 +91,14 @@ public interface RatingService {
      * @return a List of activityObject
      */
     ActivitiesList getRatedChildren(String activityObject, int rating, String aspect);
+
+    /**
+     * Get the latest docs activities rated by a specific user
+     *
+     *
+     * @param username the desired user
+     * @param limit
+     * @return a List of activityObject
+     */
+    ActivitiesList getLastestRatedDocByUser(String username, String aspect, int limit);
 }

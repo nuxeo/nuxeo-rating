@@ -7,12 +7,14 @@ var prefs = new gadgets.Prefs();
     queryOperationId: 'Document.Query',
     userHasLikedIcon: '/nuxeo/icons/vote_up_active.png',
     likedIcon: '/nuxeo/icons/vote_up_active2.png',
-    prefContextPath: 'contextPath'
+    prefContextPath: 'contextPath',
+    prefDatesRange: 'dateRange'
   };
 
   var content;
   var tools;
   var contextPath;
+  var dateRange;
 
   function displayObjects() {
     var table = jQuery('<table class="dataList"><thead>' + '<th class="iconColumn"></th>' + '<th>' + prefs.getMsg("label.dublincore.title") + '</th>' + '<th>Likes</th>' + '<th>' + prefs.getMsg("label.dublincore.creator") + '</th>' + '</thead></table>');
@@ -87,29 +89,89 @@ var prefs = new gadgets.Prefs();
   }
 
   function initToolbar() {
+    var toolbar = jQuery('<div class="tools" />');
+    tools = toolbar.prependTo(content.parent());
+
+    var divDates = jQuery('<div class="floatL" id="dates"></div>').appendTo(tools);
+    var dates = ['ever', 'this_week', 'this_month', 'last_week', 'last_month'];
+
+    function displayDate(date) {
+      return function() {
+        dateRange = date;
+        loadMostLiked();
+        return false;
+      }
+    }
+
+    dateRange = prefs.getString(Constants.prefDatesRange) || dates[0];
+    jQuery.each(dates, function(i, date) {
+      var data = jQuery('<span><a href="#' + date + '">' + date + '</a></span>').click(displayDate(date));
+      if (dateRange == date) {
+        data.addClass('selected');
+      }
+
+      if (i != 0) {
+        data.prepend(' / ')
+      }
+
+      divDates.append(data);
+    })
+
     if (contextPath != "/") {
+      toolbar.append(jQuery('<div class="clear" />'));
       loadMostLiked();
       return;
     }
-    var toolbar = jQuery('<div class="tools"><div class="floatR" id="contextButton"><a href="#" class="linkButton" title="Edit context settings">Settings</a></div><div id="domains" style="display: none;"></div><div class="clear" /></div>');
-    tools = toolbar.prependTo(content.parent());
-
+    toolbar.append(jQuery('<div class="floatR" id="contextButton"><a href="#" class="linkButton" title="Edit context settings">Settings</a></div><div id="domains" style="display: none;"></div><div class="clear" />'));
     jQuery("#contextButton a").click(function() {
       var that = jQuery(this);
-      var disp = jQuery("#domains").css('display');
-      jQuery("#domains").css('display', disp == "none" ? "block" : "none");
+      jQuery("#domains").toggle();
+      jQuery("#dates").toggle();
       gadgets.window.adjustHeight();
     });
     loadDomains();
   }
 
+  function buildDatesFromDateRange() {
+    var startDt, endDt;
+    //['ever', 'this_week', 'this_month', 'last_week', 'last_month'];
+    switch (dateRange) {
+    case 'this_week':
+      startDt = moment().day(0);
+      endDt = moment();
+      break;
+    case 'this_month':
+      startDt = moment().date(1);
+      endDt = moment();
+      break;
+    case 'last_week':
+      startDt = moment().day(-7);
+      endDt = moment().day(-1);
+      break;
+    case 'last_month':
+      endDt = moment().date(-1);
+      startDt = moment(endDt).date(1);
+      break;
+    default:
+      return {};
+    }
+
+    var pattern = "ddd LL";
+    return {
+      startDt: startDt.sod().toDate(),
+      endDt: endDt.eod().toDate()
+    };
+  }
+
   function loadMostLiked() {
+    var operationParams = $.extend(buildDatesFromDateRange(), {
+      contextPath: contextPath,
+      limit: 10
+    })
+
     var NXRequestParams = {
       operationId: Constants.mostLikedOperationId,
-      operationParams: {
-        contextPath: contextPath,
-        limit: 10
-      },
+      operationParams: operationParams,
       operationContext: {},
       operationCallback: handleMostLikedResponse
     };

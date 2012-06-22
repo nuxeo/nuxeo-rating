@@ -29,6 +29,7 @@ import javax.persistence.Query;
 import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.activity.ActivitiesListImpl;
 import org.nuxeo.ecm.activity.Activity;
+import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.activity.ActivityStreamFilter;
 import org.nuxeo.ecm.activity.ActivityStreamService;
 import org.nuxeo.ecm.activity.ActivityStreamServiceImpl;
@@ -47,7 +48,7 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
     public static final String ID = "RatingActivityStreamFilter";
 
     public enum QueryType {
-        GET_ACTOR_RATINGS_FOR_OBJECT, GET_RATINGS_FOR_OBJECT, GET_RATED_CHILDREN_FOR_CONTEXT, GET_RATINGS_FOR_CANCEL
+        GET_ACTOR_RATINGS_FOR_OBJECT, GET_RATINGS_FOR_OBJECT, GET_RATED_CHILDREN_FOR_CONTEXT, GET_RATINGS_FOR_CANCEL, GET_LATEST_RATED_FOR_OBJECT
     }
 
     public static final String QUERY_TYPE_PARAMETER = "queryTypeParameter";
@@ -176,6 +177,12 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
             if (actor != null) {
                 query.setParameter(ACTOR_PARAMETER, actor);
             }
+            break;
+        case GET_LATEST_RATED_FOR_OBJECT:
+            query = em.createQuery("select activity from Activity activity where activity.target LIKE :targetObject and activity.context is null and activity.actor = :actor and activity.verb = :verb order by activity.publishedDate DESC");
+            query.setParameter("verb", RATING_VERB_PREFIX + aspect);
+            query.setParameter(ACTOR_PARAMETER, actor);
+            query.setParameter(TARGET_OBJECT_PARAMETER, ActivityHelper.DOC_PREFIX + "%");
             break;
         }
 

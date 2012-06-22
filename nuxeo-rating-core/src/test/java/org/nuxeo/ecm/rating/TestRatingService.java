@@ -27,6 +27,7 @@ import java.io.IOException;
 import com.google.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
@@ -300,5 +301,26 @@ public class TestRatingService extends AbstractRatingTest {
         session.save();
 
         assertEquals(0, ratingService.getRatesCount(docActivity, STARS_ASPECT));
+    }
+
+    @Test
+    public void shouldGetLatestRateForUser() throws ClientException {
+        String activity1 = ActivityHelper.createDocumentActivityObject(createTestDocument("doc1"));
+        String activity2 = ActivityHelper.createDocumentActivityObject(createTestDocument("doc2"));
+        String activity3 = ActivityHelper.createDocumentActivityObject(createTestDocument("doc3"));
+        String activity4 = ActivityHelper.createDocumentActivityObject(createTestDocument("doc4"));
+
+        String username = "Lise";
+
+        ratingService.rate(username, 5, activity1, STARS_ASPECT);
+        ratingService.rate(username, 2, activity2, STARS_ASPECT);
+        ratingService.rate(username, 3, activity3, STARS_ASPECT);
+        ratingService.rate(username, 5, activity4, STARS_ASPECT);
+
+        ActivitiesList lastestRatedDocByUser = ratingService.getLastestRatedDocByUser(username, STARS_ASPECT, 3);
+        assertEquals(3, lastestRatedDocByUser.size());
+        assertEquals(activity4, lastestRatedDocByUser.get(0).getTarget());
+        assertEquals(activity3, lastestRatedDocByUser.get(1).getTarget());
+        assertEquals(activity2, lastestRatedDocByUser.get(2).getTarget());
     }
 }
