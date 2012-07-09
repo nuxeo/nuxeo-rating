@@ -7,14 +7,14 @@
       <mountPoint>/like</mountPoint>
       <entryPoint>like.xml</entryPoint>
       <category>Nuxeo</category>
-      <icon>gadget-like.png</icon>
+      <icon>gadget-documentLike.png</icon>
     </internalGadget>
 
     <internalGadget name="mostLiked" disabled="false">
       <mountPoint>/mostLiked</mountPoint>
       <entryPoint>mostLiked.xml</entryPoint>
       <category>Nuxeo</category>
-      <icon>gadget-like.png</icon>
+      <icon>gadget-mostLiked.png</icon>
     </internalGadget>
 
   </extension>
