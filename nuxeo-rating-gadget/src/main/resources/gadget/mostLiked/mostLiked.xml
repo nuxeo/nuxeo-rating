@@ -10,6 +10,7 @@
   </ModulePrefs>
   <#include "context-prefs.ftl"/>
   <UserPref name="contextPath" datatype="string"></UserPref>
+  <UserPref name="dateRange" datatype="string"></UserPref>
   <Content type="html">
 
 <![CDATA[
