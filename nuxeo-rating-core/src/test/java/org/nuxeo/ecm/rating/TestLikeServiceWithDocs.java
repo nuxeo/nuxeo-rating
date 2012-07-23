@@ -1,7 +1,6 @@
 package org.nuxeo.ecm.rating;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.nuxeo.ecm.activity.ActivityHelper.createActivityObject;
 import static org.nuxeo.ecm.activity.ActivityHelper.createDocumentActivityObject;
@@ -32,6 +31,7 @@ import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.activity.Activity;
 import org.nuxeo.ecm.activity.ActivityBuilder;
 import org.nuxeo.ecm.activity.ActivityHelper;
+import org.nuxeo.ecm.activity.ActivityStreamService;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.IdRef;
@@ -41,8 +41,7 @@ import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 import org.nuxeo.ecm.platform.usermanager.exceptions.UserAlreadyExistsException;
-import org.nuxeo.ecm.social.mini.message.MiniMessage;
-import org.nuxeo.ecm.social.mini.message.MiniMessageService;
+import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
@@ -55,17 +54,13 @@ import org.nuxeo.runtime.test.runner.LocalDeploy;
 @RunWith(FeaturesRunner.class)
 @Features({ RatingFeature.class })
 @RepositoryConfig(repositoryName = "default", cleanup = Granularity.METHOD, init = DefaultRepositoryInit.class)
-@Deploy({ "org.nuxeo.ecm.social.mini.message",
-        "org.nuxeo.ecm.platform.url.core",
+@Deploy({"org.nuxeo.ecm.platform.url.core",
         "org.nuxeo.ecm.platform.ui:OSGI-INF/urlservice-framework.xml",
         "org.nuxeo.ecm.user.center:OSGI-INF/urlservice-contrib.xml" })
 @LocalDeploy("org.nuxeo.ecm.rating.core:rating-test.xml")
 public class TestLikeServiceWithDocs extends AbstractRatingTest {
     @Inject
     protected UserManager userManager;
-
-    @Inject
-    protected MiniMessageService mms;
 
     @Test
     public void shouldHandleSuperSpaceCount() throws ClientException {
@@ -180,24 +175,22 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         DocumentModel lovelyDoc = createTestDocument("myLovelyDoc",
                 context.getPathAsString()); // 3 likes
 
-        assertNotNull(mms);
-
         Principal jeannot = createUser("jeannot");
         Principal steve = createUser("steve");
 
         // Create some minimessages
-        MiniMessage miniMessage1 = mms.addMiniMessage(steve,
+        String miniMessage1 = addMiniMessage(steve,
                 "This is a revolution.", new Date(), activityContext);
-        MiniMessage miniMessage2 = mms.addMiniMessage(steve, "One more thing.",
+        String miniMessage2 = addMiniMessage(steve, "One more thing.",
                 new Date(), activityContext);
-        MiniMessage miniMessage3 = mms.addMiniMessage(jeannot,
+        String miniMessage3 = addMiniMessage(jeannot,
                 "My daddy is awesome.", new Date(), activityContext);
 
-        String actMiniMessage1 = createActivityObject(miniMessage1.getId()); // 4
+        String actMiniMessage1 = createActivityObject(miniMessage1); // 4
                                                                              // likes
-        String actMiniMessage2 = createActivityObject(miniMessage2.getId()); // 2
+        String actMiniMessage2 = createActivityObject(miniMessage2); // 2
                                                                              // likes
-        String actMiniMessage3 = createActivityObject(miniMessage3.getId()); // 1
+        String actMiniMessage3 = createActivityObject(miniMessage3); // 1
                                                                              // like
 
         // like them all.
@@ -243,10 +236,10 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
                 context.getPathAsString());
 
         Principal jeannot = createUser("Tim");
-        MiniMessage miniMessage = mms.addMiniMessage(session.getPrincipal(),
+        String miniMessage = addMiniMessage(session.getPrincipal(),
                 "My first miniMessage", new Date(),
                 createDocumentActivityObject(context));
-        MiniMessage miniMessage1 = mms.addMiniMessage(session.getPrincipal(),
+        String miniMessage1 = addMiniMessage(session.getPrincipal(),
                 "My second miniMessage", new Date(),
                 createDocumentActivityObject(context));
 
@@ -256,11 +249,11 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
 
         String contextObject = createDocumentActivityObject(context);
         // Likes now
-        String currentActivity = createActivityObject(miniMessage.getId());
+        String currentActivity = createActivityObject(miniMessage);
         manuallyLike("user0", currentActivity, YESTERDAY, null);
         manuallyLike("user1", currentActivity, TODAY, null);
 
-        currentActivity = createActivityObject(miniMessage1.getId());
+        currentActivity = createActivityObject(miniMessage1);
         manuallyLike("user0", currentActivity, YESTERDAY, null);
         manuallyLike("user1", currentActivity, TODAY, null);
         manuallyLike("user2", currentActivity, TOMORROW, null);
@@ -319,23 +312,22 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
                 "/default-domain/workspaces/test"));
         DocumentModel lovelyDoc = createTestDocument("lovelyDoc",
                 context.getPathAsString());
-        assertNotNull(mms);
 
         Principal jeannot = createUser("jeannot");
-        MiniMessage miniMessage = mms.addMiniMessage(session.getPrincipal(),
+        String miniMessage = addMiniMessage(session.getPrincipal(),
                 "My first miniMessage", new Date(),
                 createDocumentActivityObject(context));
-        MiniMessage miniMessage1 = mms.addMiniMessage(jeannot,
+        String miniMessage1 = addMiniMessage(jeannot,
                 "My Second miniMessage", new Date(),
                 createDocumentActivityObject(context));
-        MiniMessage miniMessage2 = mms.addMiniMessage(session.getPrincipal(),
+        String miniMessage2 = addMiniMessage(session.getPrincipal(),
                 "My third miniMessage", new Date(),
                 createDocumentActivityObject(context));
 
-        String miniMessageActivity = createActivityObject(miniMessage.getId());
+        String miniMessageActivity = createActivityObject(miniMessage);
         likeService.like(session.getPrincipal().getName(), miniMessageActivity);
 
-        String miniMessage1Activity = createActivityObject(miniMessage1.getId());
+        String miniMessage1Activity = createActivityObject(miniMessage1);
         likeService.like(session.getPrincipal().getName(), miniMessage1Activity);
         likeService.like("Emir", miniMessage1Activity);
 
@@ -451,5 +443,17 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         for (int i = 0; i < nb; i++) {
             likeService.like("user" + i, doc);
         }
+    }
+
+    protected String addMiniMessage(Principal principal, String message,
+            Date publishedDate, String contextActivityObject) {
+        Activity activity = new ActivityBuilder().actor(
+                ActivityHelper.createUserActivityObject(principal)).displayActor(
+                ActivityHelper.generateDisplayName(principal)).verb("minimessage").object(
+                message).publishedDate(publishedDate).context(
+                contextActivityObject).build();
+        activity = Framework.getLocalService(ActivityStreamService.class).addActivity(
+                activity);
+        return activity.getId().toString();
     }
 }
