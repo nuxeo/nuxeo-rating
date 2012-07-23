@@ -51,11 +51,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.nuxeo.ecm.social</groupId>
-      <artifactId>nuxeo-mini-message</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.nuxeo.ecm.platform</groupId>
       <artifactId>nuxeo-user-profile</artifactId>
       <scope>test</scope>
