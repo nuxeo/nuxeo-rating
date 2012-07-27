@@ -81,7 +81,6 @@ var prefs = new gadgets.Prefs();
       for (var i = 0; i < response.data.entries.length; i++) {
         var entry = response.data.entries[i];
         var selected = entry.path == savedContextPath ? ' selected="selected"' : '';
-        console.log(entry.path)
         jQuery('<option value="' + entry.path + '"' + selected + '>' + entry.title + '</option>').appendTo(select)
       }
       select.change();
@@ -96,18 +95,22 @@ var prefs = new gadgets.Prefs();
     var dates = ['ever', 'this_week', 'this_month', 'last_week', 'last_month'];
 
     function displayDate(date) {
-      return function() {
+      return function(evt) {
         dateRange = date;
         loadMostLiked();
+
+        $("#dates .selected").removeClass('selected');
+        $(evt.target).addClass('selected');
+
         return false;
       }
     }
 
     dateRange = prefs.getString(Constants.prefDatesRange) || dates[0];
     jQuery.each(dates, function(i, date) {
-      var data = jQuery('<span><a href="#' + date + '">' + date + '</a></span>').click(displayDate(date));
+      var data = jQuery('<span><a href="#' + date + '" class="dateSelection">' + prefs.getMsg('gadget.label.mostLiked.' + date) + '</a></span>').click(displayDate(date));
       if (dateRange == date) {
-        data.addClass('selected');
+        data.find(".dateSelection").addClass('selected');
       }
 
       if (i != 0) {
@@ -158,8 +161,8 @@ var prefs = new gadgets.Prefs();
 
     var pattern = "ddd LL";
     return {
-      startDt: startDt.sod().toDate(),
-      endDt: endDt.eod().toDate()
+      fromDt: startDt.sod().toDate(),
+      toDt: endDt.eod().toDate()
     };
   }
 
