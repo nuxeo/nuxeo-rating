@@ -169,7 +169,8 @@ var prefs = new gadgets.Prefs();
   function loadMostLiked() {
     var operationParams = $.extend(buildDatesFromDateRange(), {
       contextPath: contextPath,
-      limit: 10
+      limit: 10,
+      documentLinkBuilder: prefs.getString("documentLinkBuilder")
     })
 
     var NXRequestParams = {

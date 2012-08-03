@@ -1,5 +1,6 @@
 package org.nuxeo.ecm.rating.operations;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.nuxeo.ecm.activity.ActivityHelper.getActivityId;
 import static org.nuxeo.ecm.activity.ActivityHelper.getDocumentId;
 import static org.nuxeo.ecm.activity.ActivityHelper.getUsername;
@@ -39,9 +40,11 @@ import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
 import org.nuxeo.ecm.core.api.impl.blob.InputStreamBlob;
+import org.nuxeo.ecm.platform.types.adapter.TypeInfo;
 import org.nuxeo.ecm.platform.ui.web.rest.api.URLPolicyService;
 import org.nuxeo.ecm.platform.url.DocumentViewImpl;
 import org.nuxeo.ecm.platform.url.api.DocumentView;
+import org.nuxeo.ecm.platform.url.api.DocumentViewCodecManager;
 import org.nuxeo.ecm.platform.web.common.vh.VirtualHostHelper;
 import org.nuxeo.ecm.rating.api.LikeService;
 import org.nuxeo.runtime.api.Framework;
@@ -77,6 +80,9 @@ public class MostLiked {
 
     @Param(name = "toDt", required = false)
     protected Date toDt;
+
+    @Param(name = "documentLinkBuilder", required = false)
+    protected String documentLinkBuilder;
 
     @OperationMethod
     public Blob run() throws Exception {
@@ -131,24 +137,30 @@ public class MostLiked {
         Map<String, Object> value = new HashMap<String, Object>();
         value.put("rating", rating);
         value.put("document", new JSONObject(out.toString()));
-        value.put("url", getDocumentUrl(doc.getId()));
+        value.put("url", getDocumentUrl(doc));
         value.put("hasUserLiked", hasRated);
         value.put("type", "document");
 
         return new JSONObject(value);
     }
 
-    protected String getDocumentUrl(String documentId) {
+    protected String getDocumentUrl(DocumentModel doc) {
         if (Framework.isTestModeSet()) {
             return "http://dummyurl.com";
         }
 
+        DocumentViewCodecManager documentViewCodecManager = Framework.getLocalService(DocumentViewCodecManager.class);
+        String codecName = isBlank(documentLinkBuilder) ? documentViewCodecManager.getDefaultCodecName()
+                : documentLinkBuilder;
+
         DocumentLocation docLoc = new DocumentLocationImpl(
-                session.getRepositoryName(), new IdRef(documentId));
-        DocumentView docView = new DocumentViewImpl(docLoc, "view_documents");
-        URLPolicyService urlPolicyService = Framework.getLocalService(URLPolicyService.class);
-        return VirtualHostHelper.getContextPathProperty() + "/"
-                + urlPolicyService.getUrlFromDocumentView("id", docView, null);
+                session.getRepositoryName(), doc.getRef());
+        DocumentView docView = new DocumentViewImpl(docLoc, doc.getAdapter(
+                TypeInfo.class).getDefaultView());
+        return VirtualHostHelper.getContextPathProperty()
+                + "/"
+                + documentViewCodecManager.getUrlFromDocumentView(codecName,
+                        docView, false, null);
     }
 
     protected static String replaceURLsByLinks(String message) {
