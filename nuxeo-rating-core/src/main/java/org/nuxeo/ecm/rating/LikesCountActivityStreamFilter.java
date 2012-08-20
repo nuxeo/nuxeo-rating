@@ -17,13 +17,14 @@ import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.activity.ActivitiesListImpl;
 import org.nuxeo.ecm.activity.Activity;
 import org.nuxeo.ecm.activity.ActivityBuilder;
+import org.nuxeo.ecm.activity.ActivityReply;
 import org.nuxeo.ecm.activity.ActivityStreamFilter;
 import org.nuxeo.ecm.activity.ActivityStreamService;
 import org.nuxeo.ecm.activity.ActivityStreamServiceImpl;
 
 /**
  * An activity stream filter to handle likes count
- * 
+ *
  * @author <a href="mailto:akervern@nuxeo.com">Arnaud Kervern</a>
  * @since 5.6
  */
@@ -81,6 +82,12 @@ public class LikesCountActivityStreamFilter implements ActivityStreamFilter {
     public void handleRemovedActivities(
             ActivityStreamService activityStreamService,
             ActivitiesList activities) {
+    }
+
+    @Override
+    public void handleRemovedActivityReply(
+            ActivityStreamService activityStreamService, Activity activity,
+            ActivityReply activityReply) {
     }
 
     @Override
