@@ -24,9 +24,17 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.nuxeo.ecm.activity.Activity;
+import org.nuxeo.ecm.activity.ActivityHelper;
+import org.nuxeo.ecm.activity.ActivityImpl;
+import org.nuxeo.ecm.activity.ActivityReply;
+import org.nuxeo.ecm.activity.ActivityStreamService;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
@@ -35,6 +43,8 @@ import org.nuxeo.ecm.rating.api.LikeStatus;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 import org.nuxeo.runtime.test.runner.LocalDeploy;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
@@ -178,5 +188,98 @@ public class TestLikeService extends AbstractRatingTest {
         assertEquals(1, likeStatus.dislikesCount);
         assertNull(likeStatus.username);
         assertEquals(LikeStatus.UNKNOWN, likeStatus.userLikeStatus);
+    }
+
+    @Test
+    public void shouldRemoveLikeOnRemovedActivity() {
+        Activity activity = new ActivityImpl();
+        activity.setActor("Administrator");
+        activity.setVerb("test");
+        activity.setObject("yo");
+        activity.setPublishedDate(new Date());
+        activity = activityStreamService.addActivity(activity);
+
+        String activityObject = ActivityHelper.createActivityObject(activity);
+        likeService.like("bender", activityObject);
+
+        LikeStatus likeStatus = likeService.getLikeStatus(activityObject);
+        assertEquals(1, likeStatus.likesCount);
+
+        activityStreamService.removeActivities(Collections.singleton(activity));
+        likeStatus = likeService.getLikeStatus(activityObject);
+        assertEquals(0, likeStatus.likesCount);
+    }
+
+    @Test
+    public void shouldRemoveLikeOnRemovedActivityAndReplies() {
+        Activity activity = new ActivityImpl();
+        activity.setActor("Administrator");
+        activity.setVerb("test");
+        activity.setObject("yo");
+        activity.setPublishedDate(new Date());
+        activity = activityStreamService.addActivity(activity);
+
+        String activityObject = ActivityHelper.createActivityObject(activity);
+        likeService.like("bender", activityObject);
+
+        LikeStatus likeStatus = likeService.getLikeStatus(activityObject);
+        assertEquals(1, likeStatus.likesCount);
+
+        long replyPublishedDate = new Date().getTime();
+        ActivityReply reply = new ActivityReply("bender", "Bender",
+                "First reply", replyPublishedDate);
+        reply = activityStreamService.addActivityReply(
+                activity.getId(), reply);
+        assertEquals(activity.getId() + "-reply-1", reply.getId());
+
+        String activityReplyObject = ActivityHelper.createActivityObject(reply.getId());
+        likeService.like("bender", activityReplyObject);
+
+        likeStatus = likeService.getLikeStatus(activityReplyObject);
+        assertEquals(1, likeStatus.likesCount);
+
+        activity = activityStreamService.getActivity(activity.getId());
+        activityStreamService.removeActivities(Collections.singleton(activity));
+        likeStatus = likeService.getLikeStatus(activityObject);
+        assertEquals(0, likeStatus.likesCount);
+
+        likeStatus = likeService.getLikeStatus(activityReplyObject);
+        assertEquals(0, likeStatus.likesCount);
+    }
+
+    @Test
+    public void shouldRemoveLikeOnRemovedActivityReply() {
+        Activity activity = new ActivityImpl();
+        activity.setActor("Administrator");
+        activity.setVerb("test");
+        activity.setObject("yo");
+        activity.setPublishedDate(new Date());
+        activity = activityStreamService.addActivity(activity);
+
+        String activityObject = ActivityHelper.createActivityObject(activity);
+        likeService.like("bender", activityObject);
+
+        LikeStatus likeStatus = likeService.getLikeStatus(activityObject);
+        assertEquals(1, likeStatus.likesCount);
+
+        long replyPublishedDate = new Date().getTime();
+        ActivityReply reply = new ActivityReply("bender", "Bender",
+                "First reply", replyPublishedDate);
+        reply = activityStreamService.addActivityReply(
+                activity.getId(), reply);
+        assertEquals(activity.getId() + "-reply-1", reply.getId());
+
+        String activityReplyObject = ActivityHelper.createActivityObject(reply.getId());
+        likeService.like("bender", activityReplyObject);
+
+        likeStatus = likeService.getLikeStatus(activityReplyObject);
+        assertEquals(1, likeStatus.likesCount);
+
+        activityStreamService.removeActivityReply(activity.getId(), reply.getId());
+        likeStatus = likeService.getLikeStatus(activityObject);
+        assertEquals(1, likeStatus.likesCount);
+
+        likeStatus = likeService.getLikeStatus(activityReplyObject);
+        assertEquals(0, likeStatus.likesCount);
     }
 }

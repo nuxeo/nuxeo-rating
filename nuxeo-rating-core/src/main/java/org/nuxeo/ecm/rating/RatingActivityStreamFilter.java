@@ -20,7 +20,10 @@ package org.nuxeo.ecm.rating;
 import static org.nuxeo.ecm.rating.api.Constants.RATING_VERB_PREFIX;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -30,6 +33,7 @@ import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.activity.ActivitiesListImpl;
 import org.nuxeo.ecm.activity.Activity;
 import org.nuxeo.ecm.activity.ActivityHelper;
+import org.nuxeo.ecm.activity.ActivityReply;
 import org.nuxeo.ecm.activity.ActivityStreamFilter;
 import org.nuxeo.ecm.activity.ActivityStreamService;
 import org.nuxeo.ecm.activity.ActivityStreamServiceImpl;
@@ -92,7 +96,33 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
     public void handleRemovedActivities(
             ActivityStreamService activityStreamService,
             ActivitiesList activities) {
-        // nothing to do for now
+        List<String> activityObjects = new ArrayList<String>();
+        for (Activity activity : activities) {
+            activityObjects.add(ActivityHelper.createActivityObject(activity));
+            for (ActivityReply reply : activity.getActivityReplies()) {
+                activityObjects.add(ActivityHelper.createActivityObject(reply.getId()));
+            }
+        }
+        removeAllRatingActivitiesFor(activityStreamService, activityObjects);
+    }
+
+    @Override
+    public void handleRemovedActivityReply(
+            ActivityStreamService activityStreamService, Activity activity,
+            ActivityReply activityReply) {
+        removeAllRatingActivitiesFor(
+                activityStreamService,
+                Collections.singleton(ActivityHelper.createActivityObject(activityReply.getId())));
+    }
+
+    protected void removeAllRatingActivitiesFor(
+            ActivityStreamService activityStreamService,
+            Collection<String> activityObjects) {
+        EntityManager em = ((ActivityStreamServiceImpl) activityStreamService).getEntityManager();
+        Query query = em.createQuery("delete from Activity activity where activity.verb LIKE :verb and activity.target in (:target)");
+        query.setParameter("verb", RATING_VERB_PREFIX + "%");
+        query.setParameter("target", activityObjects);
+        query.executeUpdate();
     }
 
     @Override
@@ -182,7 +212,8 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
             query = em.createQuery("select activity from Activity activity where activity.target LIKE :targetObject and activity.context is null and activity.actor = :actor and activity.verb = :verb order by activity.publishedDate DESC");
             query.setParameter("verb", RATING_VERB_PREFIX + aspect);
             query.setParameter(ACTOR_PARAMETER, actor);
-            query.setParameter(TARGET_OBJECT_PARAMETER, ActivityHelper.DOC_PREFIX + "%");
+            query.setParameter(TARGET_OBJECT_PARAMETER,
+                    ActivityHelper.DOC_PREFIX + "%");
             break;
         }
 
