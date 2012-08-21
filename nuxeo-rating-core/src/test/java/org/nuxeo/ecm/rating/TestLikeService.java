@@ -26,7 +26,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +33,6 @@ import org.nuxeo.ecm.activity.Activity;
 import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.activity.ActivityImpl;
 import org.nuxeo.ecm.activity.ActivityReply;
-import org.nuxeo.ecm.activity.ActivityStreamService;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
@@ -43,8 +41,6 @@ import org.nuxeo.ecm.rating.api.LikeStatus;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 import org.nuxeo.runtime.test.runner.LocalDeploy;
-
-import edu.emory.mathcs.backport.java.util.Arrays;
 
 /**
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>

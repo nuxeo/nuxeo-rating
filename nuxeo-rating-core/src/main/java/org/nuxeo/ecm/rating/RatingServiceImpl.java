@@ -22,13 +22,13 @@ import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.ACTOR_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.ASPECT_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.CONTEXT_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QUERY_TYPE_PARAMETER;
+import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.RATING_PARAMETER;
+import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.TARGET_OBJECT_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_ACTOR_RATINGS_FOR_OBJECT;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_LATEST_RATED_FOR_OBJECT;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATED_CHILDREN_FOR_CONTEXT;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATINGS_FOR_CANCEL;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATINGS_FOR_OBJECT;
-import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.RATING_PARAMETER;
-import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.TARGET_OBJECT_PARAMETER;
 import static org.nuxeo.ecm.rating.api.Constants.RATING_VERB_PREFIX;
 
 import java.io.Serializable;
@@ -137,7 +137,7 @@ public class RatingServiceImpl extends DefaultComponent implements
         parameters.put(QUERY_TYPE_PARAMETER, GET_RATINGS_FOR_OBJECT);
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
-        parameters.put(RATING_PARAMETER, rating);
+        parameters.put(RATING_PARAMETER, Integer.valueOf(rating));
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
         ActivitiesList activities = activityStreamService.query(
@@ -170,7 +170,7 @@ public class RatingServiceImpl extends DefaultComponent implements
                 ActivityHelper.createUserActivityObject(username));
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
-        parameters.put(RATING_PARAMETER, rating);
+        parameters.put(RATING_PARAMETER, Integer.valueOf(rating));
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
         ActivitiesList activities = activityStreamService.query(
@@ -214,7 +214,7 @@ public class RatingServiceImpl extends DefaultComponent implements
         parameters.put(QUERY_TYPE_PARAMETER, GET_RATED_CHILDREN_FOR_CONTEXT);
         parameters.put(CONTEXT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
-        parameters.put(RATING_PARAMETER, rating);
+        parameters.put(RATING_PARAMETER, Integer.valueOf(rating));
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
         return activityStreamService.query(RatingActivityStreamFilter.ID,
@@ -222,7 +222,8 @@ public class RatingServiceImpl extends DefaultComponent implements
     }
 
     @Override
-    public ActivitiesList getLastestRatedDocByUser(String username, String aspect, int limit) {
+    public ActivitiesList getLastestRatedDocByUser(String username,
+            String aspect, int limit) {
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_LATEST_RATED_FOR_OBJECT);
         parameters.put(ACTOR_PARAMETER,
@@ -238,7 +239,7 @@ public class RatingServiceImpl extends DefaultComponent implements
         double average = 0;
         for (Activity activity : activities) {
             try {
-                average += Integer.valueOf(activity.getObject());
+                average += Integer.valueOf(activity.getObject()).intValue();
             } catch (NumberFormatException e) {
                 log.warn(activity.getObject() + " is not a valid rating");
             }

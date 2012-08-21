@@ -19,10 +19,9 @@ package org.nuxeo.ecm.rating;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
-import com.google.inject.Inject;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.activity.ActivityHelper;
@@ -44,6 +43,8 @@ import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 import org.nuxeo.runtime.test.runner.LocalDeploy;
 
+import com.google.inject.Inject;
+
 /**
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
@@ -53,6 +54,7 @@ import org.nuxeo.runtime.test.runner.LocalDeploy;
 @RepositoryConfig(repositoryName = "default", cleanup = Granularity.METHOD)
 @Deploy({ "org.nuxeo.ecm.automation.core" })
 @LocalDeploy("org.nuxeo.ecm.rating.core:rating-test.xml")
+@SuppressWarnings("boxing")
 public class TestLikeOperations extends AbstractRatingTest {
 
     @Inject

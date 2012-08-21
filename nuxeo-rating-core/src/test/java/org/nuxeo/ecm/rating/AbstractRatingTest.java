@@ -20,7 +20,6 @@ package org.nuxeo.ecm.rating;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import com.google.inject.Inject;
 import org.junit.Before;
 import org.nuxeo.ecm.activity.ActivityStreamService;
 import org.nuxeo.ecm.activity.ActivityStreamServiceImpl;
@@ -31,14 +30,13 @@ import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.ecm.core.event.EventServiceAdmin;
 import org.nuxeo.ecm.core.persistence.PersistenceProvider;
 import org.nuxeo.ecm.core.test.CoreFeature;
-import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
 import org.nuxeo.ecm.rating.api.LikeService;
 import org.nuxeo.ecm.rating.api.RatingService;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
+import com.google.inject.Inject;
+
 /**
- * 
- * 
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
  */
@@ -74,7 +72,7 @@ public abstract class AbstractRatingTest {
     @Before
     public void cleanupDatabase() throws ClientException {
         ((ActivityStreamServiceImpl) activityStreamService).getOrCreatePersistenceProvider().run(
-                true, new PersistenceProvider.RunVoid() {
+                Boolean.TRUE, new PersistenceProvider.RunVoid() {
                     public void runWith(EntityManager em) {
                         Query query = em.createQuery("delete from Activity");
                         query.executeUpdate();

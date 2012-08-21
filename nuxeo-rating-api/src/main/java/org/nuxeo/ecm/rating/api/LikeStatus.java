@@ -37,7 +37,8 @@ import java.util.Map;
 public class LikeStatus {
 
     /**
-     * Constant used when the {@code username} liked the {@code activityObject}.
+     * Constant used when the {@code username} liked the {@code activityObject}
+     * .
      */
     public static final int LIKED = 1;
 
@@ -99,6 +100,7 @@ public class LikeStatus {
     /**
      * Returns a {@code Map} of attributes for this {@code LikeStatus}.
      */
+    @SuppressWarnings("boxing")
     public Map<String, Serializable> toMap() {
         Map<String, Serializable> map = new HashMap<String, Serializable>();
         map.put("activityObject", activityObject);

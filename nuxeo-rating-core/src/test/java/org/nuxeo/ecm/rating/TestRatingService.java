@@ -24,7 +24,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import com.google.inject.Inject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.activity.ActivitiesList;
@@ -39,6 +38,8 @@ import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 import org.nuxeo.runtime.test.runner.LocalDeploy;
 
+import com.google.inject.Inject;
+
 /**
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
@@ -47,6 +48,7 @@ import org.nuxeo.runtime.test.runner.LocalDeploy;
 @Features({ RatingFeature.class })
 @RepositoryConfig(repositoryName = "default", cleanup = Granularity.METHOD)
 @LocalDeploy("org.nuxeo.ecm.rating.core:rating-test.xml")
+@SuppressWarnings("boxing")
 public class TestRatingService extends AbstractRatingTest {
 
     public static final String STARS_ASPECT = "stars";
@@ -317,7 +319,8 @@ public class TestRatingService extends AbstractRatingTest {
         ratingService.rate(username, 3, activity3, STARS_ASPECT);
         ratingService.rate(username, 5, activity4, STARS_ASPECT);
 
-        ActivitiesList lastestRatedDocByUser = ratingService.getLastestRatedDocByUser(username, STARS_ASPECT, 3);
+        ActivitiesList lastestRatedDocByUser = ratingService.getLastestRatedDocByUser(
+                username, STARS_ASPECT, 3);
         assertEquals(3, lastestRatedDocByUser.size());
         assertEquals(activity4, lastestRatedDocByUser.get(0).getTarget());
         assertEquals(activity3, lastestRatedDocByUser.get(1).getTarget());

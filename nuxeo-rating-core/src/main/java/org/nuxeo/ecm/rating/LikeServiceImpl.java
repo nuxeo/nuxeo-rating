@@ -23,9 +23,9 @@ import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.ACTOR_PARAMETE
 import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.CONTEXT_PARAMETER;
 import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.FROMDT_PARAMETER;
 import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.OBJECT_PARAMETER;
+import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.TODT_PARAMETER;
 import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.QueryType.GET_DOCUMENTS_COUNT;
 import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.QueryType.GET_MINI_MESSAGE_COUNT;
-import static org.nuxeo.ecm.rating.LikesCountActivityStreamFilter.TODT_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QUERY_TYPE_PARAMETER;
 import static org.nuxeo.ecm.rating.api.Constants.LIKE_ASPECT;
 import static org.nuxeo.ecm.rating.api.LikeStatus.DISLIKED;
@@ -39,8 +39,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.activity.ActivitiesListImpl;
 import org.nuxeo.ecm.activity.Activity;
@@ -55,13 +53,11 @@ import org.nuxeo.runtime.model.DefaultComponent;
 
 /**
  * Default implementation of {@see LikeService}.
- * 
+ *
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
  */
 public class LikeServiceImpl extends DefaultComponent implements LikeService {
-
-    private static final Log log = LogFactory.getLog(LikeServiceImpl.class);
 
     public static final int LIKE_RATING = 1;
 
@@ -191,7 +187,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
             parameters.put(TODT_PARAMETER, toDt);
         }
         parameters.put(CONTEXT_PARAMETER, createDocumentActivityObject(source));
-        parameters.put(OBJECT_PARAMETER, LIKE_RATING);
+        parameters.put(OBJECT_PARAMETER, Integer.valueOf(LIKE_RATING));
         parameters.put(ACTOR_PARAMETER,
                 createUserActivityObject(session.getPrincipal().getName()));
         parameters.put(QUERY_TYPE_PARAMETER, GET_DOCUMENTS_COUNT);
