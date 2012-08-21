@@ -38,6 +38,7 @@ import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
+import org.nuxeo.ecm.platform.test.PlatformFeature;
 import org.nuxeo.ecm.platform.usermanager.UserManager;
 import org.nuxeo.ecm.platform.usermanager.exceptions.UserAlreadyExistsException;
 import org.nuxeo.runtime.api.Framework;
@@ -53,7 +54,7 @@ import com.google.inject.Inject;
  * @since 5.6
  */
 @RunWith(FeaturesRunner.class)
-@Features({ RatingFeature.class })
+@Features({ RatingFeature.class, PlatformFeature.class })
 @RepositoryConfig(repositoryName = "default", cleanup = Granularity.METHOD, init = DefaultRepositoryInit.class)
 @Deploy({ "org.nuxeo.ecm.platform.url.core",
         "org.nuxeo.ecm.platform.ui:OSGI-INF/urlservice-framework.xml",
