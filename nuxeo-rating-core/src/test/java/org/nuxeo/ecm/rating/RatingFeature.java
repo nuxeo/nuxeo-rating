@@ -2,7 +2,7 @@ package org.nuxeo.ecm.rating;
 
 import java.io.File;
 
-import org.apache.commons.io.FileUtils;
+import org.nuxeo.common.utils.FileUtils;
 import org.nuxeo.ecm.core.test.CoreFeature;
 import org.nuxeo.ecm.core.test.TransactionalFeature;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
@@ -31,7 +31,7 @@ public class RatingFeature extends SimpleFeature {
     @Override
     public void initialize(FeaturesRunner runner) throws Exception {
         dir = new File(DIRECTORY);
-        FileUtils.deleteDirectory(dir);
+        FileUtils.deleteTree(dir);
         dir.mkdirs();
         System.setProperty(PROP_NAME, dir.getPath());
         super.initialize(runner);
@@ -39,7 +39,7 @@ public class RatingFeature extends SimpleFeature {
 
     @Override
     public void stop(FeaturesRunner runner) throws Exception {
-        FileUtils.deleteDirectory(dir);
+        FileUtils.deleteTree(dir);
         dir = null;
         super.stop(runner);
     }
