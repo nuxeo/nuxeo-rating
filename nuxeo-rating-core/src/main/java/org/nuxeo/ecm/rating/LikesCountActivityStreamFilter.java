@@ -136,7 +136,7 @@ public class LikesCountActivityStreamFilter implements ActivityStreamFilter {
             }
             queryStr = "Select likes.target, count(likes), (" + innerStr
                     + ") from Activity as likes, Activity as minimessage";
-            queryStr += " where concat('activity:', minimessage.id) = likes.target";
+            queryStr += " where concat('activity:', cast(minimessage.id as string)) = likes.target";
             queryStr += " and minimessage.verb = :verbMiniMessage and minimessage.context  = :context";
             queryStr += " and likes.verb = :verb";
             if (parameters.containsKey(FROMDT_PARAMETER)) {
