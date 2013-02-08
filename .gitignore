@@ -9,3 +9,4 @@ gen
 build.properties
 *.iml
 *.log
+*.DS_Store
