@@ -19,7 +19,8 @@ package org.nuxeo.ecm.rating.operations;
 
 import java.io.ByteArrayInputStream;
 
-import org.json.JSONObject;
+import net.sf.json.JSONObject;
+
 import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.automation.OperationException;
 import org.nuxeo.ecm.automation.core.Constants;
@@ -75,7 +76,7 @@ public class Like {
                     "'document' or 'activityId' parameter must be set.");
         }
 
-        JSONObject json = new JSONObject(status.toMap());
+        JSONObject json = JSONObject.fromObject(status.toMap());
         return new InputStreamBlob(new ByteArrayInputStream(
                 json.toString().getBytes("UTF-8")), "application/json");
     }

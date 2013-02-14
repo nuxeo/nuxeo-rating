@@ -17,11 +17,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.activity.Activity;
 import org.nuxeo.ecm.activity.ActivityHelper;
@@ -101,8 +102,8 @@ public class MostLiked {
         }
 
         Map<String, Object> jsonObj = new HashMap<String, Object>();
-        jsonObj.put("items", new JSONArray(docsWithRate));
-        return new InputStreamBlob(new ByteArrayInputStream(new JSONObject(
+        jsonObj.put("items", JSONArray.fromObject(docsWithRate));
+        return new InputStreamBlob(new ByteArrayInputStream(JSONObject.fromObject(
                 jsonObj).toString().getBytes("UTF-8")), "application/json");
     }
 
@@ -121,7 +122,7 @@ public class MostLiked {
                 miniMessage.getActor(), miniMessage.getDisplayActor()));
         value.put("hasUserLiked", hasRated);
 
-        return new JSONObject(value);
+        return JSONObject.fromObject(value);
     }
 
     protected JSONObject buildFromDocument(Activity activity) throws Exception {
@@ -135,12 +136,12 @@ public class MostLiked {
 
         Map<String, Object> value = new HashMap<String, Object>();
         value.put("rating", rating);
-        value.put("document", new JSONObject(out.toString()));
+        value.put("document", JSONObject.fromObject(out.toString()));
         value.put("url", getDocumentUrl(doc));
         value.put("hasUserLiked", hasRated);
         value.put("type", "document");
 
-        return new JSONObject(value);
+        return JSONObject.fromObject(value);
     }
 
     protected String getDocumentUrl(DocumentModel doc) {
