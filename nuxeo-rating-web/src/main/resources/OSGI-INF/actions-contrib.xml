@@ -11,6 +11,9 @@
       <filter-id>mutable_document</filter-id>
       <filter-id>not_folder</filter-id>
       <filter-id>userNotLiked</filter-id>
+      <properties>
+        <property name="ajaxSupport">true</property>
+      </properties>
     </action>
 
     <action id="documentUnlike" order="5" type="link"
@@ -20,6 +23,9 @@
       <filter-id>mutable_document</filter-id>
       <filter-id>not_folder</filter-id>
       <filter-id>userLiked</filter-id>
+      <properties>
+        <property name="ajaxSupport">true</property>
+      </properties>
     </action>
 
   </extension>
