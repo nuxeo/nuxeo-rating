@@ -23,9 +23,12 @@ import static org.jboss.seam.annotations.Install.FRAMEWORK;
 import java.io.Serializable;
 import java.security.Principal;
 
+import org.jboss.seam.annotations.In;
 import org.jboss.seam.annotations.Install;
 import org.jboss.seam.annotations.Name;
 import org.jboss.seam.annotations.Scope;
+import org.jboss.seam.faces.FacesMessages;
+import org.jboss.seam.international.StatusMessage;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.rating.api.LikeService;
 import org.nuxeo.runtime.api.Framework;
@@ -43,6 +46,9 @@ public class LikeActions implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @In(create = true, required = false)
+    protected FacesMessages facesMessages;
+
     public boolean hasUserLiked(Principal principal, DocumentModel doc) {
         LikeService likeService = Framework.getLocalService(LikeService.class);
         return likeService.hasUserLiked(principal.getName(), doc);
@@ -51,11 +57,15 @@ public class LikeActions implements Serializable {
     public void like(Principal principal, DocumentModel doc) {
         LikeService likeService = Framework.getLocalService(LikeService.class);
         likeService.like(principal.getName(), doc);
+        facesMessages.addFromResourceBundle(StatusMessage.Severity.INFO,
+                "label.document.liked");
     }
 
     public void cancelLike(Principal principal, DocumentModel doc) {
         LikeService likeService = Framework.getLocalService(LikeService.class);
         likeService.cancel(principal.getName(), doc);
+        facesMessages.addFromResourceBundle(StatusMessage.Severity.INFO,
+                "label.document.unliked");
     }
 
     public long getLikesCount(DocumentModel doc) {
