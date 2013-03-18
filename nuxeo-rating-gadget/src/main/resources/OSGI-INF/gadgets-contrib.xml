@@ -3,13 +3,6 @@
 
   <extension target="org.nuxeo.opensocial.gadgets.service" point="gadget">
 
-    <internalGadget name="like" disabled="false">
-      <mountPoint>/like</mountPoint>
-      <entryPoint>like.xml</entryPoint>
-      <category>Nuxeo</category>
-      <icon>gadget-documentLike.png</icon>
-    </internalGadget>
-
     <internalGadget name="mostLiked" disabled="false">
       <documentation>
         This gadget allows user to list most liked document from a Social Workspace or from a SuperSpace if it is added in the User Home.

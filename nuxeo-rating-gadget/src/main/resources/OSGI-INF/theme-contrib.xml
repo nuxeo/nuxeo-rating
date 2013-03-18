@@ -6,18 +6,12 @@
   <extension target="org.nuxeo.theme.services.ThemeService" point="resources">
     <!-- CSS -->
     <!-- Gadgets CSS -->
-    <resource name="gadget-like.css">
-      <path>css/opensocial/gadgets/like.css</path>
-    </resource>
     <resource name="gadget-mostLiked.css">
       <path>css/opensocial/gadgets/mostLiked.css</path>
     </resource>
 
     <!-- JS -->
     <!-- Gadgets JS -->
-    <resource name="gadget-like.js">
-      <path>scripts/opensocial/gadgets/like.js</path>
-    </resource>
     <resource name="gadget-mostLiked.js">
       <path>scripts/opensocial/gadgets/mostLiked.js</path>
     </resource>
