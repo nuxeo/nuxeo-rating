@@ -92,7 +92,7 @@ var prefs = new gadgets.Prefs();
     tools = toolbar.prependTo(content.parent());
 
     var divDates = jQuery('<div class="floatL" id="dates"></div>').appendTo(tools);
-    var dates = ['ever', 'this_week', 'this_month', 'last_week', 'last_month'];
+    var dates = ['ever', 'this_week', 'this_month', 'past_week', 'past_month'];
 
     function displayDate(date) {
       return function(evt) {
@@ -137,7 +137,7 @@ var prefs = new gadgets.Prefs();
 
   function buildDatesFromDateRange() {
     var startDt, endDt;
-    //['ever', 'this_week', 'this_month', 'last_week', 'last_month'];
+    //['ever', 'this_week', 'this_month', 'past_week', 'past_month'];
     switch (dateRange) {
     case 'this_week':
       startDt = moment().day(0);
@@ -147,11 +147,11 @@ var prefs = new gadgets.Prefs();
       startDt = moment().date(1);
       endDt = moment();
       break;
-    case 'last_week':
+    case 'past_week':
       startDt = moment().day(-7);
       endDt = moment().day(-1);
       break;
-    case 'last_month':
+    case 'past_month':
       endDt = moment().date(-1);
       startDt = moment(endDt).date(1);
       break;

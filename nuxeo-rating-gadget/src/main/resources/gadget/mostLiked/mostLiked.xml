@@ -17,7 +17,7 @@
 <![CDATA[
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="${clientSideBaseUrl}nxthemes-lib/gadget-common.css,gadget-like.css?path=${contextPath}&basepath=${contextPath}"/>
+    <link rel="stylesheet" type="text/css" href="${clientSideBaseUrl}nxthemes-lib/gadget-common.css,gadget-mostLiked.css?path=${contextPath}&basepath=${contextPath}"/>
 
     <!-- insert JS Context -->
     ${jsContext}
