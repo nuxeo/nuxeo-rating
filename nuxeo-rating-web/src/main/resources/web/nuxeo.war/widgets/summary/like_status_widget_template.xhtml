@@ -2,21 +2,13 @@
   xmlns:nxu="http://nuxeo.org/nxweb/util"
   xmlns:f="http://java.sun.com/jsf/core"
   xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
   xmlns:c="http://java.sun.com/jstl/core">
 
   <c:set var="likesCount" value="#{likeActions.getLikesCount(value)}" />
-
-  <c:choose>
-    <c:when test="#{likesCount > 1}">
-      <h:outputFormat value="#{messages['label.people.liked.document']}">
-        <f:param value="#{likesCount}" />
-      </h:outputFormat>
-    </c:when>
-    <c:otherwise>
-      <h:outputFormat value="#{messages['label.one.people.liked.document']}">
-        <f:param value="#{likesCount}" />
-      </h:outputFormat>
-    </c:otherwise>
-  </c:choose>
+  
+  <h:outputText value="#{likesCount}" title="#{tooltip}" >
+  </h:outputText>
+  <h:graphicImage value="/icons/like.png" />
 
 </c:if>
