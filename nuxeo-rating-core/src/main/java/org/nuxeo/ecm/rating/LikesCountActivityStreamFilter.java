@@ -164,9 +164,10 @@ public class LikesCountActivityStreamFilter implements ActivityStreamFilter {
         }
 
         if (limit > 0) {
-            if (offset != 0) {
-                query.setFirstResult((int) offset);
-            }
+            query.setMaxResults((int) limit);
+        }
+        if (offset > 0) {
+            query.setFirstResult((int) offset);
         }
 
         ActivitiesList likesCount = new ActivitiesListImpl();

@@ -219,9 +219,9 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
 
         if (limit > 0) {
             query.setMaxResults((int) limit);
-            if (offset > 0) {
-                query.setFirstResult((int) offset);
-            }
+        }
+        if (offset > 0) {
+            query.setFirstResult((int) offset);
         }
         return new ActivitiesListImpl(query.getResultList());
     }
