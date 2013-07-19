@@ -45,6 +45,8 @@
 
     <action id="summary_document_likes_count" type="widget" order="10">
       <category>SUMMARY_INDICATORS</category>
+      <filter-id>mutable_document</filter-id>
+      <filter-id>not_folder</filter-id>
       <properties>
         <property name="widgetName">document_likes_count</property>
       </properties>
