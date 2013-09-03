@@ -4,7 +4,6 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.nuxeo.ecm.activity.ActivityHelper.getActivityId;
 import static org.nuxeo.ecm.activity.ActivityHelper.getDocumentId;
 import static org.nuxeo.ecm.activity.ActivityHelper.getUsername;
-import static org.nuxeo.ecm.automation.server.jaxrs.io.writers.JsonDocumentWriter.writeDocument;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,6 +22,7 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.jackson.JsonGenerator;
 import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.activity.Activity;
 import org.nuxeo.ecm.activity.ActivityHelper;
@@ -33,6 +33,8 @@ import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
+import org.nuxeo.ecm.automation.jaxrs.io.JsonHelper;
+import org.nuxeo.ecm.automation.jaxrs.io.documents.JsonDocumentWriter;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentLocation;
@@ -132,7 +134,9 @@ public class MostLiked {
         Integer hasRated = Integer.valueOf(activity.getContext());
 
         OutputStream out = new ByteArrayOutputStream();
-        writeDocument(out, doc, new String[] { "dublincore", "common" });
+        JsonGenerator jg = JsonHelper.createJsonGenerator(out);
+
+        JsonDocumentWriter.writeDocument(jg, doc, new String[] { "dublincore", "common" });
 
         Map<String, Object> value = new HashMap<String, Object>();
         value.put("rating", rating);
