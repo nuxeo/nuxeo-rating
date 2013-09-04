@@ -52,7 +52,7 @@ import com.google.inject.Inject;
 @RunWith(FeaturesRunner.class)
 @Features(RatingFeature.class)
 @RepositoryConfig(repositoryName = "default", cleanup = Granularity.METHOD)
-@Deploy({ "org.nuxeo.ecm.automation.core", "org.nuxeo.ecm.automation.server" })
+@Deploy({ "org.nuxeo.ecm.automation.core", "org.nuxeo.ecm.automation.server","org.nuxeo.ecm.automation.io" })
 @LocalDeploy("org.nuxeo.ecm.rating.core:rating-test.xml")
 @SuppressWarnings("boxing")
 public class TestLikeOperations extends AbstractRatingTest {
