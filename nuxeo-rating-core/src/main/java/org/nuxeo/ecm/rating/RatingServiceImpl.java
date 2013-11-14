@@ -76,6 +76,10 @@ public class RatingServiceImpl extends DefaultComponent implements
 
     @Override
     public void cancelRate(String username, String activityObject, String aspect) {
+        // Logging parameters
+        log.info("Cancel Rate - username:" + username);
+        log.info("Cancel Rate - activity:" + activityObject);
+        log.info("Cancel Rate - aspect:" + aspect);
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_RATINGS_FOR_CANCEL);
         parameters.put(ACTOR_PARAMETER,
