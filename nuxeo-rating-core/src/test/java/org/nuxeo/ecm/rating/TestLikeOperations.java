@@ -22,6 +22,8 @@ import static org.junit.Assert.assertNotNull;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.activity.ActivityHelper;
@@ -56,6 +58,8 @@ import com.google.inject.Inject;
 @LocalDeploy("org.nuxeo.ecm.rating.core:rating-test.xml")
 @SuppressWarnings("boxing")
 public class TestLikeOperations extends AbstractRatingTest {
+
+    private static final Log log = LogFactory.getLog(TestLikeOperations.class);
 
     @Inject
     protected AutomationService service;
@@ -280,6 +284,10 @@ public class TestLikeOperations extends AbstractRatingTest {
 
     @Test
     public void shouldCancelLikeOnAnActivityObject() throws Exception {
+        // Logging info for heisenbug
+        // TODO: revert these changes
+        log.info("Culprit Test");
+
         Long activityId = 15L;
         String activityObject = ActivityHelper.createActivityObject(activityId);
 
