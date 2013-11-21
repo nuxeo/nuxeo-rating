@@ -35,6 +35,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.activity.ActivitiesList;
@@ -81,6 +82,7 @@ public class RatingServiceImpl extends DefaultComponent implements
         log.info("Cancel Rate - username:" + username);
         log.info("Cancel Rate - activity:" + activityObject);
         log.info("Cancel Rate - aspect:" + aspect);
+        log.info("StackTrace: "+ExceptionUtils.getFullStackTrace(new Throwable()));
 
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_RATINGS_FOR_CANCEL);
