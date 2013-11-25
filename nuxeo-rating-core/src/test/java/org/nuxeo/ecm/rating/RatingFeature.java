@@ -2,11 +2,21 @@ package org.nuxeo.ecm.rating;
 
 import java.io.File;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+
+import org.junit.runners.model.FrameworkMethod;
 import org.nuxeo.common.utils.FileUtils;
+import org.nuxeo.ecm.activity.ActivityStreamService;
+import org.nuxeo.ecm.activity.ActivityStreamServiceImpl;
+import org.nuxeo.ecm.core.persistence.PersistenceProvider;
+import org.nuxeo.ecm.core.storage.sql.ra.PoolingRepositoryFactory;
 import org.nuxeo.ecm.core.test.CoreFeature;
 import org.nuxeo.ecm.core.test.TransactionalFeature;
 import org.nuxeo.ecm.core.test.annotations.Granularity;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
+import org.nuxeo.ecm.core.test.annotations.TransactionalConfig;
+import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
@@ -16,7 +26,7 @@ import org.nuxeo.runtime.test.runner.SimpleFeature;
  * @author <a href="mailto:akervern@nuxeo.com">Arnaud Kervern</a>
  */
 @Features({ TransactionalFeature.class, CoreFeature.class })
-@RepositoryConfig(cleanup = Granularity.METHOD)
+@RepositoryConfig(cleanup = Granularity.METHOD, repositoryFactoryClass = PoolingRepositoryFactory.class)
 @Deploy({ "org.nuxeo.runtime.datasource", "org.nuxeo.ecm.core.persistence",
         "org.nuxeo.ecm.activity", "org.nuxeo.ecm.rating.api",
         "org.nuxeo.ecm.rating.core" })
@@ -44,4 +54,18 @@ public class RatingFeature extends SimpleFeature {
         super.stop(runner);
     }
 
+    @Override
+    public void afterMethodRun(FeaturesRunner runner, FrameworkMethod method,
+            Object test) throws Exception {
+        ActivityStreamServiceImpl service = (ActivityStreamServiceImpl) Framework.getLocalService(ActivityStreamService.class);
+        service.getOrCreatePersistenceProvider().run(true,
+                new PersistenceProvider.RunVoid() {
+                    @Override
+                    public void runWith(EntityManager em) {
+                        Query query = em.createQuery("delete from Activity");
+                        query.executeUpdate();
+
+                    }
+                });
+    }
 }
