@@ -16,6 +16,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.servlet.ServletRequest;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -28,6 +30,7 @@ import org.nuxeo.ecm.activity.Activity;
 import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.activity.ActivityMessageHelper;
 import org.nuxeo.ecm.activity.ActivityStreamService;
+import org.nuxeo.ecm.automation.OperationContext;
 import org.nuxeo.ecm.automation.core.Constants;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -70,6 +73,9 @@ public class MostLiked {
 
     @Context
     protected ActivityStreamService activityService;
+
+    @Context
+    protected OperationContext ctx;
 
     @Param(name = "contextPath")
     protected String contextPath;
@@ -138,7 +144,7 @@ public class MostLiked {
         JsonGenerator jg = JsonHelper.createJsonGenerator(out);
 
         JsonDocumentWriter.writeDocument(jg, doc, new String[] { "dublincore",
-                "common" });
+                "common" }, getRequest());
 
         Map<String, Object> value = new HashMap<String, Object>();
         value.put("rating", rating);
@@ -148,6 +154,20 @@ public class MostLiked {
         value.put("type", "document");
 
         return JSONObject.fromObject(value);
+    }
+
+    /**
+     * Returns the surrounding HttpServletRequest if possible else null.
+     * @return The surrounding request
+     *
+     * @since 5.9.3
+     */
+    private ServletRequest getRequest() {
+        Object request = ctx.get("request");
+        if(request != null && request instanceof ServletRequest) {
+            return (ServletRequest) request;
+        }
+        return null;
     }
 
     protected String getDocumentUrl(DocumentModel doc) {
