@@ -105,8 +105,9 @@ public class MostLiked {
 
         Map<String, Object> jsonObj = new HashMap<String, Object>();
         jsonObj.put("items", JSONArray.fromObject(docsWithRate));
-        return new InputStreamBlob(new ByteArrayInputStream(JSONObject.fromObject(
-                jsonObj).toString().getBytes("UTF-8")), "application/json");
+        return new InputStreamBlob(new ByteArrayInputStream(
+                JSONObject.fromObject(jsonObj).toString().getBytes("UTF-8")),
+                "application/json");
     }
 
     protected JSONObject buildFromActivity(Activity activity) {
@@ -136,7 +137,8 @@ public class MostLiked {
         OutputStream out = new ByteArrayOutputStream();
         JsonGenerator jg = JsonHelper.createJsonGenerator(out);
 
-        JsonDocumentWriter.writeDocument(jg, doc, new String[] { "dublincore", "common" });
+        JsonDocumentWriter.writeDocument(jg, doc, new String[] { "dublincore",
+                "common" });
 
         Map<String, Object> value = new HashMap<String, Object>();
         value.put("rating", rating);
