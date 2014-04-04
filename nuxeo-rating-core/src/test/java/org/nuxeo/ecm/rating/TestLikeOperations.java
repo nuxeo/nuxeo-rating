@@ -59,10 +59,9 @@ import com.google.inject.Inject;
 @SuppressWarnings("boxing")
 public class TestLikeOperations extends AbstractRatingTest {
 
-    private static final Log log = LogFactory.getLog(TestLikeOperations.class);
-
     @Inject
     protected AutomationService service;
+
 
     @Test
     public void shouldReturnLikeStatusForDocument() throws Exception {
@@ -103,9 +102,6 @@ public class TestLikeOperations extends AbstractRatingTest {
 
     @Test
     public void shouldReturnLikeStatusForAnActivityObject() throws Exception {
-        Long activityId = 15L;
-        String activityObject = ActivityHelper.createActivityObject(activityId);
-
         likeService.like("bender", activityObject);
         likeService.like("leela", activityObject);
         likeService.dislike("fry", activityObject);
@@ -115,7 +111,7 @@ public class TestLikeOperations extends AbstractRatingTest {
 
         OperationChain chain = new OperationChain("testLikeOperation");
         chain.add(GetLikeStatus.ID).set("activityId",
-                String.valueOf(activityId));
+                String.valueOf(activity.getId()));
         Blob result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         String json = result.getString();
@@ -192,9 +188,6 @@ public class TestLikeOperations extends AbstractRatingTest {
 
     @Test
     public void shouldLikeAnActivityObject() throws Exception {
-        Long activityId = 15L;
-        String activityObject = ActivityHelper.createActivityObject(activityId);
-
         likeService.like("bender", activityObject);
         likeService.like("leela", activityObject);
         likeService.dislike("fry", activityObject);
@@ -204,7 +197,7 @@ public class TestLikeOperations extends AbstractRatingTest {
 
         OperationChain chain = new OperationChain("testLikeOperation");
         chain.add(GetLikeStatus.ID).set("activityId",
-                String.valueOf(activityId));
+                String.valueOf(activity.getId()));
         Blob result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         String json = result.getString();
@@ -217,7 +210,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertEquals(0, object.getInt("userLikeStatus"));
 
         chain = new OperationChain("testLikeOperation");
-        chain.add(Like.ID).set("activityId", String.valueOf(activityId));
+        chain.add(Like.ID).set("activityId", String.valueOf(String.valueOf(activity.getId())));
         result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         json = result.getString();
@@ -284,13 +277,6 @@ public class TestLikeOperations extends AbstractRatingTest {
 
     @Test
     public void shouldCancelLikeOnAnActivityObject() throws Exception {
-        // Logging info for heisenbug
-        // TODO: revert these changes
-        log.info("Culprit Test");
-
-        Long activityId = 15L;
-        String activityObject = ActivityHelper.createActivityObject(activityId);
-
         likeService.like("bender", activityObject);
         likeService.like("leela", activityObject);
         likeService.like("Administrator", activityObject);
@@ -301,7 +287,7 @@ public class TestLikeOperations extends AbstractRatingTest {
 
         OperationChain chain = new OperationChain("testLikeOperation");
         chain.add(GetLikeStatus.ID).set("activityId",
-                String.valueOf(activityId));
+                String.valueOf(activity.getId()));
         Blob result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         String json = result.getString();
@@ -314,7 +300,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertEquals(1, object.getInt("userLikeStatus"));
 
         chain = new OperationChain("testLikeOperation");
-        chain.add(CancelLike.ID).set("activityId", String.valueOf(activityId));
+        chain.add(CancelLike.ID).set("activityId", String.valueOf(activity.getId()));
         result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         json = result.getString();

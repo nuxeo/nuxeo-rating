@@ -21,6 +21,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.junit.Before;
+import org.nuxeo.ecm.activity.Activity;
+import org.nuxeo.ecm.activity.ActivityHelper;
+import org.nuxeo.ecm.activity.ActivityImpl;
 import org.nuxeo.ecm.activity.ActivityStreamService;
 import org.nuxeo.ecm.activity.ActivityStreamServiceImpl;
 import org.nuxeo.ecm.core.api.ClientException;
@@ -62,6 +65,10 @@ public abstract class AbstractRatingTest {
     @Inject
     protected EventServiceAdmin eventServiceAdmin;
 
+    protected String activityObject;
+
+    protected Activity activity;
+
     @Before
     public void disableActivityStreamListener() {
         eventServiceAdmin.setListenerEnabledFlag("activityStreamListener",
@@ -77,6 +84,8 @@ public abstract class AbstractRatingTest {
                         query.executeUpdate();
                     }
                 });
+        activity = activityStreamService.addActivity(new ActivityImpl());
+        activityObject = ActivityHelper.createActivityObject(activity);
     }
 
     protected DocumentModel createTestDocument(String name)

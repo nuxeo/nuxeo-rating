@@ -54,18 +54,4 @@ public class RatingFeature extends SimpleFeature {
         super.stop(runner);
     }
 
-    @Override
-    public void afterMethodRun(FeaturesRunner runner, FrameworkMethod method,
-            Object test) throws Exception {
-        ActivityStreamServiceImpl service = (ActivityStreamServiceImpl) Framework.getLocalService(ActivityStreamService.class);
-        service.getOrCreatePersistenceProvider().run(true,
-                new PersistenceProvider.RunVoid() {
-                    @Override
-                    public void runWith(EntityManager em) {
-                        Query query = em.createQuery("delete from Activity");
-                        query.executeUpdate();
-
-                    }
-                });
-    }
 }
