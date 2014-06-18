@@ -22,11 +22,8 @@ import static org.junit.Assert.assertNotNull;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.automation.AutomationService;
 import org.nuxeo.ecm.automation.OperationChain;
 import org.nuxeo.ecm.automation.OperationContext;
@@ -34,8 +31,6 @@ import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
-import org.nuxeo.ecm.core.test.annotations.Granularity;
-import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
 import org.nuxeo.ecm.rating.operations.CancelLike;
 import org.nuxeo.ecm.rating.operations.GetLikeStatus;
 import org.nuxeo.ecm.rating.operations.Like;
@@ -43,8 +38,6 @@ import org.nuxeo.ecm.rating.operations.MostLiked;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
-import org.nuxeo.runtime.test.runner.LocalDeploy;
-
 import com.google.inject.Inject;
 
 /**
@@ -53,9 +46,7 @@ import com.google.inject.Inject;
  */
 @RunWith(FeaturesRunner.class)
 @Features(RatingFeature.class)
-@RepositoryConfig(repositoryName = "default", cleanup = Granularity.METHOD)
-@Deploy({ "org.nuxeo.ecm.automation.core", "org.nuxeo.ecm.automation.server","org.nuxeo.ecm.automation.io" })
-@LocalDeploy("org.nuxeo.ecm.rating.core:rating-test.xml")
+@Deploy({ "org.nuxeo.ecm.automation.core", "org.nuxeo.ecm.automation.io" })
 @SuppressWarnings("boxing")
 public class TestLikeOperations extends AbstractRatingTest {
 
