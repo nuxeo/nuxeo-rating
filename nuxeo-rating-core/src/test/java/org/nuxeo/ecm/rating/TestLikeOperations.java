@@ -46,7 +46,8 @@ import com.google.inject.Inject;
  */
 @RunWith(FeaturesRunner.class)
 @Features(RatingFeature.class)
-@Deploy({ "org.nuxeo.ecm.automation.core", "org.nuxeo.ecm.automation.io" })
+@Deploy({ "org.nuxeo.ecm.automation.core", "org.nuxeo.ecm.automation.io",
+        "org.nuxeo.ecm.webengine.core" })
 @SuppressWarnings("boxing")
 public class TestLikeOperations extends AbstractRatingTest {
 
