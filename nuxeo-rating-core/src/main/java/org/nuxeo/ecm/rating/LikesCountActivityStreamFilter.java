@@ -65,34 +65,29 @@ public class LikesCountActivityStreamFilter implements ActivityStreamFilter {
     }
 
     @Override
-    public void handleNewActivity(ActivityStreamService activityStreamService,
-            Activity activity) {
+    public void handleNewActivity(ActivityStreamService activityStreamService, Activity activity) {
         // Nothing to do for now
     }
 
     @Override
     @Deprecated
-    public void handleRemovedActivities(
-            ActivityStreamService activityStreamService,
+    public void handleRemovedActivities(ActivityStreamService activityStreamService,
             Collection<Serializable> activityIds) {
         // Nothing to do for now
     }
 
     @Override
-    public void handleRemovedActivities(
-            ActivityStreamService activityStreamService,
-            ActivitiesList activities) {
+    public void handleRemovedActivities(ActivityStreamService activityStreamService, ActivitiesList activities) {
     }
 
     @Override
-    public void handleRemovedActivityReply(
-            ActivityStreamService activityStreamService, Activity activity,
+    public void handleRemovedActivityReply(ActivityStreamService activityStreamService, Activity activity,
             ActivityReply activityReply) {
     }
 
     @Override
-    public ActivitiesList query(ActivityStreamService activityStreamService,
-            Map<String, Serializable> parameters, long offset, long limit) {
+    public ActivitiesList query(ActivityStreamService activityStreamService, Map<String, Serializable> parameters,
+            long offset, long limit) {
         QueryType queryType = (QueryType) parameters.get(QUERY_TYPE_PARAMETER);
         if (queryType == null) {
             return new ActivitiesListImpl();
@@ -113,8 +108,7 @@ public class LikesCountActivityStreamFilter implements ActivityStreamFilter {
             if (parameters.containsKey(FROMDT_PARAMETER)) {
                 innerStr += " AND activity2.publishedDate BETWEEN :fromDt AND :toDt";
             }
-            queryStr = "SELECT activity.target, count(activity), (" + innerStr
-                    + ") FROM Activity activity";
+            queryStr = "SELECT activity.target, count(activity), (" + innerStr + ") FROM Activity activity";
             queryStr += " WHERE activity.verb = :verb and activity.context  = :context";
             queryStr += " AND activity.object = :object";
             if (parameters.containsKey(FROMDT_PARAMETER)) {
@@ -158,8 +152,7 @@ public class LikesCountActivityStreamFilter implements ActivityStreamFilter {
         query.setParameter(VERB_PARAMETER, RATING_VERB_PREFIX + LIKE_ASPECT);
         query.setParameter(ACTOR_PARAMETER, actor);
         if (parameters.containsKey(FROMDT_PARAMETER)) {
-            query.setParameter(FROMDT_PARAMETER,
-                    parameters.get(FROMDT_PARAMETER));
+            query.setParameter(FROMDT_PARAMETER, parameters.get(FROMDT_PARAMETER));
             query.setParameter(TODT_PARAMETER, parameters.get(TODT_PARAMETER));
         }
 
@@ -173,10 +166,8 @@ public class LikesCountActivityStreamFilter implements ActivityStreamFilter {
         ActivitiesList likesCount = new ActivitiesListImpl();
         for (Object result : query.getResultList()) {
             Object[] objects = (Object[]) result;
-            ActivityBuilder ab = new ActivityBuilder().verb(
-                    RATING_VERB_PREFIX + LIKE_ASPECT).actor((String) actor).object(
-                    String.valueOf(objects[1])).target((String) objects[0]).context(
-                    String.valueOf(objects[2]));
+            ActivityBuilder ab = new ActivityBuilder().verb(RATING_VERB_PREFIX + LIKE_ASPECT).actor((String) actor).object(
+                    String.valueOf(objects[1])).target((String) objects[0]).context(String.valueOf(objects[2]));
             likesCount.add(ab.build());
         }
 

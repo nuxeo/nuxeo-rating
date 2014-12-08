@@ -15,8 +15,7 @@ import org.nuxeo.ecm.rating.api.RatingService;
 import org.nuxeo.runtime.api.Framework;
 
 /**
- * Remove rates made when a document is removed or his lifecycle state is
- * changing to DELETED_STATE
+ * Remove rates made when a document is removed or his lifecycle state is changing to DELETED_STATE
  * 
  * @author <a href="mailto:akervern@nuxeo.com">Arnaud Kervern</a>
  */

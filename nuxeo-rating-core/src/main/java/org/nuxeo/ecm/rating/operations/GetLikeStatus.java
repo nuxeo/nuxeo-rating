@@ -36,8 +36,7 @@ import org.nuxeo.ecm.rating.api.LikeService;
 import org.nuxeo.ecm.rating.api.LikeStatus;
 
 /**
- * Operation to get a {@see LikeStatus} for a specified document or activity
- * object.
+ * Operation to get a {@see LikeStatus} for a specified document or activity object.
  *
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
@@ -70,13 +69,11 @@ public class GetLikeStatus {
             String activityObject = ActivityHelper.createActivityObject(activityId);
             status = likeService.getLikeStatus(username, activityObject);
         } else {
-            throw new OperationException(
-                    "'document' or 'activityId' parameter must be set.");
+            throw new OperationException("'document' or 'activityId' parameter must be set.");
         }
 
         JSONObject json = JSONObject.fromObject(status.toMap());
-        return new InputStreamBlob(new ByteArrayInputStream(
-                json.toString().getBytes("UTF-8")), "application/json");
+        return new InputStreamBlob(new ByteArrayInputStream(json.toString().getBytes("UTF-8")), "application/json");
     }
 
 }

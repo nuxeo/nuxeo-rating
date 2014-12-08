@@ -63,15 +63,12 @@ public class TestRatingService extends AbstractRatingTest {
         String docActivityObject = ActivityHelper.createDocumentActivityObject(doc);
 
         ratingService.rate("bender", 5, docActivityObject, STARS_ASPECT);
-        assertTrue(ratingService.hasUserRated("bender", docActivityObject,
-                STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("bender", docActivityObject, STARS_ASPECT));
 
         ratingService.rate("fry", 2, docActivityObject, STARS_ASPECT);
         ratingService.rate("leela", 1, docActivityObject, STARS_ASPECT);
-        assertTrue(ratingService.hasUserRated("fry", docActivityObject,
-                STARS_ASPECT));
-        assertTrue(ratingService.hasUserRated("leela", docActivityObject,
-                STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("fry", docActivityObject, STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("leela", docActivityObject, STARS_ASPECT));
     }
 
     @Test
@@ -79,60 +76,46 @@ public class TestRatingService extends AbstractRatingTest {
         String activityObject = ActivityHelper.createActivityObject(15L);
 
         ratingService.rate("leela", 5, activityObject, STARS_ASPECT);
-        assertTrue(ratingService.hasUserRated("leela", activityObject,
-                STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("leela", activityObject, STARS_ASPECT));
 
         ratingService.rate("bender", 2, activityObject, STARS_ASPECT);
         ratingService.rate("fry", 1, activityObject, STARS_ASPECT);
-        assertTrue(ratingService.hasUserRated("bender", activityObject,
-                STARS_ASPECT));
-        assertTrue(ratingService.hasUserRated("fry", activityObject,
-                STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("bender", activityObject, STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("fry", activityObject, STARS_ASPECT));
     }
 
     @Test
-    public void shouldRetrieveRatesCountForAnActivityObject()
-            throws ClientException {
+    public void shouldRetrieveRatesCountForAnActivityObject() throws ClientException {
         String activityObject = ActivityHelper.createActivityObject(15L);
 
         ratingService.rate("bender", 5, activityObject, STARS_ASPECT);
         ratingService.rate("fry", 2, activityObject, STARS_ASPECT);
         ratingService.rate("leela", 3, activityObject, STARS_ASPECT);
-        assertTrue(ratingService.hasUserRated("bender", activityObject,
-                STARS_ASPECT));
-        assertTrue(ratingService.hasUserRated("fry", activityObject,
-                STARS_ASPECT));
-        assertTrue(ratingService.hasUserRated("leela", activityObject,
-                STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("bender", activityObject, STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("fry", activityObject, STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("leela", activityObject, STARS_ASPECT));
 
-        long ratesCount = ratingService.getRatesCount(activityObject,
-                STARS_ASPECT);
+        long ratesCount = ratingService.getRatesCount(activityObject, STARS_ASPECT);
         assertEquals(3, ratesCount);
     }
 
     @Test
-    public void shouldRetrieveRatesCountOfAGivenRatingForAnActivityObject()
-            throws ClientException {
+    public void shouldRetrieveRatesCountOfAGivenRatingForAnActivityObject() throws ClientException {
         String activityObject = ActivityHelper.createActivityObject(15L);
 
         ratingService.rate("bender", 5, activityObject, STARS_ASPECT);
         ratingService.rate("fry", 2, activityObject, STARS_ASPECT);
         ratingService.rate("leela", 5, activityObject, STARS_ASPECT);
-        assertTrue(ratingService.hasUserRated("bender", activityObject,
-                STARS_ASPECT));
-        assertTrue(ratingService.hasUserRated("fry", activityObject,
-                STARS_ASPECT));
-        assertTrue(ratingService.hasUserRated("leela", activityObject,
-                STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("bender", activityObject, STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("fry", activityObject, STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("leela", activityObject, STARS_ASPECT));
 
-        long ratesCount = ratingService.getRatesCount(activityObject, 5,
-                STARS_ASPECT);
+        long ratesCount = ratingService.getRatesCount(activityObject, 5, STARS_ASPECT);
         assertEquals(2, ratesCount);
     }
 
     @Test
-    public void shouldRetrieveUserRatesCountForAnActivityObject()
-            throws ClientException {
+    public void shouldRetrieveUserRatesCountForAnActivityObject() throws ClientException {
         String activityObject = ActivityHelper.createActivityObject(15L);
 
         ratingService.rate("bender", 3, activityObject, STARS_ASPECT);
@@ -145,20 +128,16 @@ public class TestRatingService extends AbstractRatingTest {
         ratingService.rate("leela", 5, activityObject, STARS_ASPECT);
         ratingService.rate("leela", 5, activityObject, STARS_ASPECT);
 
-        long ratesCount = ratingService.getRatesCountForUser("bender",
-                activityObject, 3, STARS_ASPECT);
+        long ratesCount = ratingService.getRatesCountForUser("bender", activityObject, 3, STARS_ASPECT);
         assertEquals(3, ratesCount);
-        ratesCount = ratingService.getRatesCountForUser("leela",
-                activityObject, 5, STARS_ASPECT);
+        ratesCount = ratingService.getRatesCountForUser("leela", activityObject, 5, STARS_ASPECT);
         assertEquals(2, ratesCount);
-        ratesCount = ratingService.getRatesCountForUser("fry", activityObject,
-                5, STARS_ASPECT);
+        ratesCount = ratingService.getRatesCountForUser("fry", activityObject, 5, STARS_ASPECT);
         assertEquals(0, ratesCount);
     }
 
     @Test
-    public void shouldRetrieveUserRatesCountOfAGivenRatingForAnActivityObject()
-            throws ClientException {
+    public void shouldRetrieveUserRatesCountOfAGivenRatingForAnActivityObject() throws ClientException {
         String activityObject = ActivityHelper.createActivityObject(15L);
 
         ratingService.rate("bender", 5, activityObject, STARS_ASPECT);
@@ -168,40 +147,31 @@ public class TestRatingService extends AbstractRatingTest {
         ratingService.rate("leela", 3, activityObject, STARS_ASPECT);
         ratingService.rate("leela", 5, activityObject, STARS_ASPECT);
 
-        long ratesCount = ratingService.getRatesCountForUser("bender",
-                activityObject, STARS_ASPECT);
+        long ratesCount = ratingService.getRatesCountForUser("bender", activityObject, STARS_ASPECT);
         assertEquals(3, ratesCount);
-        ratesCount = ratingService.getRatesCountForUser("fry", activityObject,
-                STARS_ASPECT);
+        ratesCount = ratingService.getRatesCountForUser("fry", activityObject, STARS_ASPECT);
         assertEquals(1, ratesCount);
-        ratesCount = ratingService.getRatesCountForUser("leela",
-                activityObject, STARS_ASPECT);
+        ratesCount = ratingService.getRatesCountForUser("leela", activityObject, STARS_ASPECT);
         assertEquals(2, ratesCount);
     }
 
     @Test
-    public void shouldRetrieveAverageRatingForAnActivityObject()
-            throws ClientException {
+    public void shouldRetrieveAverageRatingForAnActivityObject() throws ClientException {
         String activityObject = ActivityHelper.createActivityObject(15L);
 
         ratingService.rate("bender", 5, activityObject, STARS_ASPECT);
         ratingService.rate("fry", 2, activityObject, STARS_ASPECT);
         ratingService.rate("leela", 3, activityObject, STARS_ASPECT);
-        assertTrue(ratingService.hasUserRated("bender", activityObject,
-                STARS_ASPECT));
-        assertTrue(ratingService.hasUserRated("fry", activityObject,
-                STARS_ASPECT));
-        assertTrue(ratingService.hasUserRated("leela", activityObject,
-                STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("bender", activityObject, STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("fry", activityObject, STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("leela", activityObject, STARS_ASPECT));
 
-        double average = ratingService.getAverageRating(activityObject,
-                STARS_ASPECT);
+        double average = ratingService.getAverageRating(activityObject, STARS_ASPECT);
         assertEquals(3.3, average, 0.1);
     }
 
     @Test
-    public void shouldRetrieveUserAverageRatingForAnActivityObject()
-            throws ClientException {
+    public void shouldRetrieveUserAverageRatingForAnActivityObject() throws ClientException {
         String activityObject = ActivityHelper.createActivityObject(15L);
 
         ratingService.rate("bender", 5, activityObject, STARS_ASPECT);
@@ -211,11 +181,9 @@ public class TestRatingService extends AbstractRatingTest {
         ratingService.rate("leela", 3, activityObject, STARS_ASPECT);
         ratingService.rate("leela", 5, activityObject, STARS_ASPECT);
 
-        double average = ratingService.getAverageRatingForUser("bender",
-                activityObject, STARS_ASPECT);
+        double average = ratingService.getAverageRatingForUser("bender", activityObject, STARS_ASPECT);
         assertEquals(3.3, average, 0.1);
-        average = ratingService.getAverageRatingForUser("leela",
-                activityObject, STARS_ASPECT);
+        average = ratingService.getAverageRatingForUser("leela", activityObject, STARS_ASPECT);
         assertEquals(4, average, 0.1);
     }
 
@@ -230,15 +198,13 @@ public class TestRatingService extends AbstractRatingTest {
         ratingService.rate("leela", 2, activityObject, STARS_ASPECT);
         ratingService.rate("leela", 3, activityObject, OTHER_ASPECT);
 
-        long ratesCount = ratingService.getRatesCount(activityObject,
-                STARS_ASPECT);
+        long ratesCount = ratingService.getRatesCount(activityObject, STARS_ASPECT);
         assertEquals(3, ratesCount);
 
         ratesCount = ratingService.getRatesCount(activityObject, OTHER_ASPECT);
         assertEquals(3, ratesCount);
 
-        double average = ratingService.getAverageRating(activityObject,
-                STARS_ASPECT);
+        double average = ratingService.getAverageRating(activityObject, STARS_ASPECT);
         assertEquals(3, average, 0.1);
         average = ratingService.getAverageRating(activityObject, OTHER_ASPECT);
         assertEquals(2, average, 0.1);
@@ -250,22 +216,16 @@ public class TestRatingService extends AbstractRatingTest {
 
         ratingService.rate("bender", 5, activityObject, STARS_ASPECT);
         ratingService.rate("fry", 2, activityObject, STARS_ASPECT);
-        assertTrue(ratingService.hasUserRated("bender", activityObject,
-                STARS_ASPECT));
-        assertTrue(ratingService.hasUserRated("fry", activityObject,
-                STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("bender", activityObject, STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("fry", activityObject, STARS_ASPECT));
 
         ratingService.cancelRate("bender", activityObject, STARS_ASPECT);
-        assertFalse(ratingService.hasUserRated("bender", activityObject,
-                STARS_ASPECT));
-        assertTrue(ratingService.hasUserRated("fry", activityObject,
-                STARS_ASPECT));
+        assertFalse(ratingService.hasUserRated("bender", activityObject, STARS_ASPECT));
+        assertTrue(ratingService.hasUserRated("fry", activityObject, STARS_ASPECT));
 
         ratingService.cancelRate("fry", activityObject, STARS_ASPECT);
-        assertFalse(ratingService.hasUserRated("bender", activityObject,
-                STARS_ASPECT));
-        assertFalse(ratingService.hasUserRated("fry", activityObject,
-                STARS_ASPECT));
+        assertFalse(ratingService.hasUserRated("bender", activityObject, STARS_ASPECT));
+        assertFalse(ratingService.hasUserRated("fry", activityObject, STARS_ASPECT));
     }
 
     @Test
@@ -313,8 +273,7 @@ public class TestRatingService extends AbstractRatingTest {
         ratingService.rate(username, 3, activity3, STARS_ASPECT);
         ratingService.rate(username, 5, activity4, STARS_ASPECT);
 
-        ActivitiesList lastestRatedDocByUser = ratingService.getLastestRatedDocByUser(
-                username, STARS_ASPECT, 3);
+        ActivitiesList lastestRatedDocByUser = ratingService.getLastestRatedDocByUser(username, STARS_ASPECT, 3);
         assertEquals(3, lastestRatedDocByUser.size());
         assertEquals(activity4, lastestRatedDocByUser.get(0).getTarget());
         assertEquals(activity3, lastestRatedDocByUser.get(1).getTarget());

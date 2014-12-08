@@ -97,8 +97,7 @@ public class TestLikeService extends AbstractRatingTest {
     }
 
     @Test
-    public void sameUserCannotLikeAndDislikeAtTheSameTime()
-            throws ClientException {
+    public void sameUserCannotLikeAndDislikeAtTheSameTime() throws ClientException {
         DocumentModel doc = createTestDocument("file1");
 
         likeService.like("bender", doc);
@@ -217,10 +216,8 @@ public class TestLikeService extends AbstractRatingTest {
         assertEquals(1, likeStatus.likesCount);
 
         long replyPublishedDate = new Date().getTime();
-        ActivityReply reply = new ActivityReply("bender", "Bender",
-                "First reply", replyPublishedDate);
-        reply = activityStreamService.addActivityReply(
-                activity.getId(), reply);
+        ActivityReply reply = new ActivityReply("bender", "Bender", "First reply", replyPublishedDate);
+        reply = activityStreamService.addActivityReply(activity.getId(), reply);
         assertEquals(activity.getId() + "-reply-1", reply.getId());
 
         String activityReplyObject = ActivityHelper.createActivityObject(reply.getId());
@@ -254,10 +251,8 @@ public class TestLikeService extends AbstractRatingTest {
         assertEquals(1, likeStatus.likesCount);
 
         long replyPublishedDate = new Date().getTime();
-        ActivityReply reply = new ActivityReply("bender", "Bender",
-                "First reply", replyPublishedDate);
-        reply = activityStreamService.addActivityReply(
-                activity.getId(), reply);
+        ActivityReply reply = new ActivityReply("bender", "Bender", "First reply", replyPublishedDate);
+        reply = activityStreamService.addActivityReply(activity.getId(), reply);
         assertEquals(activity.getId() + "-reply-1", reply.getId());
 
         String activityReplyObject = ActivityHelper.createActivityObject(reply.getId());

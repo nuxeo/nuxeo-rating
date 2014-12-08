@@ -78,8 +78,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
     @Override
     public boolean hasUserLiked(String username, String activityObject) {
         RatingService ratingService = Framework.getLocalService(RatingService.class);
-        double average = ratingService.getAverageRatingForUser(username,
-                activityObject, LIKE_ASPECT);
+        double average = ratingService.getAverageRatingForUser(username, activityObject, LIKE_ASPECT);
         return average > 0;
     }
 
@@ -91,8 +90,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
     @Override
     public long getLikesCount(String activityObject) {
         RatingService ratingService = Framework.getLocalService(RatingService.class);
-        return ratingService.getRatesCount(activityObject, LIKE_RATING,
-                LIKE_ASPECT);
+        return ratingService.getRatesCount(activityObject, LIKE_RATING, LIKE_ASPECT);
     }
 
     @Override
@@ -104,8 +102,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
     public void dislike(String username, String activityObject) {
         RatingService ratingService = Framework.getLocalService(RatingService.class);
         ratingService.cancelRate(username, activityObject, LIKE_ASPECT);
-        ratingService.rate(username, DISLIKE_RATING, activityObject,
-                LIKE_ASPECT);
+        ratingService.rate(username, DISLIKE_RATING, activityObject, LIKE_ASPECT);
     }
 
     @Override
@@ -116,8 +113,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
     @Override
     public boolean hasUserDisliked(String username, String activityObject) {
         RatingService ratingService = Framework.getLocalService(RatingService.class);
-        double average = ratingService.getAverageRatingForUser(username,
-                activityObject, LIKE_ASPECT);
+        double average = ratingService.getAverageRatingForUser(username, activityObject, LIKE_ASPECT);
         return average < 0;
     }
 
@@ -129,8 +125,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
     @Override
     public long getDislikesCount(String activityObject) {
         RatingService ratingService = Framework.getLocalService(RatingService.class);
-        return ratingService.getRatesCount(activityObject, DISLIKE_RATING,
-                LIKE_ASPECT);
+        return ratingService.getRatesCount(activityObject, DISLIKE_RATING, LIKE_ASPECT);
     }
 
     @Override
@@ -166,10 +161,8 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
         long likesCount = getLikesCount(activityObject);
         long dislikesCount = getDislikesCount(activityObject);
         int userLikeStatus = hasUserLiked(username, activityObject) ? LIKED
-                : hasUserDisliked(username, activityObject) ? DISLIKED
-                        : UNKNOWN;
-        return new LikeStatus(activityObject, likesCount, dislikesCount,
-                username, userLikeStatus);
+                : hasUserDisliked(username, activityObject) ? DISLIKED : UNKNOWN;
+        return new LikeStatus(activityObject, likesCount, dislikesCount, username, userLikeStatus);
     }
 
     @Override
@@ -178,8 +171,8 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
     }
 
     @Override
-    public ActivitiesList getMostLikedActivities(CoreSession session,
-            int limit, DocumentModel source, Date fromDt, Date toDt) {
+    public ActivitiesList getMostLikedActivities(CoreSession session, int limit, DocumentModel source, Date fromDt,
+            Date toDt) {
         // Get most liked Documents
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
         if (fromDt != null && toDt != null) {
@@ -188,19 +181,18 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
         }
         parameters.put(CONTEXT_PARAMETER, createDocumentActivityObject(source));
         parameters.put(OBJECT_PARAMETER, Integer.valueOf(LIKE_RATING));
-        parameters.put(ACTOR_PARAMETER,
-                createUserActivityObject(session.getPrincipal().getName()));
+        parameters.put(ACTOR_PARAMETER, createUserActivityObject(session.getPrincipal().getName()));
         parameters.put(QUERY_TYPE_PARAMETER, GET_DOCUMENTS_COUNT);
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
-        ActivitiesList documentActivitiesList = activityStreamService.query(
-                LikesCountActivityStreamFilter.ID, parameters);
+        ActivitiesList documentActivitiesList = activityStreamService.query(LikesCountActivityStreamFilter.ID,
+                parameters);
         ActivitiesList mostLikedActivities = documentActivitiesList.filterActivities(session);
 
         // Get most liked minimessages
         parameters.put(QUERY_TYPE_PARAMETER, GET_MINI_MESSAGE_COUNT);
-        ActivitiesList miniMessageActivitiesList = activityStreamService.query(
-                LikesCountActivityStreamFilter.ID, parameters, 0, limit);
+        ActivitiesList miniMessageActivitiesList = activityStreamService.query(LikesCountActivityStreamFilter.ID,
+                parameters, 0, limit);
         mostLikedActivities.addAll(miniMessageActivitiesList);
 
         // Sort by Object
@@ -218,8 +210,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
     }
 
     @Override
-    public ActivitiesList getMostLikedActivities(CoreSession session,
-            int limit, DocumentModel source) {
+    public ActivitiesList getMostLikedActivities(CoreSession session, int limit, DocumentModel source) {
         return getMostLikedActivities(session, limit, source, null, null);
     }
 }

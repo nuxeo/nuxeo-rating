@@ -94,9 +94,8 @@ public class MostLiked {
 
     @OperationMethod
     public Blob run() throws Exception {
-        ActivitiesList mostLikedDocuments = likeService.getMostLikedActivities(
-                session, limit, session.getDocument(new PathRef(contextPath)),
-                fromDt, toDt);
+        ActivitiesList mostLikedDocuments = likeService.getMostLikedActivities(session, limit,
+                session.getDocument(new PathRef(contextPath)), fromDt, toDt);
 
         final List<JSONObject> docsWithRate = new ArrayList<JSONObject>();
         for (Activity activity : mostLikedDocuments) {
@@ -111,8 +110,8 @@ public class MostLiked {
 
         Map<String, Object> jsonObj = new HashMap<String, Object>();
         jsonObj.put("items", JSONArray.fromObject(docsWithRate));
-        return new InputStreamBlob(new ByteArrayInputStream(
-                JSONObject.fromObject(jsonObj).toString().getBytes("UTF-8")),
+        return new InputStreamBlob(
+                new ByteArrayInputStream(JSONObject.fromObject(jsonObj).toString().getBytes("UTF-8")),
                 "application/json");
     }
 
@@ -127,24 +126,22 @@ public class MostLiked {
         value.put("message", message);
         value.put("rating", rating);
         value.put("actor", getUsername(miniMessage.getActor()));
-        value.put("profile", ActivityMessageHelper.getUserProfileLink(
-                miniMessage.getActor(), miniMessage.getDisplayActor()));
+        value.put("profile",
+                ActivityMessageHelper.getUserProfileLink(miniMessage.getActor(), miniMessage.getDisplayActor()));
         value.put("hasUserLiked", hasRated);
 
         return JSONObject.fromObject(value);
     }
 
     protected JSONObject buildFromDocument(Activity activity) throws Exception {
-        DocumentModel doc = session.getDocument(new IdRef(
-                getDocumentId(activity.getTarget())));
+        DocumentModel doc = session.getDocument(new IdRef(getDocumentId(activity.getTarget())));
         Integer rating = Integer.valueOf(activity.getObject());
         Integer hasRated = Integer.valueOf(activity.getContext());
 
         OutputStream out = new ByteArrayOutputStream();
         JsonGenerator jg = JsonHelper.createJsonGenerator(out);
 
-        JsonDocumentWriter.writeDocument(jg, doc, new String[] { "dublincore",
-                "common" }, getRequest());
+        JsonDocumentWriter.writeDocument(jg, doc, new String[] { "dublincore", "common" }, getRequest());
 
         Map<String, Object> value = new HashMap<String, Object>();
         value.put("rating", rating);
@@ -158,13 +155,13 @@ public class MostLiked {
 
     /**
      * Returns the surrounding HttpServletRequest if possible else null.
+     * 
      * @return The surrounding request
-     *
      * @since 5.9.3
      */
     private ServletRequest getRequest() {
         Object request = ctx.get("request");
-        if(request != null && request instanceof ServletRequest) {
+        if (request != null && request instanceof ServletRequest) {
             return (ServletRequest) request;
         }
         return null;
@@ -179,14 +176,10 @@ public class MostLiked {
         String codecName = isBlank(documentLinkBuilder) ? documentViewCodecManager.getDefaultCodecName()
                 : documentLinkBuilder;
 
-        DocumentLocation docLoc = new DocumentLocationImpl(
-                session.getRepositoryName(), doc.getRef());
-        DocumentView docView = new DocumentViewImpl(docLoc, doc.getAdapter(
-                TypeInfo.class).getDefaultView());
-        return VirtualHostHelper.getContextPathProperty()
-                + "/"
-                + documentViewCodecManager.getUrlFromDocumentView(codecName,
-                        docView, false, null);
+        DocumentLocation docLoc = new DocumentLocationImpl(session.getRepositoryName(), doc.getRef());
+        DocumentView docView = new DocumentViewImpl(docLoc, doc.getAdapter(TypeInfo.class).getDefaultView());
+        return VirtualHostHelper.getContextPathProperty() + "/"
+                + documentViewCodecManager.getUrlFromDocumentView(codecName, docView, false, null);
     }
 
     protected static String replaceURLsByLinks(String message) {

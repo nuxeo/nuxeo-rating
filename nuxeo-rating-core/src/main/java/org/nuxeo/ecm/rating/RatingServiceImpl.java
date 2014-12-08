@@ -57,18 +57,14 @@ import org.nuxeo.runtime.model.DefaultComponent;
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
  */
-public class RatingServiceImpl extends DefaultComponent implements
-        RatingService {
+public class RatingServiceImpl extends DefaultComponent implements RatingService {
 
     private static final Log log = LogFactory.getLog(RatingServiceImpl.class);
 
     @Override
-    public void rate(String username, int rating, String activityObject,
-            String aspect) {
-        Activity activity = new ActivityBuilder().verb(
-                RATING_VERB_PREFIX + aspect).actor(
-                ActivityHelper.createUserActivityObject(username)).target(
-                activityObject).object(String.valueOf(rating)).build();
+    public void rate(String username, int rating, String activityObject, String aspect) {
+        Activity activity = new ActivityBuilder().verb(RATING_VERB_PREFIX + aspect).actor(
+                ActivityHelper.createUserActivityObject(username)).target(activityObject).object(String.valueOf(rating)).build();
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
         activityStreamService.addActivity(activity);
 
@@ -79,14 +75,12 @@ public class RatingServiceImpl extends DefaultComponent implements
     public void cancelRate(String username, String activityObject, String aspect) {
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_RATINGS_FOR_CANCEL);
-        parameters.put(ACTOR_PARAMETER,
-                ActivityHelper.createUserActivityObject(username));
+        parameters.put(ACTOR_PARAMETER, ActivityHelper.createUserActivityObject(username));
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
-        ActivitiesList activities = activityStreamService.query(
-                RatingActivityStreamFilter.ID, parameters);
+        ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         activityStreamService.removeActivities(activities);
     }
 
@@ -98,24 +92,20 @@ public class RatingServiceImpl extends DefaultComponent implements
         parameters.put(ASPECT_PARAMETER, aspect);
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
-        ActivitiesList activities = activityStreamService.query(
-                RatingActivityStreamFilter.ID, parameters);
+        ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         activityStreamService.removeActivities(activities);
     }
 
     @Override
-    public boolean hasUserRated(String username, String activityObject,
-            String aspect) {
+    public boolean hasUserRated(String username, String activityObject, String aspect) {
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_ACTOR_RATINGS_FOR_OBJECT);
-        parameters.put(ACTOR_PARAMETER,
-                ActivityHelper.createUserActivityObject(username));
+        parameters.put(ACTOR_PARAMETER, ActivityHelper.createUserActivityObject(username));
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
-        ActivitiesList activities = activityStreamService.query(
-                RatingActivityStreamFilter.ID, parameters);
+        ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         return !activities.isEmpty();
     }
 
@@ -127,8 +117,7 @@ public class RatingServiceImpl extends DefaultComponent implements
         parameters.put(ASPECT_PARAMETER, aspect);
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
-        ActivitiesList activities = activityStreamService.query(
-                RatingActivityStreamFilter.ID, parameters);
+        ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         return activities.size();
     }
 
@@ -141,41 +130,34 @@ public class RatingServiceImpl extends DefaultComponent implements
         parameters.put(RATING_PARAMETER, Integer.valueOf(rating));
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
-        ActivitiesList activities = activityStreamService.query(
-                RatingActivityStreamFilter.ID, parameters);
+        ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         return activities.size();
     }
 
     @Override
-    public long getRatesCountForUser(String username, String activityObject,
-            String aspect) {
+    public long getRatesCountForUser(String username, String activityObject, String aspect) {
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_ACTOR_RATINGS_FOR_OBJECT);
-        parameters.put(ACTOR_PARAMETER,
-                ActivityHelper.createUserActivityObject(username));
+        parameters.put(ACTOR_PARAMETER, ActivityHelper.createUserActivityObject(username));
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
-        ActivitiesList activities = activityStreamService.query(
-                RatingActivityStreamFilter.ID, parameters);
+        ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         return activities.size();
     }
 
     @Override
-    public long getRatesCountForUser(String username, String activityObject,
-            int rating, String aspect) {
+    public long getRatesCountForUser(String username, String activityObject, int rating, String aspect) {
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_ACTOR_RATINGS_FOR_OBJECT);
-        parameters.put(ACTOR_PARAMETER,
-                ActivityHelper.createUserActivityObject(username));
+        parameters.put(ACTOR_PARAMETER, ActivityHelper.createUserActivityObject(username));
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
         parameters.put(RATING_PARAMETER, Integer.valueOf(rating));
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
-        ActivitiesList activities = activityStreamService.query(
-                RatingActivityStreamFilter.ID, parameters);
+        ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         return activities.size();
     }
 
@@ -187,30 +169,25 @@ public class RatingServiceImpl extends DefaultComponent implements
         parameters.put(ASPECT_PARAMETER, aspect);
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
-        ActivitiesList activities = activityStreamService.query(
-                RatingActivityStreamFilter.ID, parameters);
+        ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         return computeAverage(activities);
     }
 
     @Override
-    public double getAverageRatingForUser(String username,
-            String activityObject, String aspect) {
+    public double getAverageRatingForUser(String username, String activityObject, String aspect) {
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_ACTOR_RATINGS_FOR_OBJECT);
-        parameters.put(ACTOR_PARAMETER,
-                ActivityHelper.createUserActivityObject(username));
+        parameters.put(ACTOR_PARAMETER, ActivityHelper.createUserActivityObject(username));
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
-        ActivitiesList activities = activityStreamService.query(
-                RatingActivityStreamFilter.ID, parameters);
+        ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         return computeAverage(activities);
     }
 
     @Override
-    public ActivitiesList getRatedChildren(String activityObject, int rating,
-            String aspect) {
+    public ActivitiesList getRatedChildren(String activityObject, int rating, String aspect) {
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_RATED_CHILDREN_FOR_CONTEXT);
         parameters.put(CONTEXT_PARAMETER, activityObject);
@@ -218,22 +195,18 @@ public class RatingServiceImpl extends DefaultComponent implements
         parameters.put(RATING_PARAMETER, Integer.valueOf(rating));
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
-        return activityStreamService.query(RatingActivityStreamFilter.ID,
-                parameters);
+        return activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
     }
 
     @Override
-    public ActivitiesList getLastestRatedDocByUser(String username,
-            String aspect, int limit) {
+    public ActivitiesList getLastestRatedDocByUser(String username, String aspect, int limit) {
         Map<String, Serializable> parameters = new HashMap<String, Serializable>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_LATEST_RATED_FOR_OBJECT);
-        parameters.put(ACTOR_PARAMETER,
-                ActivityHelper.createUserActivityObject(username));
+        parameters.put(ACTOR_PARAMETER, ActivityHelper.createUserActivityObject(username));
         parameters.put(ASPECT_PARAMETER, aspect);
 
         ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
-        return activityStreamService.query(RatingActivityStreamFilter.ID,
-                parameters, 0, limit);
+        return activityStreamService.query(RatingActivityStreamFilter.ID, parameters, 0, limit);
     }
 
     private double computeAverage(ActivitiesList activities) {
@@ -257,12 +230,10 @@ public class RatingServiceImpl extends DefaultComponent implements
         final ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
         try {
 
-            new UnrestrictedSessionRunner(
-                    ActivityHelper.getRepositoryName(activityObject)) {
+            new UnrestrictedSessionRunner(ActivityHelper.getRepositoryName(activityObject)) {
                 @Override
                 public void run() throws ClientException {
-                    IdRef docId = new IdRef(
-                            ActivityHelper.getDocumentId(activityObject));
+                    IdRef docId = new IdRef(ActivityHelper.getDocumentId(activityObject));
                     for (DocumentModel parent : session.getParentDocuments(docId)) {
                         if (!parent.hasFacet(SUPER_SPACE)) {
                             continue;
@@ -275,8 +246,7 @@ public class RatingServiceImpl extends DefaultComponent implements
                 }
             }.runUnrestricted();
         } catch (ClientException e) {
-            log.info("Unable to found SuperSpaces for recomputing their rates",
-                    e);
+            log.info("Unable to found SuperSpaces for recomputing their rates", e);
         }
     }
 }

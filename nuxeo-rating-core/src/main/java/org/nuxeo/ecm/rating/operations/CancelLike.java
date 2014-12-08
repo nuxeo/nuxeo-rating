@@ -72,13 +72,11 @@ public class CancelLike {
             likeService.cancel(username, activityObject);
             status = likeService.getLikeStatus(username, activityObject);
         } else {
-            throw new OperationException(
-                    "'document' or 'activityId' parameter must be set.");
+            throw new OperationException("'document' or 'activityId' parameter must be set.");
         }
 
         JSONObject json = JSONObject.fromObject(status.toMap());
-        return new InputStreamBlob(new ByteArrayInputStream(
-                json.toString().getBytes("UTF-8")), "application/json");
+        return new InputStreamBlob(new ByteArrayInputStream(json.toString().getBytes("UTF-8")), "application/json");
     }
 
 }

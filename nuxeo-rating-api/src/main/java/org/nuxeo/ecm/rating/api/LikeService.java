@@ -44,14 +44,13 @@ public interface LikeService {
     void like(String username, DocumentModel doc);
 
     /**
-     * Returns {@code true} if the given {@code username} already liked the
-     * {@code activityObject}, {@code false} otherwise.
+     * Returns {@code true} if the given {@code username} already liked the {@code activityObject}, {@code false}
+     * otherwise.
      */
     boolean hasUserLiked(String username, String activityObject);
 
     /**
-     * Returns {@code true} if the given {@code username} already liked the
-     * {@code doc}, {@code false} otherwise.
+     * Returns {@code true} if the given {@code username} already liked the {@code doc}, {@code false} otherwise.
      */
     boolean hasUserLiked(String username, DocumentModel doc);
 
@@ -80,14 +79,13 @@ public interface LikeService {
     void dislike(String username, DocumentModel doc);
 
     /**
-     * Returns {@code true} if the given {@code username} already disliked the
-     * {@code activityObject}, {@code false} otherwise.
+     * Returns {@code true} if the given {@code username} already disliked the {@code activityObject}, {@code false}
+     * otherwise.
      */
     boolean hasUserDisliked(String username, String activityObject);
 
     /**
-     * Returns {@code true} if the given {@code username} already disliked the
-     * {@code doc}, {@code false} otherwise.
+     * Returns {@code true} if the given {@code username} already disliked the {@code doc}, {@code false} otherwise.
      */
     boolean hasUserDisliked(String username, DocumentModel doc);
 
@@ -97,8 +95,7 @@ public interface LikeService {
     long getDislikesCount(String activityObject);
 
     /**
-     * Convenient method to returns the dislikes count for a
-     * {@link DocumentModel}.
+     * Convenient method to returns the dislikes count for a {@link DocumentModel}.
      * 
      * @see LikeService#getDislikesCount(String)
      */
@@ -108,8 +105,7 @@ public interface LikeService {
      * Cancel a like or dislike for the given {@code username}.
      * 
      * @param username the username
-     * @param activityObject the activity object on which to cancel the like or
-     *            dislike.
+     * @param activityObject the activity object on which to cancel the like or dislike.
      */
     void cancel(String username, String activityObject);
 
@@ -126,49 +122,41 @@ public interface LikeService {
     LikeStatus getLikeStatus(String activityObject);
 
     /**
-     * Convenient method to return the {@see LikeStatus} for a {@see
-     * DocumentModel}.
+     * Convenient method to return the {@see LikeStatus} for a {@see DocumentModel}.
      * 
      * @see LikeService#getLikeStatus(String)
      */
     LikeStatus getLikeStatus(DocumentModel doc);
 
     /**
-     * Returns the {@see LikeStatus} for the {@code username} and
-     * {@code activityObject}.
+     * Returns the {@see LikeStatus} for the {@code username} and {@code activityObject}.
      * <p>
-     * The returned {@see LikeStatus} will have the information about the like /
-     * dislike status of the {@code username}.
+     * The returned {@see LikeStatus} will have the information about the like / dislike status of the {@code username}.
      */
     LikeStatus getLikeStatus(String username, String activityObject);
 
     /**
-     * Convenient method to return the {@see LikeStatus} for the
-     * {@code username} and a {@see DocumentModel}.
+     * Convenient method to return the {@see LikeStatus} for the {@code username} and a {@see DocumentModel}.
      * 
      * @see LikeService#getLikeStatus(String, String)
      */
     LikeStatus getLikeStatus(String username, DocumentModel doc);
 
     /**
-     * An actitivitesList containing a documentActivity or a minimessageActivity
-     * as target, the likes count as object, current user as actor and actor's
-     * likes in context.
+     * An actitivitesList containing a documentActivity or a minimessageActivity as target, the likes count as object,
+     * current user as actor and actor's likes in context.
      * 
      * @param limit maximum documents returned
      * @param source the parent document when child will be reached
      */
-    ActivitiesList getMostLikedActivities(CoreSession session, int limit,
-            DocumentModel source);
+    ActivitiesList getMostLikedActivities(CoreSession session, int limit, DocumentModel source);
 
     /**
-     * An actitivitesList containing a documentActivity or a minimessageActivity
-     * as target, the likes count as object, current user as actor and actor's
-     * likes in context the result will be between two dates
+     * An actitivitesList containing a documentActivity or a minimessageActivity as target, the likes count as object,
+     * current user as actor and actor's likes in context the result will be between two dates
      * 
      * @param limit maximum documents returned
      * @param source the parent document when child will be reached
      */
-    ActivitiesList getMostLikedActivities(CoreSession session, int limit,
-            DocumentModel source, Date fromDt, Date toDt);
+    ActivitiesList getMostLikedActivities(CoreSession session, int limit, DocumentModel source, Date fromDt, Date toDt);
 }

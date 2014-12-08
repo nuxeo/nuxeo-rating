@@ -41,8 +41,7 @@ import org.nuxeo.ecm.activity.ActivityStreamServiceImpl;
 /**
  * Activity Stream filter handling rating activities.
  * <p>
- * The different queries this filter can handle are defined in the
- * {@link QueryType} enum.
+ * The different queries this filter can handle are defined in the {@link QueryType} enum.
  *
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
@@ -79,23 +78,19 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
     }
 
     @Override
-    public void handleNewActivity(ActivityStreamService activityStreamService,
-            Activity activity) {
+    public void handleNewActivity(ActivityStreamService activityStreamService, Activity activity) {
         // nothing to do for now
     }
 
     @Override
     @Deprecated
-    public void handleRemovedActivities(
-            ActivityStreamService activityStreamService,
+    public void handleRemovedActivities(ActivityStreamService activityStreamService,
             Collection<Serializable> activityIds) {
         // nothing to do for now
     }
 
     @Override
-    public void handleRemovedActivities(
-            ActivityStreamService activityStreamService,
-            ActivitiesList activities) {
+    public void handleRemovedActivities(ActivityStreamService activityStreamService, ActivitiesList activities) {
         List<String> activityObjects = new ArrayList<String>();
         for (Activity activity : activities) {
             activityObjects.add(ActivityHelper.createActivityObject(activity));
@@ -107,16 +102,13 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
     }
 
     @Override
-    public void handleRemovedActivityReply(
-            ActivityStreamService activityStreamService, Activity activity,
+    public void handleRemovedActivityReply(ActivityStreamService activityStreamService, Activity activity,
             ActivityReply activityReply) {
-        removeAllRatingActivitiesFor(
-                activityStreamService,
+        removeAllRatingActivitiesFor(activityStreamService,
                 Collections.singleton(ActivityHelper.createActivityObject(activityReply.getId())));
     }
 
-    protected void removeAllRatingActivitiesFor(
-            ActivityStreamService activityStreamService,
+    protected void removeAllRatingActivitiesFor(ActivityStreamService activityStreamService,
             Collection<String> activityObjects) {
         EntityManager em = ((ActivityStreamServiceImpl) activityStreamService).getEntityManager();
         Query query = em.createQuery("delete from Activity activity where activity.verb LIKE :verb and activity.target in (:target)");
@@ -127,8 +119,8 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
 
     @Override
     @SuppressWarnings("unchecked")
-    public ActivitiesList query(ActivityStreamService activityStreamService,
-            Map<String, Serializable> parameters, long offset, long limit) {
+    public ActivitiesList query(ActivityStreamService activityStreamService, Map<String, Serializable> parameters,
+            long offset, long limit) {
         EntityManager em = ((ActivityStreamServiceImpl) activityStreamService).getEntityManager();
         QueryType queryType = (QueryType) parameters.get(QUERY_TYPE_PARAMETER);
         if (queryType == null) {
@@ -184,8 +176,7 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
             }
             break;
         case GET_RATINGS_FOR_CANCEL:
-            sb = new StringBuilder(
-                    "select activity from Activity activity where activity.target = :targetObject");
+            sb = new StringBuilder("select activity from Activity activity where activity.target = :targetObject");
             if (rating != null) {
                 sb.append(" and activity.object = :rating");
             }
@@ -212,8 +203,7 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
             query = em.createQuery("select activity from Activity activity where activity.target LIKE :targetObject and activity.context is null and activity.actor = :actor and activity.verb = :verb order by activity.publishedDate DESC");
             query.setParameter("verb", RATING_VERB_PREFIX + aspect);
             query.setParameter(ACTOR_PARAMETER, actor);
-            query.setParameter(TARGET_OBJECT_PARAMETER,
-                    ActivityHelper.DOC_PREFIX + "%");
+            query.setParameter(TARGET_OBJECT_PARAMETER, ActivityHelper.DOC_PREFIX + "%");
             break;
         }
 

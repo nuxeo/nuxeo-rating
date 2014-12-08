@@ -71,14 +71,13 @@ public abstract class AbstractRatingTest {
 
     @Before
     public void disableActivityStreamListener() {
-        eventServiceAdmin.setListenerEnabledFlag("activityStreamListener",
-                false);
+        eventServiceAdmin.setListenerEnabledFlag("activityStreamListener", false);
     }
 
     @Before
     public void cleanupDatabase() throws ClientException {
-        ((ActivityStreamServiceImpl) activityStreamService).getOrCreatePersistenceProvider().run(
-                Boolean.TRUE, new PersistenceProvider.RunVoid() {
+        ((ActivityStreamServiceImpl) activityStreamService).getOrCreatePersistenceProvider().run(Boolean.TRUE,
+                new PersistenceProvider.RunVoid() {
                     public void runWith(EntityManager em) {
                         Query query = em.createQuery("delete from Activity");
                         query.executeUpdate();
@@ -88,13 +87,11 @@ public abstract class AbstractRatingTest {
         activityObject = ActivityHelper.createActivityObject(activity);
     }
 
-    protected DocumentModel createTestDocument(String name)
-            throws ClientException {
+    protected DocumentModel createTestDocument(String name) throws ClientException {
         return createTestDocument(name, "/");
     }
 
-    protected DocumentModel createTestDocument(String name, String path)
-            throws ClientException {
+    protected DocumentModel createTestDocument(String name, String path) throws ClientException {
         DocumentModel doc = session.createDocumentModel(path, name, "File");
         doc.setProperty("dublincore", "title", name);
         doc = session.createDocument(doc);

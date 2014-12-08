@@ -57,15 +57,13 @@ public class LikeActions implements Serializable {
     public void like(Principal principal, DocumentModel doc) {
         LikeService likeService = Framework.getLocalService(LikeService.class);
         likeService.like(principal.getName(), doc);
-        facesMessages.addFromResourceBundle(StatusMessage.Severity.INFO,
-                "label.document.liked");
+        facesMessages.addFromResourceBundle(StatusMessage.Severity.INFO, "label.document.liked");
     }
 
     public void cancelLike(Principal principal, DocumentModel doc) {
         LikeService likeService = Framework.getLocalService(LikeService.class);
         likeService.cancel(principal.getName(), doc);
-        facesMessages.addFromResourceBundle(StatusMessage.Severity.INFO,
-                "label.document.unliked");
+        facesMessages.addFromResourceBundle(StatusMessage.Severity.INFO, "label.document.unliked");
     }
 
     public long getLikesCount(DocumentModel doc) {

@@ -46,14 +46,12 @@ import com.google.inject.Inject;
  */
 @RunWith(FeaturesRunner.class)
 @Features(RatingFeature.class)
-@Deploy({ "org.nuxeo.ecm.automation.core", "org.nuxeo.ecm.automation.io",
-        "org.nuxeo.ecm.webengine.core" })
+@Deploy({ "org.nuxeo.ecm.automation.core", "org.nuxeo.ecm.automation.io", "org.nuxeo.ecm.webengine.core" })
 @SuppressWarnings("boxing")
 public class TestLikeOperations extends AbstractRatingTest {
 
     @Inject
     protected AutomationService service;
-
 
     @Test
     public void shouldReturnLikeStatusForDocument() throws Exception {
@@ -102,8 +100,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertNotNull(ctx);
 
         OperationChain chain = new OperationChain("testLikeOperation");
-        chain.add(GetLikeStatus.ID).set("activityId",
-                String.valueOf(activity.getId()));
+        chain.add(GetLikeStatus.ID).set("activityId", String.valueOf(activity.getId()));
         Blob result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         String json = result.getString();
@@ -188,8 +185,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertNotNull(ctx);
 
         OperationChain chain = new OperationChain("testLikeOperation");
-        chain.add(GetLikeStatus.ID).set("activityId",
-                String.valueOf(activity.getId()));
+        chain.add(GetLikeStatus.ID).set("activityId", String.valueOf(activity.getId()));
         Blob result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         String json = result.getString();
@@ -278,8 +274,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertNotNull(ctx);
 
         OperationChain chain = new OperationChain("testLikeOperation");
-        chain.add(GetLikeStatus.ID).set("activityId",
-                String.valueOf(activity.getId()));
+        chain.add(GetLikeStatus.ID).set("activityId", String.valueOf(activity.getId()));
         Blob result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         String json = result.getString();
@@ -309,21 +304,18 @@ public class TestLikeOperations extends AbstractRatingTest {
     public void shouldReturnMostLikedDocumentAsJson() throws Exception {
         initWithDefaultRepository();
 
-        DocumentModel myDoc = createTestDocument("test",
-                "/default-domain/workspaces/test");
+        DocumentModel myDoc = createTestDocument("test", "/default-domain/workspaces/test");
         likeService.like("Robin", myDoc);
         likeService.like("Barney", myDoc);
 
-        DocumentModel test2 = createTestDocument("test2",
-                "/default-domain/workspaces/test");
+        DocumentModel test2 = createTestDocument("test2", "/default-domain/workspaces/test");
         likeService.like("Robin", test2);
 
         OperationContext ctx = new OperationContext(session);
         assertNotNull(ctx);
 
         OperationChain chain = new OperationChain("testLikeOperation");
-        chain.add(MostLiked.ID).set("limit", 5).set("contextPath",
-                "/default-domain/");
+        chain.add(MostLiked.ID).set("limit", 5).set("contextPath", "/default-domain/");
         Blob result = (Blob) service.run(ctx, chain);
         assertNotNull(result);
         String json = result.getString();
@@ -335,8 +327,7 @@ public class TestLikeOperations extends AbstractRatingTest {
 
         JSONObject firstDocRated = items.getJSONObject(0);
         assertEquals(2, firstDocRated.getInt("rating"));
-        assertEquals(myDoc.getId(),
-                firstDocRated.getJSONObject("document").getString("uid"));
+        assertEquals(myDoc.getId(), firstDocRated.getJSONObject("document").getString("uid"));
     }
 
     protected void initWithDefaultRepository() throws ClientException {

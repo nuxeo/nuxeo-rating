@@ -37,20 +37,17 @@ import java.util.Map;
 public class LikeStatus {
 
     /**
-     * Constant used when the {@code username} liked the {@code activityObject}
-     * .
+     * Constant used when the {@code username} liked the {@code activityObject} .
      */
     public static final int LIKED = 1;
 
     /**
-     * Constant used when the {@code username} disliked the
-     * {@code activityObject}.
+     * Constant used when the {@code username} disliked the {@code activityObject}.
      */
     public static final int DISLIKED = -1;
 
     /**
-     * Constant used when the {@code username} didn't like nor dislike the
-     * {@code activityObject}.
+     * Constant used when the {@code username} didn't like nor dislike the {@code activityObject}.
      */
     public static final int UNKNOWN = 0;
 
@@ -65,18 +62,15 @@ public class LikeStatus {
     public final int userLikeStatus;
 
     /**
-     * Creates a {@code LikeStatus} with the like status for the specified
-     * {@code username}.
+     * Creates a {@code LikeStatus} with the like status for the specified {@code username}.
      *
-     * @param activityObject the activity object for which this
-     *            {@code LikeStatus} apply
+     * @param activityObject the activity object for which this {@code LikeStatus} apply
      * @param likesCount the likes count for the activity object
      * @param dislikesCount the dislikes count for the activity object
      * @param username the username on which the {@code userLikeStatus} apply
      * @param userLikeStatus the like status for the {@code username}
      */
-    public LikeStatus(String activityObject, long likesCount,
-            long dislikesCount, String username, int userLikeStatus) {
+    public LikeStatus(String activityObject, long likesCount, long dislikesCount, String username, int userLikeStatus) {
         this.activityObject = activityObject;
         this.likesCount = likesCount;
         this.dislikesCount = dislikesCount;
@@ -85,11 +79,9 @@ public class LikeStatus {
     }
 
     /**
-     * Creates a {@code LikeStatus} without the like status for a
-     * {@code username}.
+     * Creates a {@code LikeStatus} without the like status for a {@code username}.
      *
-     * @param activityObject the activity object for which this
-     *            {@code LikeStatus} apply
+     * @param activityObject the activity object for which this {@code LikeStatus} apply
      * @param likesCount the likes count for the activity object
      * @param dislikesCount the dislikes count for the activity object
      */
