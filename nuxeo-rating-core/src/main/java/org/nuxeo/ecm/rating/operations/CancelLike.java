@@ -17,8 +17,6 @@
 
 package org.nuxeo.ecm.rating.operations;
 
-import java.io.ByteArrayInputStream;
-
 import net.sf.json.JSONObject;
 
 import org.nuxeo.ecm.activity.ActivityHelper;
@@ -31,7 +29,7 @@ import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.DocumentModel;
-import org.nuxeo.ecm.core.api.impl.blob.InputStreamBlob;
+import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.rating.api.LikeService;
 import org.nuxeo.ecm.rating.api.LikeStatus;
 
@@ -76,7 +74,7 @@ public class CancelLike {
         }
 
         JSONObject json = JSONObject.fromObject(status.toMap());
-        return new InputStreamBlob(new ByteArrayInputStream(json.toString().getBytes("UTF-8")), "application/json");
+        return new StringBlob(json.toString(), "application/json");
     }
 
 }

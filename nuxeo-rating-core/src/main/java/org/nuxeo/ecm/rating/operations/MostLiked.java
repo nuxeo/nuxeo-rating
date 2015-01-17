@@ -5,7 +5,6 @@ import static org.nuxeo.ecm.activity.ActivityHelper.getActivityId;
 import static org.nuxeo.ecm.activity.ActivityHelper.getDocumentId;
 import static org.nuxeo.ecm.activity.ActivityHelper.getUsername;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
-import org.nuxeo.ecm.core.api.impl.blob.InputStreamBlob;
+import org.nuxeo.ecm.core.api.impl.blob.StringBlob;
 import org.nuxeo.ecm.platform.types.adapter.TypeInfo;
 import org.nuxeo.ecm.platform.url.DocumentViewImpl;
 import org.nuxeo.ecm.platform.url.api.DocumentView;
@@ -110,9 +109,8 @@ public class MostLiked {
 
         Map<String, Object> jsonObj = new HashMap<String, Object>();
         jsonObj.put("items", JSONArray.fromObject(docsWithRate));
-        return new InputStreamBlob(
-                new ByteArrayInputStream(JSONObject.fromObject(jsonObj).toString().getBytes("UTF-8")),
-                "application/json");
+        JSONObject json = JSONObject.fromObject(jsonObj);
+        return new StringBlob(json.toString(), "application/json");
     }
 
     protected JSONObject buildFromActivity(Activity activity) {
@@ -155,7 +153,7 @@ public class MostLiked {
 
     /**
      * Returns the surrounding HttpServletRequest if possible else null.
-     * 
+     *
      * @return The surrounding request
      * @since 5.9.3
      */
