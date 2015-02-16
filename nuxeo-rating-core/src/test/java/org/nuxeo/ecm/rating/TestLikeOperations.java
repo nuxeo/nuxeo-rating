@@ -19,6 +19,9 @@ package org.nuxeo.ecm.rating;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import javax.inject.Inject;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -38,7 +41,6 @@ import org.nuxeo.ecm.rating.operations.MostLiked;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
-import com.google.inject.Inject;
 
 /**
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
