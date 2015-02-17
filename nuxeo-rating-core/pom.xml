@@ -13,6 +13,10 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.nuxeo.ecm.core</groupId>
+      <artifactId>nuxeo-core-io</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.nuxeo.rating</groupId>
       <artifactId>nuxeo-rating-api</artifactId>
     </dependency>

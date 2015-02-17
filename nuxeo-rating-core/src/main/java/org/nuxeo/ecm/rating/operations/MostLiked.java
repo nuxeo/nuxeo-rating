@@ -6,6 +6,7 @@ import static org.nuxeo.ecm.activity.ActivityHelper.getDocumentId;
 import static org.nuxeo.ecm.activity.ActivityHelper.getUsername;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.ServletRequest;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -36,7 +35,6 @@ import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
 import org.nuxeo.ecm.automation.core.annotations.Param;
 import org.nuxeo.ecm.automation.jaxrs.io.JsonHelper;
-import org.nuxeo.ecm.automation.jaxrs.io.documents.JsonDocumentWriter;
 import org.nuxeo.ecm.core.api.Blob;
 import org.nuxeo.ecm.core.api.Blobs;
 import org.nuxeo.ecm.core.api.CoreSession;
@@ -45,6 +43,10 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.api.impl.DocumentLocationImpl;
+import org.nuxeo.ecm.core.io.marshallers.json.document.DocumentModelJsonWriter;
+import org.nuxeo.ecm.core.io.registry.MarshallerRegistry;
+import org.nuxeo.ecm.core.io.registry.context.RenderingContext;
+import org.nuxeo.ecm.core.io.registry.context.RenderingContext.CtxBuilder;
 import org.nuxeo.ecm.platform.types.adapter.TypeInfo;
 import org.nuxeo.ecm.platform.url.DocumentViewImpl;
 import org.nuxeo.ecm.platform.url.api.DocumentView;
@@ -139,7 +141,7 @@ public class MostLiked {
         OutputStream out = new ByteArrayOutputStream();
         JsonGenerator jg = JsonHelper.createJsonGenerator(out);
 
-        JsonDocumentWriter.writeDocument(jg, doc, new String[] { "dublincore", "common" }, getRequest());
+        writeDocument(doc, jg);
 
         Map<String, Object> value = new HashMap<String, Object>();
         value.put("rating", rating);
@@ -151,18 +153,16 @@ public class MostLiked {
         return JSONObject.fromObject(value);
     }
 
-    /**
-     * Returns the surrounding HttpServletRequest if possible else null.
-     *
-     * @return The surrounding request
-     * @since 5.9.3
-     */
-    private ServletRequest getRequest() {
-        Object request = ctx.get("request");
-        if (request != null && request instanceof ServletRequest) {
-            return (ServletRequest) request;
+    private static DocumentModelJsonWriter documentModelWriter;
+
+    private static void writeDocument(DocumentModel doc, JsonGenerator jg) throws IOException {
+        if (documentModelWriter == null) {
+            RenderingContext ctx = CtxBuilder.properties("dublincore", "common").get();
+            MarshallerRegistry registry = Framework.getService(MarshallerRegistry.class);
+            documentModelWriter = registry.getUniqueInstance(ctx, DocumentModelJsonWriter.class);
         }
-        return null;
+        documentModelWriter.write(doc, jg);
+        jg.flush();
     }
 
     protected String getDocumentUrl(DocumentModel doc) {
