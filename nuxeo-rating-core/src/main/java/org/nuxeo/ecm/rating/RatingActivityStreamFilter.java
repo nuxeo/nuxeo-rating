@@ -200,7 +200,7 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
             }
             break;
         case GET_LATEST_RATED_FOR_OBJECT:
-            query = em.createQuery("select activity from Activity activity where activity.target LIKE :targetObject and activity.context is null and activity.actor = :actor and activity.verb = :verb order by activity.publishedDate DESC");
+            query = em.createQuery("select activity from Activity activity where activity.target LIKE :targetObject and activity.context is null and activity.actor = :actor and activity.verb = :verb order by activity.publishedDate DESC, activity.id DESC");
             query.setParameter("verb", RATING_VERB_PREFIX + aspect);
             query.setParameter(ACTOR_PARAMETER, actor);
             query.setParameter(TARGET_OBJECT_PARAMETER, ActivityHelper.DOC_PREFIX + "%");
