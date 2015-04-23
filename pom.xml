@@ -16,7 +16,6 @@
   <modules>
     <module>nuxeo-rating-api</module>
     <module>nuxeo-rating-core</module>
-    <module>nuxeo-rating-gadget</module>
     <module>nuxeo-rating-web</module>
   </modules>
 
