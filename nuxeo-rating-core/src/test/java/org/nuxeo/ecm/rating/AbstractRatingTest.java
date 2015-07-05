@@ -74,7 +74,7 @@ public abstract class AbstractRatingTest {
     }
 
     @Before
-    public void cleanupDatabase() throws ClientException {
+    public void cleanupDatabase() {
         ((ActivityStreamServiceImpl) activityStreamService).getOrCreatePersistenceProvider().run(Boolean.TRUE,
                 new PersistenceProvider.RunVoid() {
                     public void runWith(EntityManager em) {
@@ -86,11 +86,11 @@ public abstract class AbstractRatingTest {
         activityObject = ActivityHelper.createActivityObject(activity);
     }
 
-    protected DocumentModel createTestDocument(String name) throws ClientException {
+    protected DocumentModel createTestDocument(String name) {
         return createTestDocument(name, "/");
     }
 
-    protected DocumentModel createTestDocument(String name, String path) throws ClientException {
+    protected DocumentModel createTestDocument(String name, String path) {
         DocumentModel doc = session.createDocumentModel(path, name, "File");
         doc.setProperty("dublincore", "title", name);
         doc = session.createDocument(doc);
@@ -99,7 +99,7 @@ public abstract class AbstractRatingTest {
         return doc;
     }
 
-    protected CoreSession openSessionAs(String username) throws ClientException {
+    protected CoreSession openSessionAs(String username) {
         return settings.openSessionAs(username);
     }
 

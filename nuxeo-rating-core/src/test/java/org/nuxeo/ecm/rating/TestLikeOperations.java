@@ -333,7 +333,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         assertEquals(myDoc.getId(), firstDocRated.getJSONObject("document").getString("uid"));
     }
 
-    protected void initWithDefaultRepository() throws ClientException {
+    protected void initWithDefaultRepository() {
         new DefaultRepositoryInit().populate(session);
         session.save();
     }

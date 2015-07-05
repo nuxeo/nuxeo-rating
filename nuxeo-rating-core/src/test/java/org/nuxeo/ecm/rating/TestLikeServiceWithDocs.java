@@ -62,7 +62,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
     protected UserManager userManager;
 
     @Test
-    public void shouldHandleSuperSpaceCount() throws ClientException {
+    public void shouldHandleSuperSpaceCount() {
         DocumentModel folder = session.createDocumentModel("/default-domain/workspaces/", "folder", "Folder");
         folder = session.createDocument(folder);
         session.save();
@@ -97,7 +97,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldCorrectlyReturnedMostLikedDocumentList() throws ClientException {
+    public void shouldCorrectlyReturnedMostLikedDocumentList() {
         DocumentModel workspaces = session.getDocument(new PathRef("/default-domain/workspaces"));
 
         DocumentModel doc1 = createTestDocument("tmp", "/default-domain/workspaces/test");
@@ -139,7 +139,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldCountDocumentsAndMiniMessages() throws ClientException {
+    public void shouldCountDocumentsAndMiniMessages() {
         // Create some docs
         DocumentModel context = session.getDocument(new PathRef("/default-domain/workspaces/test"));
         String activityContext = createDocumentActivityObject(context);
@@ -192,7 +192,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldHandleMostLikedBetweenTwoDates() throws ClientException {
+    public void shouldHandleMostLikedBetweenTwoDates() {
         DocumentModel context = session.getDocument(new PathRef("/default-domain/workspaces/test"));
         DocumentModel lovelyDoc = createTestDocument("lovelyDoc", context.getPathAsString());
         DocumentModel anotherLovelyDoc = createTestDocument("anotherLovelyDoc", context.getPathAsString());
@@ -258,7 +258,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldCountCorrectlyLikesOnMiniMessage() throws ClientException {
+    public void shouldCountCorrectlyLikesOnMiniMessage() {
         DocumentModel context = session.getDocument(new PathRef("/default-domain/workspaces/test"));
         createTestDocument("lovelyDoc", context.getPathAsString());
 
@@ -295,7 +295,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         assertNotSame("1", activitiesList.get(1).getContext());
     }
 
-    protected Principal createUser(String username) throws ClientException {
+    protected Principal createUser(String username) {
         DocumentModel user = userManager.getBareUserModel();
         user.setPropertyValue("user:username", username);
         try {
@@ -309,7 +309,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldCorrectlyCountWithRatingCountFilter() throws ClientException {
+    public void shouldCorrectlyCountWithRatingCountFilter() {
         DocumentModel test = session.getDocument(new PathRef("/default-domain/workspaces/test"));
 
         DocumentModel doc1 = createTestDocument("tmp", "/default-domain/workspaces/test");
@@ -350,7 +350,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
 
     @Test
     @Ignore
-    public void shouldEnsureOrderIsRight() throws ClientException {
+    public void shouldEnsureOrderIsRight() {
         int expected = 75;
         int limit = 30;
 
@@ -372,7 +372,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         }
     }
 
-    protected void createAndLikeDocs(int nb) throws ClientException {
+    protected void createAndLikeDocs(int nb) {
         DocumentModel doc = createTestDocument("doc" + nb, "/default-domain/workspaces/test");
         for (int i = 0; i < nb; i++) {
             likeService.like("user" + i, doc);
