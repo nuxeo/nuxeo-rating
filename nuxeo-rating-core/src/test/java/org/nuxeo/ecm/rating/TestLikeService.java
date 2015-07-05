@@ -53,7 +53,7 @@ public class TestLikeService extends AbstractRatingTest {
     }
 
     @Test
-    public void differentUsersCanLikeADocument() throws ClientException {
+    public void differentUsersCanLikeADocument() {
         DocumentModel doc = createTestDocument("file1");
 
         likeService.like("bender", doc);
@@ -75,7 +75,7 @@ public class TestLikeService extends AbstractRatingTest {
     }
 
     @Test
-    public void differentUsersCanDislikeADocument() throws ClientException {
+    public void differentUsersCanDislikeADocument() {
         DocumentModel doc = createTestDocument("file1");
 
         likeService.dislike("bender", doc);
@@ -97,7 +97,7 @@ public class TestLikeService extends AbstractRatingTest {
     }
 
     @Test
-    public void sameUserCannotLikeAndDislikeAtTheSameTime() throws ClientException {
+    public void sameUserCannotLikeAndDislikeAtTheSameTime() {
         DocumentModel doc = createTestDocument("file1");
 
         likeService.like("bender", doc);
@@ -116,7 +116,7 @@ public class TestLikeService extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldCancelLikeOrDislike() throws ClientException {
+    public void shouldCancelLikeOrDislike() {
         DocumentModel doc = createTestDocument("file1");
 
         likeService.like("bender", doc);
@@ -133,7 +133,7 @@ public class TestLikeService extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldGetLikeStatusForUser() throws ClientException {
+    public void shouldGetLikeStatusForUser() {
         DocumentModel doc = createTestDocument("file1");
 
         likeService.like("bender", doc);
@@ -166,7 +166,7 @@ public class TestLikeService extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldGetGlobalLikeStatus() throws ClientException {
+    public void shouldGetGlobalLikeStatus() {
         DocumentModel doc = createTestDocument("file1");
 
         likeService.like("bender", doc);

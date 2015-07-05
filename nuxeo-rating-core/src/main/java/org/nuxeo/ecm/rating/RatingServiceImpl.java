@@ -232,7 +232,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
 
             new UnrestrictedSessionRunner(ActivityHelper.getRepositoryName(activityObject)) {
                 @Override
-                public void run() throws ClientException {
+                public void run() {
                     IdRef docId = new IdRef(ActivityHelper.getDocumentId(activityObject));
                     for (DocumentModel parent : session.getParentDocuments(docId)) {
                         if (!parent.hasFacet(SUPER_SPACE)) {

@@ -59,7 +59,7 @@ public class TestRatingService extends AbstractRatingTest {
     }
 
     @Test
-    public void differentUsersCanRateADocument() throws ClientException {
+    public void differentUsersCanRateADocument() {
         DocumentModel doc = createTestDocument("file1");
         String docActivityObject = ActivityHelper.createDocumentActivityObject(doc);
 
@@ -73,7 +73,7 @@ public class TestRatingService extends AbstractRatingTest {
     }
 
     @Test
-    public void differentUsersCanRateAnActivity() throws ClientException {
+    public void differentUsersCanRateAnActivity() {
         String activityObject = ActivityHelper.createActivityObject(15L);
 
         ratingService.rate("leela", 5, activityObject, STARS_ASPECT);
@@ -86,7 +86,7 @@ public class TestRatingService extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldRetrieveRatesCountForAnActivityObject() throws ClientException {
+    public void shouldRetrieveRatesCountForAnActivityObject() {
         String activityObject = ActivityHelper.createActivityObject(15L);
 
         ratingService.rate("bender", 5, activityObject, STARS_ASPECT);
@@ -101,7 +101,7 @@ public class TestRatingService extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldRetrieveRatesCountOfAGivenRatingForAnActivityObject() throws ClientException {
+    public void shouldRetrieveRatesCountOfAGivenRatingForAnActivityObject() {
         String activityObject = ActivityHelper.createActivityObject(15L);
 
         ratingService.rate("bender", 5, activityObject, STARS_ASPECT);
@@ -116,7 +116,7 @@ public class TestRatingService extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldRetrieveUserRatesCountForAnActivityObject() throws ClientException {
+    public void shouldRetrieveUserRatesCountForAnActivityObject() {
         String activityObject = ActivityHelper.createActivityObject(15L);
 
         ratingService.rate("bender", 3, activityObject, STARS_ASPECT);
@@ -138,7 +138,7 @@ public class TestRatingService extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldRetrieveUserRatesCountOfAGivenRatingForAnActivityObject() throws ClientException {
+    public void shouldRetrieveUserRatesCountOfAGivenRatingForAnActivityObject() {
         String activityObject = ActivityHelper.createActivityObject(15L);
 
         ratingService.rate("bender", 5, activityObject, STARS_ASPECT);
@@ -157,7 +157,7 @@ public class TestRatingService extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldRetrieveAverageRatingForAnActivityObject() throws ClientException {
+    public void shouldRetrieveAverageRatingForAnActivityObject() {
         String activityObject = ActivityHelper.createActivityObject(15L);
 
         ratingService.rate("bender", 5, activityObject, STARS_ASPECT);
@@ -172,7 +172,7 @@ public class TestRatingService extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldRetrieveUserAverageRatingForAnActivityObject() throws ClientException {
+    public void shouldRetrieveUserAverageRatingForAnActivityObject() {
         String activityObject = ActivityHelper.createActivityObject(15L);
 
         ratingService.rate("bender", 5, activityObject, STARS_ASPECT);
@@ -230,7 +230,7 @@ public class TestRatingService extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldNotFindRatingWhenDocIsRemoved() throws ClientException {
+    public void shouldNotFindRatingWhenDocIsRemoved() {
         DocumentModel doc = createTestDocument("doc1");
         String docActivity = ActivityHelper.createDocumentActivityObject(doc);
 
@@ -245,7 +245,7 @@ public class TestRatingService extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldNotFindRatingWhenDocIsDeleted() throws ClientException {
+    public void shouldNotFindRatingWhenDocIsDeleted() {
 
         DocumentModel doc = createTestDocument("doc1");
         String docActivity = ActivityHelper.createDocumentActivityObject(doc);
@@ -261,7 +261,7 @@ public class TestRatingService extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldGetLatestRateForUser() throws ClientException {
+    public void shouldGetLatestRateForUser() {
         String activity1 = ActivityHelper.createDocumentActivityObject(createTestDocument("doc1"));
         String activity2 = ActivityHelper.createDocumentActivityObject(createTestDocument("doc2"));
         String activity3 = ActivityHelper.createDocumentActivityObject(createTestDocument("doc3"));
