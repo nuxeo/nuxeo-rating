@@ -43,7 +43,6 @@ import org.nuxeo.ecm.activity.Activity;
 import org.nuxeo.ecm.activity.ActivityBuilder;
 import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.activity.ActivityStreamService;
-import org.nuxeo.ecm.core.api.ClientException;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.IdRef;
 import org.nuxeo.ecm.core.api.UnrestrictedSessionRunner;
@@ -228,25 +227,19 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
         }
 
         final ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
-        try {
-
-            new UnrestrictedSessionRunner(ActivityHelper.getRepositoryName(activityObject)) {
-                @Override
-                public void run() {
-                    IdRef docId = new IdRef(ActivityHelper.getDocumentId(activityObject));
-                    for (DocumentModel parent : session.getParentDocuments(docId)) {
-                        if (!parent.hasFacet(SUPER_SPACE)) {
-                            continue;
-                        }
-
-                        Activity activity = new ActivityBuilder(fromActivity).context(
-                                ActivityHelper.createDocumentActivityObject(parent)).build();
-                        activityStreamService.addActivity(activity);
+        new UnrestrictedSessionRunner(ActivityHelper.getRepositoryName(activityObject)) {
+            @Override
+            public void run() {
+                IdRef docId = new IdRef(ActivityHelper.getDocumentId(activityObject));
+                for (DocumentModel parent : session.getParentDocuments(docId)) {
+                    if (!parent.hasFacet(SUPER_SPACE)) {
+                        continue;
                     }
+                    Activity activity = new ActivityBuilder(fromActivity).context(
+                            ActivityHelper.createDocumentActivityObject(parent)).build();
+                    activityStreamService.addActivity(activity);
                 }
-            }.runUnrestricted();
-        } catch (ClientException e) {
-            log.info("Unable to found SuperSpaces for recomputing their rates", e);
-        }
+            }
+        }.runUnrestricted();
     }
 }

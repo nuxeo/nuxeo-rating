@@ -94,7 +94,7 @@ public class MostLiked {
     protected String documentLinkBuilder;
 
     @OperationMethod
-    public Blob run() throws Exception {
+    public Blob run() throws IOException {
         ActivitiesList mostLikedDocuments = likeService.getMostLikedActivities(session, limit,
                 session.getDocument(new PathRef(contextPath)), fromDt, toDt);
 
@@ -133,7 +133,7 @@ public class MostLiked {
         return JSONObject.fromObject(value);
     }
 
-    protected JSONObject buildFromDocument(Activity activity) throws Exception {
+    protected JSONObject buildFromDocument(Activity activity) throws IOException {
         DocumentModel doc = session.getDocument(new IdRef(getDocumentId(activity.getTarget())));
         Integer rating = Integer.valueOf(activity.getObject());
         Integer hasRated = Integer.valueOf(activity.getContext());

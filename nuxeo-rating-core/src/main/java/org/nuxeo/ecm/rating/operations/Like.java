@@ -59,7 +59,7 @@ public class Like {
     protected String activityId;
 
     @OperationMethod
-    public Blob run() throws Exception {
+    public Blob run() throws OperationException {
         String username = session.getPrincipal().getName();
         LikeStatus status;
         if (doc != null) {
