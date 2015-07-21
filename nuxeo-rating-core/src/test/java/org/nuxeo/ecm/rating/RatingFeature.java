@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.nuxeo.common.utils.FileUtils;
 import org.nuxeo.ecm.core.test.CoreFeature;
-import org.nuxeo.ecm.core.test.TransactionalFeature;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
@@ -14,7 +13,7 @@ import org.nuxeo.runtime.test.runner.SimpleFeature;
 /**
  * @author <a href="mailto:akervern@nuxeo.com">Arnaud Kervern</a>
  */
-@Features({ TransactionalFeature.class, CoreFeature.class })
+@Features(CoreFeature.class)
 @Deploy({ "org.nuxeo.runtime.datasource", "org.nuxeo.ecm.core.persistence", "org.nuxeo.ecm.activity",
         "org.nuxeo.ecm.rating.api", "org.nuxeo.ecm.rating.core" })
 @LocalDeploy("org.nuxeo.ecm.rating.core:rating-test.xml")
