@@ -32,7 +32,6 @@ import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.ecm.core.event.EventServiceAdmin;
 import org.nuxeo.ecm.core.persistence.PersistenceProvider;
-import org.nuxeo.ecm.core.test.RepositorySettings;
 import org.nuxeo.ecm.rating.api.LikeService;
 import org.nuxeo.ecm.rating.api.RatingService;
 
@@ -41,9 +40,6 @@ import org.nuxeo.ecm.rating.api.RatingService;
  * @since 5.6
  */
 public abstract class AbstractRatingTest {
-
-    @Inject
-    protected RepositorySettings settings;
 
     @Inject
     protected ActivityStreamService activityStreamService;
@@ -96,10 +92,6 @@ public abstract class AbstractRatingTest {
         session.saveDocument(doc);
         session.save();
         return doc;
-    }
-
-    protected CoreSession openSessionAs(String username) {
-        return settings.openSessionAs(username);
     }
 
 }
