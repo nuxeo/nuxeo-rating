@@ -1,3 +1,21 @@
+/*
+ * (C) Copyright 2012 Nuxeo SA (http://nuxeo.com/) and others.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Contributors:
+ *     Thomas Roger
+ */
 package org.nuxeo.ecm.rating.api;
 
 import org.nuxeo.ecm.activity.ActivitiesList;
@@ -6,7 +24,7 @@ import org.nuxeo.ecm.activity.ActivitiesList;
  * Service handling rating on activity objects.
  * <p>
  * The same activity object can handle multiple ratings by using different {@code aspect}s.
- * 
+ *
  * @author <a href="mailto:troger@nuxeo.com">Thomas Roger</a>
  * @since 5.6
  */
@@ -14,7 +32,7 @@ public interface RatingService {
 
     /**
      * Rates the {@code activityObject} by the {@code username}.
-     * 
+     *
      * @param rating the rating
      * @param aspect the rating aspect
      */
@@ -22,7 +40,7 @@ public interface RatingService {
 
     /**
      * Cancels a rate by the {@code username}.
-     * 
+     *
      * @param activityObject the activity object on which cancelling the rate
      * @param aspect the rating aspect
      */
