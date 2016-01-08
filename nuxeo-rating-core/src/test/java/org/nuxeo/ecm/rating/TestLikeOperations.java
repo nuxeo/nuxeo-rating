@@ -19,6 +19,9 @@ package org.nuxeo.ecm.rating;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import org.junit.Ignore;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -279,6 +282,7 @@ public class TestLikeOperations extends AbstractRatingTest {
     }
 
     @Test
+    @Ignore
     public void shouldCancelLikeOnAnActivityObject() throws Exception {
         Long activityId = 15L;
         String activityObject = ActivityHelper.createActivityObject(activityId);
