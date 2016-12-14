@@ -88,13 +88,6 @@ public class LikesCountActivityStreamFilter implements ActivityStreamFilter {
     }
 
     @Override
-    @Deprecated
-    public void handleRemovedActivities(ActivityStreamService activityStreamService,
-            Collection<Serializable> activityIds) {
-        // Nothing to do for now
-    }
-
-    @Override
     public void handleRemovedActivities(ActivityStreamService activityStreamService, ActivitiesList activities) {
     }
 

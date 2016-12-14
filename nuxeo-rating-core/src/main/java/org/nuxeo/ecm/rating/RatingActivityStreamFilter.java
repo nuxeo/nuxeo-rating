@@ -84,13 +84,6 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
     }
 
     @Override
-    @Deprecated
-    public void handleRemovedActivities(ActivityStreamService activityStreamService,
-            Collection<Serializable> activityIds) {
-        // nothing to do for now
-    }
-
-    @Override
     public void handleRemovedActivities(ActivityStreamService activityStreamService, ActivitiesList activities) {
         List<String> activityObjects = new ArrayList<>();
         for (Activity activity : activities) {
