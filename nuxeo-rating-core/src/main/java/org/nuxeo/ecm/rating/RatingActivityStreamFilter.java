@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2006-2012 Nuxeo SA (http://nuxeo.com/) and others.
+ * (C) Copyright 2006-2016 Nuxeo SA (http://nuxeo.com/) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
  * Contributors:
  *     Thomas Roger <troger@nuxeo.com>
  */
-
 package org.nuxeo.ecm.rating;
 
 import static org.nuxeo.ecm.rating.api.Constants.RATING_VERB_PREFIX;
@@ -93,7 +92,7 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
 
     @Override
     public void handleRemovedActivities(ActivityStreamService activityStreamService, ActivitiesList activities) {
-        List<String> activityObjects = new ArrayList<String>();
+        List<String> activityObjects = new ArrayList<>();
         for (Activity activity : activities) {
             activityObjects.add(ActivityHelper.createActivityObject(activity));
             for (ActivityReply reply : activity.getActivityReplies()) {
@@ -113,7 +112,8 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
     protected void removeAllRatingActivitiesFor(ActivityStreamService activityStreamService,
             Collection<String> activityObjects) {
         EntityManager em = ((ActivityStreamServiceImpl) activityStreamService).getEntityManager();
-        Query query = em.createQuery("delete from Activity activity where activity.verb LIKE :verb and activity.target in (:target)");
+        Query query = em.createQuery(
+                "delete from Activity activity where activity.verb LIKE :verb and activity.target in (:target)");
         query.setParameter("verb", RATING_VERB_PREFIX + "%");
         query.setParameter("target", activityObjects);
         query.executeUpdate();
@@ -202,7 +202,8 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
             }
             break;
         case GET_LATEST_RATED_FOR_OBJECT:
-            query = em.createQuery("select activity from Activity activity where activity.target LIKE :targetObject and activity.context is null and activity.actor = :actor and activity.verb = :verb order by activity.publishedDate DESC, activity.id DESC");
+            query = em.createQuery(
+                    "select activity from Activity activity where activity.target LIKE :targetObject and activity.context is null and activity.actor = :actor and activity.verb = :verb order by activity.publishedDate DESC, activity.id DESC");
             query.setParameter("verb", RATING_VERB_PREFIX + aspect);
             query.setParameter(ACTOR_PARAMETER, actor);
             query.setParameter(TARGET_OBJECT_PARAMETER, ActivityHelper.DOC_PREFIX + "%");

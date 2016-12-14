@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2012 Nuxeo SA (http://nuxeo.com/) and others.
+ * (C) Copyright 2012-2016 Nuxeo SA (http://nuxeo.com/) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -111,9 +111,9 @@ public class LikesCountActivityStreamFilter implements ActivityStreamFilter {
             return new ActivitiesListImpl();
         }
 
-        Query query = null;
-        String queryStr = "";
-        String innerStr = "";
+        Query query;
+        String queryStr;
+        String innerStr;
         EntityManager em = ((ActivityStreamServiceImpl) activityStreamService).getEntityManager();
         Serializable actor = parameters.get(ACTOR_PARAMETER);
 
@@ -184,8 +184,11 @@ public class LikesCountActivityStreamFilter implements ActivityStreamFilter {
         ActivitiesList likesCount = new ActivitiesListImpl();
         for (Object result : query.getResultList()) {
             Object[] objects = (Object[]) result;
-            ActivityBuilder ab = new ActivityBuilder().verb(RATING_VERB_PREFIX + LIKE_ASPECT).actor((String) actor).object(
-                    String.valueOf(objects[1])).target((String) objects[0]).context(String.valueOf(objects[2]));
+            ActivityBuilder ab = new ActivityBuilder().verb(RATING_VERB_PREFIX + LIKE_ASPECT)
+                                                      .actor((String) actor)
+                                                      .object(String.valueOf(objects[1]))
+                                                      .target((String) objects[0])
+                                                      .context(String.valueOf(objects[2]));
             likesCount.add(ab.build());
         }
 
