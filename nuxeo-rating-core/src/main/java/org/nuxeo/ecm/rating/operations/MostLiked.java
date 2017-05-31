@@ -130,7 +130,7 @@ public class MostLiked {
         Map<String, Object> jsonObj = new HashMap<String, Object>();
         jsonObj.put("items", JSONArray.fromObject(docsWithRate));
         JSONObject json = JSONObject.fromObject(jsonObj);
-        return Blobs.createBlob(json.toString(), "application/json");
+        return Blobs.createJSONBlob(json.toString());
     }
 
     protected JSONObject buildFromActivity(Activity activity) {

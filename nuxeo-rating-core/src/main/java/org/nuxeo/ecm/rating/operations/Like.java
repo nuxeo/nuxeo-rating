@@ -76,7 +76,7 @@ public class Like {
         }
 
         JSONObject json = JSONObject.fromObject(status.toMap());
-        return Blobs.createBlob(json.toString(), "application/json");
+        return Blobs.createJSONBlob(json.toString());
     }
 
 }
