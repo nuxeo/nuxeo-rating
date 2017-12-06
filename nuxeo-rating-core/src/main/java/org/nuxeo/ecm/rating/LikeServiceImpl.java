@@ -67,7 +67,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public void like(String username, String activityObject) {
-        RatingService ratingService = Framework.getLocalService(RatingService.class);
+        RatingService ratingService = Framework.getService(RatingService.class);
         ratingService.cancelRate(username, activityObject, LIKE_ASPECT);
         ratingService.rate(username, LIKE_RATING, activityObject, LIKE_ASPECT);
     }
@@ -79,7 +79,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public boolean hasUserLiked(String username, String activityObject) {
-        RatingService ratingService = Framework.getLocalService(RatingService.class);
+        RatingService ratingService = Framework.getService(RatingService.class);
         double average = ratingService.getAverageRatingForUser(username, activityObject, LIKE_ASPECT);
         return average > 0;
     }
@@ -91,7 +91,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public long getLikesCount(String activityObject) {
-        RatingService ratingService = Framework.getLocalService(RatingService.class);
+        RatingService ratingService = Framework.getService(RatingService.class);
         return ratingService.getRatesCount(activityObject, LIKE_RATING, LIKE_ASPECT);
     }
 
@@ -102,7 +102,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public void dislike(String username, String activityObject) {
-        RatingService ratingService = Framework.getLocalService(RatingService.class);
+        RatingService ratingService = Framework.getService(RatingService.class);
         ratingService.cancelRate(username, activityObject, LIKE_ASPECT);
         ratingService.rate(username, DISLIKE_RATING, activityObject, LIKE_ASPECT);
     }
@@ -114,7 +114,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public boolean hasUserDisliked(String username, String activityObject) {
-        RatingService ratingService = Framework.getLocalService(RatingService.class);
+        RatingService ratingService = Framework.getService(RatingService.class);
         double average = ratingService.getAverageRatingForUser(username, activityObject, LIKE_ASPECT);
         return average < 0;
     }
@@ -126,7 +126,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public long getDislikesCount(String activityObject) {
-        RatingService ratingService = Framework.getLocalService(RatingService.class);
+        RatingService ratingService = Framework.getService(RatingService.class);
         return ratingService.getRatesCount(activityObject, DISLIKE_RATING, LIKE_ASPECT);
     }
 
@@ -137,7 +137,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
 
     @Override
     public void cancel(String username, String activityObject) {
-        RatingService ratingService = Framework.getLocalService(RatingService.class);
+        RatingService ratingService = Framework.getService(RatingService.class);
         ratingService.cancelRate(username, activityObject, LIKE_ASPECT);
     }
 
@@ -186,7 +186,7 @@ public class LikeServiceImpl extends DefaultComponent implements LikeService {
         parameters.put(ACTOR_PARAMETER, createUserActivityObject(session.getPrincipal().getName()));
         parameters.put(QUERY_TYPE_PARAMETER, GET_DOCUMENTS_COUNT);
 
-        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         ActivitiesList documentActivitiesList = activityStreamService.query(LikesCountActivityStreamFilter.ID,
                 parameters);
         ActivitiesList mostLikedActivities = documentActivitiesList.filterActivities(session);

@@ -55,7 +55,7 @@ public class RatingListener implements EventListener {
     }
 
     protected void cancelRates(DocumentModel document) {
-        RatingService ratingService = Framework.getLocalService(RatingService.class);
+        RatingService ratingService = Framework.getService(RatingService.class);
         ratingService.cancelRates(createDocumentActivityObject(document), null);
     }
 }

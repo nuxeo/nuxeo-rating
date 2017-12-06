@@ -188,7 +188,7 @@ public class MostLiked {
             return "http://dummyurl.com";
         }
 
-        DocumentViewCodecManager documentViewCodecManager = Framework.getLocalService(DocumentViewCodecManager.class);
+        DocumentViewCodecManager documentViewCodecManager = Framework.getService(DocumentViewCodecManager.class);
         String codecName = isBlank(documentLinkBuilder) ? documentViewCodecManager.getDefaultCodecName()
                 : documentLinkBuilder;
 
