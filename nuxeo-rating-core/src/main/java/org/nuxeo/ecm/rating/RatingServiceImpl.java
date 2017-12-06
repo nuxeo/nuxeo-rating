@@ -66,7 +66,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
     public void rate(String username, int rating, String activityObject, String aspect) {
         Activity activity = new ActivityBuilder().verb(RATING_VERB_PREFIX + aspect).actor(
                 ActivityHelper.createUserActivityObject(username)).target(activityObject).object(String.valueOf(rating)).build();
-        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         activityStreamService.addActivity(activity);
 
         addSuperSpaceRate(activity);
@@ -80,7 +80,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
 
-        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         activityStreamService.removeActivities(activities);
     }
@@ -92,7 +92,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
 
-        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         activityStreamService.removeActivities(activities);
     }
@@ -105,7 +105,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
 
-        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         return !activities.isEmpty();
     }
@@ -117,7 +117,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
 
-        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         return activities.size();
     }
@@ -130,7 +130,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
         parameters.put(ASPECT_PARAMETER, aspect);
         parameters.put(RATING_PARAMETER, Integer.valueOf(rating));
 
-        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         return activities.size();
     }
@@ -143,7 +143,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
 
-        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         return activities.size();
     }
@@ -157,7 +157,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
         parameters.put(ASPECT_PARAMETER, aspect);
         parameters.put(RATING_PARAMETER, Integer.valueOf(rating));
 
-        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         return activities.size();
     }
@@ -169,7 +169,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
 
-        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         return computeAverage(activities);
     }
@@ -182,7 +182,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
 
-        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         ActivitiesList activities = activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
         return computeAverage(activities);
     }
@@ -195,7 +195,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
         parameters.put(ASPECT_PARAMETER, aspect);
         parameters.put(RATING_PARAMETER, Integer.valueOf(rating));
 
-        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         return activityStreamService.query(RatingActivityStreamFilter.ID, parameters);
     }
 
@@ -206,7 +206,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
         parameters.put(ACTOR_PARAMETER, ActivityHelper.createUserActivityObject(username));
         parameters.put(ASPECT_PARAMETER, aspect);
 
-        ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         return activityStreamService.query(RatingActivityStreamFilter.ID, parameters, 0, limit);
     }
 
@@ -228,7 +228,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
             return;
         }
 
-        final ActivityStreamService activityStreamService = Framework.getLocalService(ActivityStreamService.class);
+        final ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         new UnrestrictedSessionRunner(ActivityHelper.getRepositoryName(activityObject)) {
             @Override
             public void run() {

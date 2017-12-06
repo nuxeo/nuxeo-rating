@@ -401,7 +401,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         Activity activity = new ActivityBuilder().actor(ActivityHelper.createUserActivityObject(principal)).displayActor(
                 ActivityHelper.generateDisplayName(principal)).verb("minimessage").object(message).publishedDate(
                 publishedDate).context(contextActivityObject).build();
-        activity = Framework.getLocalService(ActivityStreamService.class).addActivity(activity);
+        activity = Framework.getService(ActivityStreamService.class).addActivity(activity);
         return activity.getId().toString();
     }
 }
