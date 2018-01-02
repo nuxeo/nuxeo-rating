@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2012 Nuxeo SA (http://nuxeo.com/) and others.
+ * (C) Copyright 2012-2018 Nuxeo (http://nuxeo.com/) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,9 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
@@ -74,6 +71,9 @@ import org.nuxeo.runtime.api.Framework;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 /**
  * @author <a href="mailto:akervern@nuxeo.com">Arnaud Kervern</a>
  */
@@ -83,7 +83,8 @@ public class MostLiked {
 
     public static final String ID = "Services.MostLiked";
 
-    public static Pattern HTTP_URL_PATTERN = Pattern.compile("\\b(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])");
+    public static Pattern HTTP_URL_PATTERN = Pattern.compile(
+            "\\b(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])");
 
     @Context
     protected CoreSession session;
@@ -117,7 +118,7 @@ public class MostLiked {
         ActivitiesList mostLikedDocuments = likeService.getMostLikedActivities(session, limit,
                 session.getDocument(new PathRef(contextPath)), fromDt, toDt);
 
-        final List<JSONObject> docsWithRate = new ArrayList<JSONObject>();
+        final List<JSONObject> docsWithRate = new ArrayList<>();
         for (Activity activity : mostLikedDocuments) {
             if (ActivityHelper.isDocument(activity.getTarget())) {
                 docsWithRate.add(buildFromDocument(activity));
@@ -128,7 +129,7 @@ public class MostLiked {
             }
         }
 
-        Map<String, Object> jsonObj = new HashMap<String, Object>();
+        Map<String, Object> jsonObj = new HashMap<>();
         jsonObj.put("items", JSONArray.fromObject(docsWithRate));
         JSONObject json = JSONObject.fromObject(jsonObj);
         return Blobs.createJSONBlob(json.toString());
@@ -140,7 +141,7 @@ public class MostLiked {
         Integer rating = Integer.valueOf(activity.getObject());
         Integer hasRated = Integer.valueOf(activity.getContext());
 
-        Map<String, Object> value = new HashMap<String, Object>();
+        Map<String, Object> value = new HashMap<>();
         value.put("type", "minimessage");
         value.put("message", message);
         value.put("rating", rating);
@@ -162,7 +163,7 @@ public class MostLiked {
 
         writeDocument(doc, jg);
 
-        Map<String, Object> value = new HashMap<String, Object>();
+        Map<String, Object> value = new HashMap<>();
         value.put("rating", rating);
         value.put("document", JSONObject.fromObject(out.toString()));
         value.put("url", getDocumentUrl(doc));

@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2006-2012 Nuxeo SA (http://nuxeo.com/) and others.
+ * (C) Copyright 2006-2018 Nuxeo (http://nuxeo.com/) and others.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,20 +24,19 @@ import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.ACTOR_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.ASPECT_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.CONTEXT_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QUERY_TYPE_PARAMETER;
-import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.RATING_PARAMETER;
-import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.TARGET_OBJECT_PARAMETER;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_ACTOR_RATINGS_FOR_OBJECT;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_LATEST_RATED_FOR_OBJECT;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATED_CHILDREN_FOR_CONTEXT;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATINGS_FOR_CANCEL;
 import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.QueryType.GET_RATINGS_FOR_OBJECT;
+import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.RATING_PARAMETER;
+import static org.nuxeo.ecm.rating.RatingActivityStreamFilter.TARGET_OBJECT_PARAMETER;
 import static org.nuxeo.ecm.rating.api.Constants.RATING_VERB_PREFIX;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.activity.ActivitiesList;
@@ -64,8 +63,11 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
 
     @Override
     public void rate(String username, int rating, String activityObject, String aspect) {
-        Activity activity = new ActivityBuilder().verb(RATING_VERB_PREFIX + aspect).actor(
-                ActivityHelper.createUserActivityObject(username)).target(activityObject).object(String.valueOf(rating)).build();
+        Activity activity = new ActivityBuilder().verb(RATING_VERB_PREFIX + aspect)
+                                                 .actor(ActivityHelper.createUserActivityObject(username))
+                                                 .target(activityObject)
+                                                 .object(String.valueOf(rating))
+                                                 .build();
         ActivityStreamService activityStreamService = Framework.getService(ActivityStreamService.class);
         activityStreamService.addActivity(activity);
 
@@ -74,7 +76,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
 
     @Override
     public void cancelRate(String username, String activityObject, String aspect) {
-        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_RATINGS_FOR_CANCEL);
         parameters.put(ACTOR_PARAMETER, ActivityHelper.createUserActivityObject(username));
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
@@ -87,7 +89,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
 
     @Override
     public void cancelRates(String activityObject, String aspect) {
-        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_RATINGS_FOR_CANCEL);
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
@@ -99,7 +101,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
 
     @Override
     public boolean hasUserRated(String username, String activityObject, String aspect) {
-        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_ACTOR_RATINGS_FOR_OBJECT);
         parameters.put(ACTOR_PARAMETER, ActivityHelper.createUserActivityObject(username));
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
@@ -112,7 +114,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
 
     @Override
     public long getRatesCount(String activityObject, String aspect) {
-        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_RATINGS_FOR_OBJECT);
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
@@ -124,7 +126,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
 
     @Override
     public long getRatesCount(String activityObject, int rating, String aspect) {
-        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_RATINGS_FOR_OBJECT);
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
@@ -137,7 +139,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
 
     @Override
     public long getRatesCountForUser(String username, String activityObject, String aspect) {
-        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_ACTOR_RATINGS_FOR_OBJECT);
         parameters.put(ACTOR_PARAMETER, ActivityHelper.createUserActivityObject(username));
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
@@ -150,7 +152,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
 
     @Override
     public long getRatesCountForUser(String username, String activityObject, int rating, String aspect) {
-        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_ACTOR_RATINGS_FOR_OBJECT);
         parameters.put(ACTOR_PARAMETER, ActivityHelper.createUserActivityObject(username));
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
@@ -164,7 +166,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
 
     @Override
     public double getAverageRating(String activityObject, String aspect) {
-        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_RATINGS_FOR_OBJECT);
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
@@ -176,7 +178,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
 
     @Override
     public double getAverageRatingForUser(String username, String activityObject, String aspect) {
-        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_ACTOR_RATINGS_FOR_OBJECT);
         parameters.put(ACTOR_PARAMETER, ActivityHelper.createUserActivityObject(username));
         parameters.put(TARGET_OBJECT_PARAMETER, activityObject);
@@ -189,7 +191,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
 
     @Override
     public ActivitiesList getRatedChildren(String activityObject, int rating, String aspect) {
-        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_RATED_CHILDREN_FOR_CONTEXT);
         parameters.put(CONTEXT_PARAMETER, activityObject);
         parameters.put(ASPECT_PARAMETER, aspect);
@@ -201,7 +203,7 @@ public class RatingServiceImpl extends DefaultComponent implements RatingService
 
     @Override
     public ActivitiesList getLastestRatedDocByUser(String username, String aspect, int limit) {
-        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(QUERY_TYPE_PARAMETER, GET_LATEST_RATED_FOR_OBJECT);
         parameters.put(ACTOR_PARAMETER, ActivityHelper.createUserActivityObject(username));
         parameters.put(ASPECT_PARAMETER, aspect);
