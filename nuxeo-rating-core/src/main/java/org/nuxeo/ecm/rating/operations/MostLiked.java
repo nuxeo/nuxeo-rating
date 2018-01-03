@@ -18,7 +18,7 @@
  */
 package org.nuxeo.ecm.rating.operations;
 
-import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.nuxeo.ecm.activity.ActivityHelper.getActivityId;
 import static org.nuxeo.ecm.activity.ActivityHelper.getDocumentId;
 import static org.nuxeo.ecm.activity.ActivityHelper.getUsername;
@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.nuxeo.ecm.activity.ActivitiesList;
@@ -201,7 +201,7 @@ public class MostLiked {
     }
 
     protected static String replaceURLsByLinks(String message) {
-        String escapedMessage = StringEscapeUtils.escapeHtml(message);
+        String escapedMessage = StringEscapeUtils.escapeHtml4(message);
         Matcher m = HTTP_URL_PATTERN.matcher(escapedMessage);
         StringBuffer sb = new StringBuffer(escapedMessage.length());
         while (m.find()) {
