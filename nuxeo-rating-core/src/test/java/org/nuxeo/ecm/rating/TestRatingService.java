@@ -26,15 +26,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
-import org.nuxeo.ecm.core.event.EventService;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
@@ -50,9 +47,6 @@ public class TestRatingService extends AbstractRatingTest {
     public static final String STARS_ASPECT = "stars";
 
     public static final String OTHER_ASPECT = "other";
-
-    @Inject
-    protected EventService eventService;
 
     @Test
     public void serviceRegistration() throws IOException {
