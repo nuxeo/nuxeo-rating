@@ -38,6 +38,7 @@ import org.nuxeo.ecm.activity.ActivityReply;
 import org.nuxeo.ecm.activity.ActivityStreamFilter;
 import org.nuxeo.ecm.activity.ActivityStreamService;
 import org.nuxeo.ecm.activity.ActivityStreamServiceImpl;
+import org.nuxeo.ecm.core.api.NuxeoException;
 
 /**
  * Activity Stream filter handling rating activities.
@@ -201,6 +202,8 @@ public class RatingActivityStreamFilter implements ActivityStreamFilter {
             query.setParameter(ACTOR_PARAMETER, actor);
             query.setParameter(TARGET_OBJECT_PARAMETER, ActivityHelper.DOC_PREFIX + "%");
             break;
+        default:
+            throw new NuxeoException("Unknown query type: " + queryType);
         }
 
         if (limit > 0) {
