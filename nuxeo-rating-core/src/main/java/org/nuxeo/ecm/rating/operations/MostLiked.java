@@ -27,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,9 +35,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.text.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.text.StringEscapeUtils;
+import org.json.JSONException;
 import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.activity.Activity;
 import org.nuxeo.ecm.activity.ActivityHelper;
@@ -70,9 +72,7 @@ import org.nuxeo.ecm.rating.api.LikeService;
 import org.nuxeo.runtime.api.Framework;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author <a href="mailto:akervern@nuxeo.com">Arnaud Kervern</a>
@@ -113,12 +113,14 @@ public class MostLiked {
     @Param(name = "documentLinkBuilder", required = false)
     protected String documentLinkBuilder;
 
+    private ObjectMapper objectMapper = new ObjectMapper();
+
     @OperationMethod
-    public Blob run() throws IOException {
+    public Blob run() throws IOException, JSONException {
         ActivitiesList mostLikedDocuments = likeService.getMostLikedActivities(session, limit,
                 session.getDocument(new PathRef(contextPath)), fromDt, toDt);
 
-        final List<JSONObject> docsWithRate = new ArrayList<>();
+        final List<Map<String, Object>> docsWithRate = new ArrayList<>();
         for (Activity activity : mostLikedDocuments) {
             if (ActivityHelper.isDocument(activity.getTarget())) {
                 docsWithRate.add(buildFromDocument(activity));
@@ -129,13 +131,10 @@ public class MostLiked {
             }
         }
 
-        Map<String, Object> jsonObj = new HashMap<>();
-        jsonObj.put("items", JSONArray.fromObject(docsWithRate));
-        JSONObject json = JSONObject.fromObject(jsonObj);
-        return Blobs.createJSONBlob(json.toString());
+        return Blobs.createJSONBlobFromValue(Collections.singletonMap("items", docsWithRate));
     }
 
-    protected JSONObject buildFromActivity(Activity activity) {
+    protected Map<String, Object> buildFromActivity(Activity activity) {
         Activity miniMessage = activityService.getActivity(Long.valueOf(getActivityId(activity.getTarget())));
         String message = MostLiked.replaceURLsByLinks(miniMessage.getObject());
         Integer rating = Integer.valueOf(activity.getObject());
@@ -150,27 +149,30 @@ public class MostLiked {
                 ActivityMessageHelper.getUserProfileLink(miniMessage.getActor(), miniMessage.getDisplayActor()));
         value.put("hasUserLiked", hasRated);
 
-        return JSONObject.fromObject(value);
+        return value;
     }
 
-    protected JSONObject buildFromDocument(Activity activity) throws IOException {
+    protected Map<String, Object> buildFromDocument(Activity activity) throws IOException, JSONException {
         DocumentModel doc = session.getDocument(new IdRef(getDocumentId(activity.getTarget())));
         Integer rating = Integer.valueOf(activity.getObject());
         Integer hasRated = Integer.valueOf(activity.getContext());
 
-        OutputStream out = new ByteArrayOutputStream();
-        JsonGenerator jg = JsonHelper.createJsonGenerator(out);
+        try (OutputStream out = new ByteArrayOutputStream(); JsonGenerator jg = JsonHelper.createJsonGenerator(out)) {
 
-        writeDocument(doc, jg);
+            writeDocument(doc, jg);
 
-        Map<String, Object> value = new HashMap<>();
-        value.put("rating", rating);
-        value.put("document", JSONObject.fromObject(out.toString()));
-        value.put("url", getDocumentUrl(doc));
-        value.put("hasUserLiked", hasRated);
-        value.put("type", "document");
+            @SuppressWarnings("unchecked")
+            Map<String, Object> docAsMap = objectMapper.readValue(out.toString(), Map.class);
 
-        return JSONObject.fromObject(value);
+            Map<String, Object> value = new HashMap<>();
+            value.put("rating", rating);
+            value.put("document", docAsMap);
+            value.put("url", getDocumentUrl(doc));
+            value.put("hasUserLiked", hasRated);
+            value.put("type", "document");
+
+            return value;
+        }
     }
 
     private static DocumentModelJsonWriter documentModelWriter;

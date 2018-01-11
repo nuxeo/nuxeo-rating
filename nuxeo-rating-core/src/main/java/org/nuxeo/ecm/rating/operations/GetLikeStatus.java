@@ -19,7 +19,7 @@
 
 package org.nuxeo.ecm.rating.operations;
 
-import net.sf.json.JSONObject;
+import java.io.IOException;
 
 import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.automation.OperationException;
@@ -60,7 +60,7 @@ public class GetLikeStatus {
     protected String activityId;
 
     @OperationMethod
-    public Blob run() throws OperationException {
+    public Blob run() throws OperationException, IOException {
         String username = session.getPrincipal().getName();
         LikeStatus status;
         if (doc != null) {
@@ -72,8 +72,7 @@ public class GetLikeStatus {
             throw new OperationException("'document' or 'activityId' parameter must be set.");
         }
 
-        JSONObject json = JSONObject.fromObject(status.toMap());
-        return Blobs.createJSONBlob(json.toString());
+        return Blobs.createJSONBlobFromValue(status.toMap());
     }
 
 }

@@ -34,12 +34,6 @@
     </dependency>
 
     <dependency>
-      <groupId>net.sf.json-lib</groupId>
-      <artifactId>json-lib</artifactId>
-      <classifier>jdk15</classifier>
-    </dependency>
-
-    <dependency>
       <groupId>org.nuxeo.ecm.core</groupId>
       <artifactId>nuxeo-core-test</artifactId>
       <scope>test</scope>
