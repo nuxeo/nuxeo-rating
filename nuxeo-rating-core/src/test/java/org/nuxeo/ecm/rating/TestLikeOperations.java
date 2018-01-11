@@ -24,9 +24,8 @@ import static org.junit.Assert.assertNotNull;
 
 import javax.inject.Inject;
 
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.automation.AutomationService;
@@ -50,7 +49,7 @@ import org.nuxeo.runtime.test.runner.FeaturesRunner;
 @RunWith(FeaturesRunner.class)
 @Features(RatingFeature.class)
 @Deploy({ "org.nuxeo.ecm.automation.core", "org.nuxeo.ecm.automation.io", "org.nuxeo.ecm.webengine.core",
-        "org.nuxeo.ecm.core.io" })
+                "org.nuxeo.ecm.core.io" })
 @SuppressWarnings("boxing")
 public class TestLikeOperations extends AbstractRatingTest {
 
@@ -75,7 +74,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         String json = result.getString();
         assertNotNull(json);
 
-        JSONObject object = JSONObject.fromObject(json);
+        JSONObject object = new JSONObject(json);
         assertEquals(3, object.getLong("likesCount"));
         assertEquals(0, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
@@ -87,7 +86,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         json = result.getString();
         assertNotNull(json);
 
-        object = JSONObject.fromObject(json);
+        object = new JSONObject(json);
         assertEquals(4, object.getLong("likesCount"));
         assertEquals(0, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
@@ -110,7 +109,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         String json = result.getString();
         assertNotNull(json);
 
-        JSONObject object = JSONObject.fromObject(json);
+        JSONObject object = new JSONObject(json);
         assertEquals(2, object.getLong("likesCount"));
         assertEquals(1, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
@@ -122,7 +121,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         json = result.getString();
         assertNotNull(json);
 
-        object = JSONObject.fromObject(json);
+        object = new JSONObject(json);
         assertEquals(2, object.getLong("likesCount"));
         assertEquals(2, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
@@ -147,7 +146,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         String json = result.getString();
         assertNotNull(json);
 
-        JSONObject object = JSONObject.fromObject(json);
+        JSONObject object = new JSONObject(json);
         assertEquals(3, object.getLong("likesCount"));
         assertEquals(0, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
@@ -160,7 +159,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         json = result.getString();
         assertNotNull(json);
 
-        object = JSONObject.fromObject(json);
+        object = new JSONObject(json);
         assertEquals(4, object.getLong("likesCount"));
         assertEquals(0, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
@@ -172,7 +171,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         json = result.getString();
         assertNotNull(json);
 
-        object = JSONObject.fromObject(json);
+        object = new JSONObject(json);
         assertEquals(4, object.getLong("likesCount"));
         assertEquals(0, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
@@ -195,7 +194,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         String json = result.getString();
         assertNotNull(json);
 
-        JSONObject object = JSONObject.fromObject(json);
+        JSONObject object = new JSONObject(json);
         assertEquals(2, object.getLong("likesCount"));
         assertEquals(1, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
@@ -208,7 +207,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         json = result.getString();
         assertNotNull(json);
 
-        object = JSONObject.fromObject(json);
+        object = new JSONObject(json);
         assertEquals(3, object.getLong("likesCount"));
         assertEquals(1, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
@@ -234,7 +233,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         String json = result.getString();
         assertNotNull(json);
 
-        JSONObject object = JSONObject.fromObject(json);
+        JSONObject object = new JSONObject(json);
         assertEquals(4, object.getLong("likesCount"));
         assertEquals(0, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
@@ -247,7 +246,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         json = result.getString();
         assertNotNull(json);
 
-        object = JSONObject.fromObject(json);
+        object = new JSONObject(json);
         assertEquals(3, object.getLong("likesCount"));
         assertEquals(0, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
@@ -260,7 +259,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         json = result.getString();
         assertNotNull(json);
 
-        object = JSONObject.fromObject(json);
+        object = new JSONObject(json);
         assertEquals(3, object.getLong("likesCount"));
         assertEquals(0, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
@@ -284,7 +283,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         String json = result.getString();
         assertNotNull(json);
 
-        JSONObject object = JSONObject.fromObject(json);
+        JSONObject object = new JSONObject(json);
         assertEquals(3, object.getLong("likesCount"));
         assertEquals(1, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
@@ -297,7 +296,7 @@ public class TestLikeOperations extends AbstractRatingTest {
         json = result.getString();
         assertNotNull(json);
 
-        object = JSONObject.fromObject(json);
+        object = new JSONObject(json);
         assertEquals(2, object.getLong("likesCount"));
         assertEquals(1, object.getLong("dislikesCount"));
         assertEquals("Administrator", object.get("username"));
@@ -325,9 +324,9 @@ public class TestLikeOperations extends AbstractRatingTest {
         String json = result.getString();
         assertNotNull(json);
 
-        JSONObject object = JSONObject.fromObject(json);
+        JSONObject object = new JSONObject(json);
         JSONArray items = object.getJSONArray("items");
-        assertEquals(2, items.size());
+        assertEquals(2, items.length());
 
         JSONObject firstDocRated = items.getJSONObject(0);
         assertEquals(2, firstDocRated.getInt("rating"));
