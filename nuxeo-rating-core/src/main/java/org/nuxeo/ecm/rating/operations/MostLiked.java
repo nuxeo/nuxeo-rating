@@ -83,7 +83,7 @@ public class MostLiked {
 
     public static final String ID = "Services.MostLiked";
 
-    public static Pattern HTTP_URL_PATTERN = Pattern.compile(
+    public static final Pattern HTTP_URL_PATTERN = Pattern.compile(
             "\\b(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])");
 
     @Context
