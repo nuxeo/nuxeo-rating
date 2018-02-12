@@ -22,12 +22,10 @@ package org.nuxeo.ecm.rating;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
-
 import org.nuxeo.ecm.core.test.CoreFeature;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
-import org.nuxeo.runtime.test.runner.LocalDeploy;
 import org.nuxeo.runtime.test.runner.SimpleFeature;
 
 /**
@@ -36,7 +34,7 @@ import org.nuxeo.runtime.test.runner.SimpleFeature;
 @Features(CoreFeature.class)
 @Deploy({ "org.nuxeo.runtime.datasource", "org.nuxeo.ecm.core.persistence", "org.nuxeo.ecm.activity",
         "org.nuxeo.ecm.rating.api", "org.nuxeo.ecm.rating.core" })
-@LocalDeploy("org.nuxeo.ecm.rating.core:rating-test.xml")
+@Deploy("org.nuxeo.ecm.rating.core:rating-test.xml")
 public class RatingFeature extends SimpleFeature {
 
     protected static final String DIRECTORY = "target/test/nxactivities";
