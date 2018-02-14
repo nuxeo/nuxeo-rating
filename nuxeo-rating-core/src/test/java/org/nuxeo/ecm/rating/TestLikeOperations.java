@@ -48,8 +48,10 @@ import org.nuxeo.runtime.test.runner.FeaturesRunner;
  */
 @RunWith(FeaturesRunner.class)
 @Features(RatingFeature.class)
-@Deploy({ "org.nuxeo.ecm.automation.core", "org.nuxeo.ecm.automation.io", "org.nuxeo.ecm.webengine.core",
-                "org.nuxeo.ecm.core.io" })
+@Deploy("org.nuxeo.ecm.automation.core")
+@Deploy("org.nuxeo.ecm.automation.io")
+@Deploy("org.nuxeo.ecm.webengine.core")
+@Deploy("org.nuxeo.ecm.core.io")
 @SuppressWarnings("boxing")
 public class TestLikeOperations extends AbstractRatingTest {
 
