@@ -32,8 +32,11 @@ import org.nuxeo.runtime.test.runner.SimpleFeature;
  * @author <a href="mailto:akervern@nuxeo.com">Arnaud Kervern</a>
  */
 @Features(CoreFeature.class)
-@Deploy({ "org.nuxeo.runtime.datasource", "org.nuxeo.ecm.core.persistence", "org.nuxeo.ecm.activity",
-        "org.nuxeo.ecm.rating.api", "org.nuxeo.ecm.rating.core" })
+@Deploy("org.nuxeo.runtime.datasource")
+@Deploy("org.nuxeo.ecm.core.persistence")
+@Deploy("org.nuxeo.ecm.activity")
+@Deploy("org.nuxeo.ecm.rating.api")
+@Deploy("org.nuxeo.ecm.rating.core")
 @Deploy("org.nuxeo.ecm.rating.core:rating-test.xml")
 public class RatingFeature extends SimpleFeature {
 

@@ -71,8 +71,9 @@ import org.nuxeo.runtime.test.runner.FeaturesRunner;
 @RunWith(FeaturesRunner.class)
 @Features({ RatingFeature.class, PlatformFeature.class })
 @RepositoryConfig(init = DefaultRepositoryInit.class)
-@Deploy({ "org.nuxeo.ecm.platform.url.core", "org.nuxeo.ecm.platform.ui:OSGI-INF/urlservice-framework.xml",
-        "org.nuxeo.ecm.user.center:OSGI-INF/urlservice-contrib.xml" })
+@Deploy("org.nuxeo.ecm.platform.url.core")
+@Deploy("org.nuxeo.ecm.platform.ui:OSGI-INF/urlservice-framework.xml")
+@Deploy("org.nuxeo.ecm.user.center:OSGI-INF/urlservice-contrib.xml")
 @SuppressWarnings("boxing")
 public class TestLikeServiceWithDocs extends AbstractRatingTest {
     @Inject
