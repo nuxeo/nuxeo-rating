@@ -32,6 +32,8 @@ import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.DocumentRef;
+import org.nuxeo.ecm.core.trash.TrashService;
+import org.nuxeo.runtime.api.Framework;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
 
@@ -249,8 +251,7 @@ public class TestRatingService extends AbstractRatingTest {
         assertEquals(1, ratingService.getRatesCount(docActivity, STARS_ASPECT));
 
         DocumentRef docRef = doc.getRef();
-        session.followTransition(docRef, "delete");
-        session.save();
+        Framework.getService(TrashService.class).trashDocument(doc);
 
         assertEquals(0, ratingService.getRatesCount(docActivity, STARS_ASPECT));
     }
