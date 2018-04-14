@@ -7,6 +7,7 @@
               class="org.nuxeo.ecm.rating.listener.RatingListener">
       <event>documentRemoved</event>
       <event>lifecycle_transition_event</event>
+      <event>documentTrashed</event>
     </listener>
   </extension>
 

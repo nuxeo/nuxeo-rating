@@ -24,8 +24,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.nuxeo.ecm.activity.ActivitiesList;
@@ -51,7 +49,7 @@ public class TestRatingService extends AbstractRatingTest {
     public static final String OTHER_ASPECT = "other";
 
     @Test
-    public void serviceRegistration() throws IOException {
+    public void serviceRegistration()  {
         assertNotNull(ratingService);
     }
 
@@ -242,7 +240,7 @@ public class TestRatingService extends AbstractRatingTest {
     }
 
     @Test
-    public void shouldNotFindRatingWhenDocIsDeleted() {
+    public void shouldNotFindRatingWhenDocIsTrashed() {
 
         DocumentModel doc = createTestDocument("doc1");
         String docActivity = ActivityHelper.createDocumentActivityObject(doc);
@@ -250,7 +248,6 @@ public class TestRatingService extends AbstractRatingTest {
         ratingService.rate("Leah", 5, docActivity, STARS_ASPECT);
         assertEquals(1, ratingService.getRatesCount(docActivity, STARS_ASPECT));
 
-        DocumentRef docRef = doc.getRef();
         Framework.getService(TrashService.class).trashDocument(doc);
 
         assertEquals(0, ratingService.getRatesCount(docActivity, STARS_ASPECT));
