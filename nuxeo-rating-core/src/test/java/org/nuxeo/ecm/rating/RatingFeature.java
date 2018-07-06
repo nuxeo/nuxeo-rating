@@ -26,7 +26,7 @@ import org.nuxeo.ecm.core.test.CoreFeature;
 import org.nuxeo.runtime.test.runner.Deploy;
 import org.nuxeo.runtime.test.runner.Features;
 import org.nuxeo.runtime.test.runner.FeaturesRunner;
-import org.nuxeo.runtime.test.runner.SimpleFeature;
+import org.nuxeo.runtime.test.runner.RunnerFeature;
 
 /**
  * @author <a href="mailto:akervern@nuxeo.com">Arnaud Kervern</a>
@@ -38,7 +38,7 @@ import org.nuxeo.runtime.test.runner.SimpleFeature;
 @Deploy("org.nuxeo.ecm.rating.api")
 @Deploy("org.nuxeo.ecm.rating.core")
 @Deploy("org.nuxeo.ecm.rating.core:rating-test.xml")
-public class RatingFeature extends SimpleFeature {
+public class RatingFeature implements RunnerFeature {
 
     protected static final String DIRECTORY = "target/test/nxactivities";
 
@@ -47,20 +47,18 @@ public class RatingFeature extends SimpleFeature {
     protected File dir;
 
     @Override
-    public void initialize(FeaturesRunner runner) throws Exception {
+    public void initialize(FeaturesRunner runner) {
         dir = new File(DIRECTORY);
         FileUtils.deleteQuietly(dir);
         dir.mkdirs();
         System.setProperty(PROP_NAME, dir.getPath());
-        super.initialize(runner);
     }
 
     @Override
-    public void stop(FeaturesRunner runner) throws Exception {
+    public void stop(FeaturesRunner runner) {
         FileUtils.deleteQuietly(dir);
         dir = null;
         System.clearProperty(PROP_NAME);
-        super.stop(runner);
     }
 
 }
