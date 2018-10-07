@@ -35,7 +35,6 @@ import static org.nuxeo.ecm.rating.api.Constants.LIKE_ASPECT;
 import static org.nuxeo.ecm.rating.api.Constants.RATING_VERB_PREFIX;
 
 import java.io.Serializable;
-import java.security.Principal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +52,7 @@ import org.nuxeo.ecm.activity.ActivityHelper;
 import org.nuxeo.ecm.activity.ActivityStreamService;
 import org.nuxeo.ecm.core.api.DocumentModel;
 import org.nuxeo.ecm.core.api.IdRef;
+import org.nuxeo.ecm.core.api.NuxeoPrincipal;
 import org.nuxeo.ecm.core.api.PathRef;
 import org.nuxeo.ecm.core.test.DefaultRepositoryInit;
 import org.nuxeo.ecm.core.test.annotations.RepositoryConfig;
@@ -163,8 +163,8 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         String activityContext = createDocumentActivityObject(context);
         DocumentModel lovelyDoc = createTestDocument("myLovelyDoc", context.getPathAsString()); // 3 likes
 
-        Principal jeannot = createUser("jeannot");
-        Principal steve = createUser("steve");
+        NuxeoPrincipal jeannot = createUser("jeannot");
+        NuxeoPrincipal steve = createUser("steve");
 
         // Create some minimessages
         String miniMessage1 = addMiniMessage(steve, "This is a revolution.", new Date(), activityContext);
@@ -280,7 +280,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         DocumentModel context = session.getDocument(new PathRef("/default-domain/workspaces/test"));
         createTestDocument("lovelyDoc", context.getPathAsString());
 
-        Principal jeannot = createUser("jeannot");
+        NuxeoPrincipal jeannot = createUser("jeannot");
         String miniMessage = addMiniMessage(session.getPrincipal(), "My first miniMessage", new Date(),
                 createDocumentActivityObject(context));
         String miniMessage1 = addMiniMessage(jeannot, "My Second miniMessage", new Date(),
@@ -313,7 +313,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         assertNotSame("1", activitiesList.get(1).getContext());
     }
 
-    protected Principal createUser(String username) {
+    protected NuxeoPrincipal createUser(String username) {
         DocumentModel user = userManager.getBareUserModel();
         user.setPropertyValue("user:username", username);
         try {
@@ -397,7 +397,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         }
     }
 
-    protected String addMiniMessage(Principal principal, String message, Date publishedDate,
+    protected String addMiniMessage(NuxeoPrincipal principal, String message, Date publishedDate,
             String contextActivityObject) {
         Activity activity = new ActivityBuilder().actor(ActivityHelper.createUserActivityObject(principal)).displayActor(
                 ActivityHelper.generateDisplayName(principal)).verb("minimessage").object(message).publishedDate(
