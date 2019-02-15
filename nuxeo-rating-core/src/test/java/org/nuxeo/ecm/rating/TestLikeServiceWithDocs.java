@@ -35,16 +35,17 @@ import static org.nuxeo.ecm.rating.api.Constants.LIKE_ASPECT;
 import static org.nuxeo.ecm.rating.api.Constants.RATING_VERB_PREFIX;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import org.joda.time.DateTime;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.nuxeo.common.utils.DateUtils;
 import org.nuxeo.ecm.activity.ActivitiesList;
 import org.nuxeo.ecm.activity.Activity;
 import org.nuxeo.ecm.activity.ActivityBuilder;
@@ -99,19 +100,19 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         assertEquals(0,
                 ratingService.getRatedChildren(createDocumentActivityObject(folder), LIKE_RATING, LIKE_ASPECT).size());
 
-        assertEquals(
-                2,
-                ratingService.getRatedChildren(createDocumentActivityObject(defaultDomain), LIKE_RATING, LIKE_ASPECT).size());
-        assertEquals(
-                2,
-                ratingService.getRatedChildren(createDocumentActivityObject(workspaces), LIKE_RATING, LIKE_ASPECT).size());
+        assertEquals(2,
+                ratingService.getRatedChildren(createDocumentActivityObject(defaultDomain), LIKE_RATING, LIKE_ASPECT)
+                             .size());
+        assertEquals(2,
+                ratingService.getRatedChildren(createDocumentActivityObject(workspaces), LIKE_RATING, LIKE_ASPECT)
+                             .size());
 
         // All activities correctly removed
         likeService.cancel("robin", testDoc);
         assertEquals(2, ratingService.getRatesCount(createDocumentActivityObject(testDoc), LIKE_ASPECT));
-        assertEquals(
-                1,
-                ratingService.getRatedChildren(createDocumentActivityObject(defaultDomain), LIKE_RATING, LIKE_ASPECT).size());
+        assertEquals(1,
+                ratingService.getRatedChildren(createDocumentActivityObject(defaultDomain), LIKE_RATING, LIKE_ASPECT)
+                             .size());
     }
 
     @Test
@@ -171,12 +172,9 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         String miniMessage2 = addMiniMessage(steve, "One more thing.", new Date(), activityContext);
         String miniMessage3 = addMiniMessage(jeannot, "My daddy is awesome.", new Date(), activityContext);
 
-        String actMiniMessage1 = createActivityObject(miniMessage1); // 4
-                                                                     // likes
-        String actMiniMessage2 = createActivityObject(miniMessage2); // 2
-                                                                     // likes
-        String actMiniMessage3 = createActivityObject(miniMessage3); // 1
-                                                                     // like
+        String actMiniMessage1 = createActivityObject(miniMessage1); // 4 likes
+        String actMiniMessage2 = createActivityObject(miniMessage2); // 2 likes
+        String actMiniMessage3 = createActivityObject(miniMessage3); // 1 like
 
         // like them all.
         likeService.like("Tim", actMiniMessage1);
@@ -221,9 +219,9 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         String miniMessage1 = addMiniMessage(session.getPrincipal(), "My second miniMessage", new Date(),
                 createDocumentActivityObject(context));
 
-        final DateTime YESTERDAY = new DateTime().minusDays(1);
-        final DateTime TODAY = new DateTime();
-        final DateTime TOMORROW = new DateTime().plusDays(1);
+        final ZonedDateTime TODAY = ZonedDateTime.now();
+        final ZonedDateTime YESTERDAY = TODAY.minusDays(1);
+        final ZonedDateTime TOMORROW = TODAY.plusDays(1);
 
         String contextObject = createDocumentActivityObject(context);
         // Likes now
@@ -246,28 +244,31 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
 
         // Tests now !
         ActivitiesList mostLikedActivities = likeService.getMostLikedActivities(session, 10, context,
-                YESTERDAY.minusHours(2).toDate(), YESTERDAY.plusHours(2).toDate());
+                DateUtils.toDate(YESTERDAY.minusHours(2)), DateUtils.toDate(YESTERDAY.plusHours(2)));
         assertEquals(3, mostLikedActivities.size());
         assertEquals(createDocumentActivityObject(lovelyDoc), mostLikedActivities.get(0).getTarget());
 
-        mostLikedActivities = likeService.getMostLikedActivities(session, 10, context, TOMORROW.minusHours(2).toDate(),
-                TOMORROW.plusHours(2).toDate());
+        mostLikedActivities = likeService.getMostLikedActivities(session, 10, context,
+                DateUtils.toDate(TOMORROW.minusHours(2)), DateUtils.toDate(TOMORROW.plusHours(2)));
         assertEquals(2, mostLikedActivities.size());
         assertEquals(createDocumentActivityObject(anotherLovelyDoc), mostLikedActivities.get(0).getTarget());
 
-        mostLikedActivities = likeService.getMostLikedActivities(session, 10, context, TODAY.minusHours(2).toDate(),
-                TOMORROW.plusHours(2).toDate());
+        mostLikedActivities = likeService.getMostLikedActivities(session, 10, context,
+                DateUtils.toDate(TODAY.minusHours(2)), DateUtils.toDate(TOMORROW.plusHours(2)));
         assertEquals(3, mostLikedActivities.size());
 
         mostLikedActivities = likeService.getMostLikedActivities(session, 10, context,
-                YESTERDAY.minusHours(2).toDate(), TOMORROW.plusHours(2).toDate());
+                DateUtils.toDate(YESTERDAY.minusHours(2)), DateUtils.toDate(TOMORROW.plusHours(2)));
         assertEquals(4, mostLikedActivities.size());
     }
 
-    protected void manuallyLike(String username, String activityObject, DateTime publishedDate, String contextObject) {
-        ActivityBuilder activityBuilder = new ActivityBuilder().verb(RATING_VERB_PREFIX + LIKE_ASPECT).actor(
-                ActivityHelper.createUserActivityObject(username)).target(activityObject).object(String.valueOf(1)).publishedDate(
-                publishedDate.toDate());
+    protected void manuallyLike(String username, String activityObject, ZonedDateTime publishedDate,
+            String contextObject) {
+        ActivityBuilder activityBuilder = new ActivityBuilder().verb(RATING_VERB_PREFIX + LIKE_ASPECT)
+                                                               .actor(ActivityHelper.createUserActivityObject(username))
+                                                               .target(activityObject)
+                                                               .object(String.valueOf(1))
+                                                               .publishedDate(DateUtils.toDate(publishedDate));
         if (contextObject != null) {
             activityBuilder.context(contextObject);
         }
@@ -298,7 +299,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         assertEquals(1, likeService.getLikesCount(miniMessageActivity));
 
         // Query a first time with all principals
-        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(ACTOR_PARAMETER, createUserActivityObject("Emir"));
         parameters.put(CONTEXT_PARAMETER, createDocumentActivityObject(context));
         parameters.put(QUERY_TYPE_PARAMETER, GET_MINI_MESSAGE_COUNT);
@@ -342,7 +343,7 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
         likeService.like("Marshal", doc2);
         likeService.like("Ranjit", doc2);
 
-        Map<String, Serializable> parameters = new HashMap<String, Serializable>();
+        Map<String, Serializable> parameters = new HashMap<>();
         parameters.put(CONTEXT_PARAMETER, ActivityHelper.createDocumentActivityObject(test));
         parameters.put(ASPECT_PARAMETER, "like");
         parameters.put(OBJECT_PARAMETER, LIKE_RATING);
@@ -399,9 +400,13 @@ public class TestLikeServiceWithDocs extends AbstractRatingTest {
 
     protected String addMiniMessage(NuxeoPrincipal principal, String message, Date publishedDate,
             String contextActivityObject) {
-        Activity activity = new ActivityBuilder().actor(ActivityHelper.createUserActivityObject(principal)).displayActor(
-                ActivityHelper.generateDisplayName(principal)).verb("minimessage").object(message).publishedDate(
-                publishedDate).context(contextActivityObject).build();
+        Activity activity = new ActivityBuilder().actor(ActivityHelper.createUserActivityObject(principal))
+                                                 .displayActor(ActivityHelper.generateDisplayName(principal))
+                                                 .verb("minimessage")
+                                                 .object(message)
+                                                 .publishedDate(publishedDate)
+                                                 .context(contextActivityObject)
+                                                 .build();
         activity = Framework.getService(ActivityStreamService.class).addActivity(activity);
         return activity.getId().toString();
     }
